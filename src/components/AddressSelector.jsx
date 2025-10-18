@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { geocodeAddress, reverseGeocode } from '../utils/locationService';
+import api from '../api/api';
 
 export default function AddressSelector({ onAddressConfirmed }) {
   const { user } = useContext(AuthContext);
-  const [step, setStep] = useState('location'); // 'location', 'address', 'confirm'
+  const [step, setStep] = useState('select'); // 'select', 'location', 'address'
   const [loading, setLoading] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [detectedAddress, setDetectedAddress] = useState('');
   const [manualAddress, setManualAddress] = useState('');
   const [addressDetails, setAddressDetails] = useState({
+    label: 'Home',
     flat: '',
     building: '',
     street: '',
@@ -20,30 +23,40 @@ export default function AddressSelector({ onAddressConfirmed }) {
   });
   const [autocomplete, setAutocomplete] = useState(null);
 
-  // Load Google Maps Places API
   useEffect(() => {
+    loadSavedAddresses();
+    loadGoogleMapsScript();
+  }, [user]);
+
+  const loadSavedAddresses = async () => {
+    try {
+      const res = await api.get(`/addresses/user/${user._id}`);
+      setSavedAddresses(res.data);
+    } catch (err) {
+      console.error('Error loading saved addresses:', err);
+    }
+  };
+
+  const loadGoogleMapsScript = () => {
+    if (window.google) {
+      setTimeout(initAutocomplete, 100);
+      return;
+    }
+    
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyD2TeCSHqgbJIHKG0zVgGDddi4bLzNEn8o&libraries=places`;
     script.async = true;
-    script.onload = initAutocomplete;
+    script.onload = () => setTimeout(initAutocomplete, 100);
     document.head.appendChild(script);
-
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
-  }, []);
+  };
 
   const initAutocomplete = () => {
-    if (window.google && document.getElementById('address-autocomplete')) {
-      const autocompleteInstance = new window.google.maps.places.Autocomplete(
-        document.getElementById('address-autocomplete'),
-        {
-          types: ['address'],
-          componentRestrictions: { country: 'in' }
-        }
-      );
+    const input = document.getElementById('address-autocomplete');
+    if (window.google && input) {
+      const autocompleteInstance = new window.google.maps.places.Autocomplete(input, {
+        types: ['address'],
+        componentRestrictions: { country: 'in' }
+      });
 
       autocompleteInstance.addListener('place_changed', handlePlaceSelect);
       setAutocomplete(autocompleteInstance);
@@ -79,6 +92,36 @@ export default function AddressSelector({ onAddressConfirmed }) {
     });
 
     setAddressDetails(newDetails);
+  };
+
+  const selectSavedAddress = async (address) => {
+    try {
+      setLoading(true);
+      
+      // Update last used
+      await api.put(`/addresses/${address._id}/use`);
+      
+      // Convert to the format expected by the app
+      const selectedAddress = {
+        flat: address.flat,
+        building: address.building,
+        street: address.street,
+        area: address.area,
+        landmark: address.landmark,
+        city: address.city,
+        pincode: address.pincode,
+        coordinates: address.coordinates,
+        formattedAddress: address.formattedAddress,
+        label: address.label
+      };
+      
+      onAddressConfirmed(selectedAddress);
+    } catch (err) {
+      console.error('Error selecting address:', err);
+      alert('Error selecting address');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const detectLocation = () => {
@@ -119,47 +162,96 @@ export default function AddressSelector({ onAddressConfirmed }) {
     try {
       const fullAddress = `${addressDetails.flat} ${addressDetails.building} ${addressDetails.street} ${addressDetails.area} ${addressDetails.city} ${addressDetails.pincode}`.trim();
       
-      const locationData = await geocodeAddress(fullAddress);
+      let locationData;
+      try {
+        locationData = await geocodeAddress(fullAddress);
+      } catch (err) {
+        console.warn('Geocoding failed, proceeding without coordinates');
+        locationData = {
+          coordinates: [],
+          formattedAddress: fullAddress
+        };
+      }
       
       const finalAddress = {
         ...addressDetails,
         coordinates: locationData.coordinates,
-        formattedAddress: locationData.formattedAddress,
-        city: locationData.city || addressDetails.city,
-        pincode: locationData.pincode || addressDetails.pincode
+        formattedAddress: locationData.formattedAddress || fullAddress
       };
+
+      // Save address for future use
+      try {
+        await api.post('/addresses', {
+          userId: user._id,
+          ...finalAddress,
+          isDefault: savedAddresses.length === 0 // First address is default
+        });
+      } catch (err) {
+        console.warn('Failed to save address for future use:', err);
+      }
 
       onAddressConfirmed(finalAddress);
     } catch (error) {
-      alert('Unable to find this address. Please check and try again.');
+      alert('Unable to process this address. Please check and try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (step === 'location') {
+  if (step === 'select') {
     return (
       <div style={styles.container}>
-        <div style={styles.locationCard}>
-          <h2>📍 Choose Your Location</h2>
-          <p>To find nearby shops and ensure accurate delivery</p>
+        <div style={styles.selectCard}>
+          <h2>📍 Choose Delivery Address</h2>
           
-          <button 
-            onClick={detectLocation}
-            disabled={loading}
-            style={styles.primaryButton}
-          >
-            {loading ? '🔍 Detecting...' : '📱 Use Current Location'}
-          </button>
-          
-          <div style={styles.divider}>OR</div>
-          
-          <button 
-            onClick={() => setStep('address')}
-            style={styles.secondaryButton}
-          >
-            📝 Enter Address Manually
-          </button>
+          {savedAddresses.length > 0 && (
+            <div style={styles.savedAddressesSection}>
+              <h3>🏠 Your Saved Addresses</h3>
+              <div style={styles.addressList}>
+                {savedAddresses.map(address => (
+                  <div key={address._id} style={styles.savedAddressCard}>
+                    <div style={styles.addressInfo}>
+                      <h4>{address.label} {address.isDefault && <span style={styles.defaultBadge}>Default</span>}</h4>
+                      <p>{address.flat} {address.building}</p>
+                      <p>{address.area}, {address.city}</p>
+                      <p>Pincode: {address.pincode}</p>
+                      {address.landmark && <p><em>Near {address.landmark}</em></p>}
+                      <small style={styles.lastUsed}>
+                        Last used: {new Date(address.lastUsed).toLocaleDateString('en-IN')}
+                      </small>
+                    </div>
+                    <button 
+                      onClick={() => selectSavedAddress(address)}
+                      disabled={loading}
+                      style={styles.selectButton}
+                    >
+                      {loading ? '...' : '✓ Use This'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={styles.newAddressSection}>
+            <h3>➕ Add New Address</h3>
+            <div style={styles.newAddressButtons}>
+              <button 
+                onClick={detectLocation}
+                disabled={loading}
+                style={styles.primaryButton}
+              >
+                {loading ? '🔍 Detecting...' : '📱 Use Current Location'}
+              </button>
+              
+              <button 
+                onClick={() => setStep('address')}
+                style={styles.secondaryButton}
+              >
+                📝 Enter Manually
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -169,16 +261,19 @@ export default function AddressSelector({ onAddressConfirmed }) {
     return (
       <div style={styles.container}>
         <div style={styles.addressCard}>
-          <h2>🏠 Enter Your Address</h2>
+          <div style={styles.backButton}>
+            <button onClick={() => setStep('select')} style={styles.backBtn}>
+              ← Back to Saved Addresses
+            </button>
+          </div>
+          
+          <h2>🏠 Enter New Address</h2>
           
           {detectedAddress && (
             <div style={styles.detectedLocation}>
               <p><strong>Detected:</strong> {detectedAddress}</p>
               <button 
-                onClick={() => {
-                  setManualAddress(detectedAddress);
-                  // Parse detected address
-                }}
+                onClick={() => setManualAddress(detectedAddress)}
                 style={styles.useDetectedButton}
               >
                 ✓ Use This Address
@@ -187,6 +282,20 @@ export default function AddressSelector({ onAddressConfirmed }) {
           )}
 
           <div style={styles.form}>
+            <div style={styles.labelRow}>
+              <label>Address Label:</label>
+              <select 
+                value={addressDetails.label}
+                onChange={(e) => setAddressDetails({...addressDetails, label: e.target.value})}
+                style={styles.labelSelect}
+              >
+                <option value="Home">🏠 Home</option>
+                <option value="Office">🏢 Office</option>
+                <option value="Apartment">🏘️ Apartment</option>
+                <option value="Other">📍 Other</option>
+              </select>
+            </div>
+
             <div style={styles.searchBox}>
               <input
                 id="address-autocomplete"
@@ -249,7 +358,7 @@ export default function AddressSelector({ onAddressConfirmed }) {
               disabled={loading || !addressDetails.flat || !addressDetails.area || !addressDetails.city || !addressDetails.pincode}
               style={styles.confirmButton}
             >
-              {loading ? '🔍 Confirming Location...' : '✓ Confirm Address'}
+              {loading ? '🔍 Saving & Confirming...' : '✓ Save & Use This Address'}
             </button>
           </div>
         </div>
@@ -269,13 +378,12 @@ const styles = {
     backgroundColor: '#f8f9fa',
     padding: '20px'
   },
-  locationCard: {
+  selectCard: {
     backgroundColor: 'white',
     borderRadius: '12px',
-    padding: '40px',
+    padding: '30px',
     boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-    textAlign: 'center',
-    maxWidth: '400px',
+    maxWidth: '800px',
     width: '100%'
   },
   addressCard: {
@@ -286,8 +394,69 @@ const styles = {
     maxWidth: '600px',
     width: '100%'
   },
+  backButton: {
+    marginBottom: '20px'
+  },
+  backBtn: {
+    padding: '8px 16px',
+    backgroundColor: '#6c757d',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer'
+  },
+  savedAddressesSection: {
+    marginBottom: '30px'
+  },
+  addressList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px'
+  },
+  savedAddressCard: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: '15px',
+    border: '2px solid #e8f5e8',
+    borderRadius: '8px',
+    backgroundColor: '#f8fff8'
+  },
+  addressInfo: {
+    flex: 1
+  },
+  defaultBadge: {
+    backgroundColor: '#28a745',
+    color: 'white',
+    padding: '2px 8px',
+    borderRadius: '12px',
+    fontSize: '12px',
+    fontWeight: 'bold'
+  },
+  lastUsed: {
+    color: '#666',
+    fontSize: '12px'
+  },
+  selectButton: {
+    padding: '10px 20px',
+    backgroundColor: '#007bff',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontWeight: 'bold'
+  },
+  newAddressSection: {
+    borderTop: '2px solid #ddd',
+    paddingTop: '20px'
+  },
+  newAddressButtons: {
+    display: 'flex',
+    gap: '15px',
+    flexWrap: 'wrap'
+  },
   primaryButton: {
-    width: '100%',
+    flex: 1,
     padding: '15px',
     backgroundColor: '#007bff',
     color: 'white',
@@ -295,12 +464,11 @@ const styles = {
     borderRadius: '8px',
     fontSize: '16px',
     fontWeight: 'bold',
-    cursor: 'pointer',
-    marginBottom: '20px'
+    cursor: 'pointer'
   },
   secondaryButton: {
-    width: '100%',
-    padding: '12px',
+    flex: 1,
+    padding: '15px',
     backgroundColor: 'transparent',
     color: '#007bff',
     border: '2px solid #007bff',
@@ -308,12 +476,18 @@ const styles = {
     fontSize: '16px',
     cursor: 'pointer'
   },
-  divider: {
-    margin: '20px 0',
-    position: 'relative',
-    textAlign: 'center',
-    color: '#666'
+  labelRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    marginBottom: '15px'
   },
+  labelSelect: {
+    padding: '8px 12px',
+    border: '1px solid #ddd',
+    borderRadius: '4px'
+  },
+  // ... rest of existing styles
   detectedLocation: {
     backgroundColor: '#e8f5e8',
     padding: '15px',

@@ -24,6 +24,51 @@ export default function ProductList() {
     }
   };
 
+  const addToPantry = async (product) => {
+    try {
+      // Get user's current delivery address
+      const savedAddress = localStorage.getItem(`deliveryAddress_${user._id}`);
+      let deliveryAddress = null;
+
+      if (savedAddress) {
+        deliveryAddress = JSON.parse(savedAddress);
+      }
+
+      const payload = {
+        userId: user._id,
+        shopId: shopId,
+        productId: product._id,
+        productName: product.name,
+        brandName: '', // Can add input for this
+        quantityPerPack: 1, // Default, can be customized
+        unit: product.unit,
+        packsOwned: 2, // Default
+        price: product.price,
+        refillThreshold: 1,
+
+        // Include delivery address
+        deliveryAddress: deliveryAddress ? {
+          flat: deliveryAddress.flat || '',
+          building: deliveryAddress.building || '',
+          street: deliveryAddress.street || '',
+          area: deliveryAddress.area || '',
+          landmark: deliveryAddress.landmark || '',
+          city: deliveryAddress.city || '',
+          pincode: deliveryAddress.pincode || '',
+          coordinates: deliveryAddress.coordinates || [],
+          formattedAddress: deliveryAddress.formattedAddress || `${deliveryAddress.area}, ${deliveryAddress.city}`
+        } : null
+      };
+
+      await api.post('/pantry', payload);
+      alert(`${product.name} added to your pantry for tracking!`);
+    } catch (err) {
+      console.error('Error adding to pantry:', err);
+      alert('Error adding to pantry: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+
   const loadProducts = async () => {
     try {
       const res = await api.get('/products');
@@ -37,13 +82,13 @@ export default function ProductList() {
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const existingItem = cart.find(item => item._id === product._id);
-    
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
       cart.push({ ...product, quantity: 1 });
     }
-    
+
     localStorage.setItem('cart', JSON.stringify(cart));
     alert(`${product.name} added to cart!`);
   };
@@ -53,12 +98,12 @@ export default function ProductList() {
       {shop && (
         <div style={styles.shopHeader}>
           <h3>{shop.name}</h3>
-          <p>{shop.address} | {shop.phone}</p>
+          <p>{shop.location?.address || shop.address} | {shop.phone}</p>
         </div>
       )}
 
       <h4>Available Products ({products.length})</h4>
-      
+
       {products.length === 0 ? (
         <p>No products available in this shop yet.</p>
       ) : (
@@ -66,8 +111,8 @@ export default function ProductList() {
           {products.map(product => (
             <div key={product._id} style={styles.productCard}>
               {product.image && (
-                <img 
-                  src={product.image} 
+                <img
+                  src={product.image}
                   alt={product.name}
                   style={styles.productImage}
                 />
@@ -75,17 +120,30 @@ export default function ProductList() {
               <div style={styles.productInfo}>
                 <h5>{product.name}</h5>
                 <p style={styles.category}>{product.category}</p>
-                <p style={styles.price}>${product.price} per {product.unit}</p>
+                <p style={styles.price}>₹{product.price} per {product.unit}</p>
                 <p style={styles.stock}>
                   Stock: {product.stock} {product.unit}
                 </p>
-                <button 
-                  onClick={() => addToCart(product)}
-                  disabled={product.stock === 0}
-                  style={product.stock === 0 ? styles.disabledButton : styles.addButton}
-                >
-                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                </button>
+
+                {/* ADD THE BUTTONS HERE - Both buttons in a button container */}
+                <div style={styles.buttonContainer}>
+                  <button
+                    onClick={() => addToCart(product)}
+                    disabled={product.stock === 0}
+                    style={product.stock === 0 ? styles.disabledButton : styles.addButton}
+                  >
+                    {product.stock === 0 ? 'Out of Stock' : '🛒 Add to Cart'}
+                  </button>
+
+                  {/* ADD TO PANTRY BUTTON - RIGHT HERE */}
+                  <button
+                    onClick={() => addToPantry(product)}
+                    disabled={product.stock === 0}
+                    style={product.stock === 0 ? styles.disabledButton : styles.pantryButton}
+                  >
+                    🏠 Track in Pantry
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -137,12 +195,30 @@ const styles = {
   },
   stock: {
     color: '#28a745',
-    fontSize: '14px'
+    fontSize: '14px',
+    marginBottom: '15px'
+  },
+
+  /* NEW STYLES FOR BUTTON CONTAINER */
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px'
   },
   addButton: {
     width: '100%',
     padding: '10px',
     backgroundColor: '#007bff',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontWeight: '600'
+  },
+  pantryButton: {
+    width: '100%',
+    padding: '10px',
+    backgroundColor: '#28a745',
     color: 'white',
     border: 'none',
     borderRadius: '4px',

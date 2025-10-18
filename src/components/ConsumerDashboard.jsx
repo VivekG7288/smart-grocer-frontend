@@ -2,19 +2,21 @@ import React, { useState, useContext } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import AddressSelector from './AddressSelector';
+import PantryManager from './PantryManager'; // Import the new component
 import ShopList from './ShopList';
 import ProductList from './ProductList';
 import Cart from './Cart';
 import OrderHistory from './OrderHistory';
+import NotificationCenter from './NotificationCenter'; // We'll create this too
 
 export default function ConsumerDashboard() {
   const { user, logout } = useContext(AuthContext);
   const [deliveryAddress, setDeliveryAddress] = useState(null);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
   const location = useLocation();
 
   const handleAddressConfirmed = (address) => {
     setDeliveryAddress(address);
-    // Save to localStorage for persistence
     localStorage.setItem(`deliveryAddress_${user._id}`, JSON.stringify(address));
   };
 
@@ -42,7 +44,7 @@ export default function ConsumerDashboard() {
     <div style={styles.container}>
       <div style={styles.header}>
         <div style={styles.locationInfo}>
-          <h2>Welcome, {user.name}! 🛍️</h2>
+          <h2>Welcome, {user.name}! 🏠</h2>
           <div style={styles.deliveryAddress}>
             <span>📍 Delivering to: {deliveryAddress.area}, {deliveryAddress.city}</span>
             <button onClick={changeLocation} style={styles.changeLocationButton}>
@@ -50,9 +52,14 @@ export default function ConsumerDashboard() {
             </button>
           </div>
         </div>
-        <button onClick={logout} style={styles.logoutButton}>
-          Logout
-        </button>
+        <div style={styles.headerActions}>
+          <Link to="/notifications" style={styles.notificationButton}>
+            🔔 {unreadNotifications > 0 && <span style={styles.notificationBadge}>{unreadNotifications}</span>}
+          </Link>
+          <button onClick={logout} style={styles.logoutButton}>
+            Logout
+          </button>
+        </div>
       </div>
 
       <nav style={styles.nav}>
@@ -60,7 +67,13 @@ export default function ConsumerDashboard() {
           to="/" 
           style={isActive('/') ? styles.activeNavLink : styles.navLink}
         >
-          🏪 Nearby Shops
+          🏠 My Pantry
+        </Link>
+        <Link 
+          to="/shops" 
+          style={isActive('/shops') ? styles.activeNavLink : styles.navLink}
+        >
+          🏪 Find Shops
         </Link>
         <Link 
           to="/cart" 
@@ -78,10 +91,13 @@ export default function ConsumerDashboard() {
 
       <div style={styles.content}>
         <Routes>
-          <Route path="/" element={<ShopList deliveryAddress={deliveryAddress} />} />
+          {/* Make Pantry the default route - main feature */}
+          <Route path="/" element={<PantryManager />} />
+          <Route path="/shops" element={<ShopList deliveryAddress={deliveryAddress} />} />
           <Route path="/shop/:shopId" element={<ProductList />} />
           <Route path="/cart" element={<Cart deliveryAddress={deliveryAddress} />} />
           <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/notifications" element={<NotificationCenter />} />
         </Routes>
       </div>
     </div>
@@ -121,6 +137,29 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     fontSize: '12px'
+  },
+  headerActions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '15px'
+  },
+  notificationButton: {
+    position: 'relative',
+    padding: '8px 12px',
+    textDecoration: 'none',
+    fontSize: '20px'
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: '0',
+    right: '0',
+    backgroundColor: '#dc3545',
+    color: 'white',
+    borderRadius: '50%',
+    fontSize: '12px',
+    padding: '2px 6px',
+    minWidth: '18px',
+    textAlign: 'center'
   },
   logoutButton: {
     padding: '8px 16px',
