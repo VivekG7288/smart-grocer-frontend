@@ -115,7 +115,7 @@ export default function AuthForm() {
             <div style={styles.blobB} />
             <div style={styles.formWrapper}>
                 <h2 style={styles.title}>
-                    {isLogin ? "Welcome Back" : "Create Account"}
+                    {isLogin ? "Log In to Your Account" : "Create Account"}
                 </h2>
 
                 {error && <div style={styles.error}>{error}</div>}
@@ -123,6 +123,14 @@ export default function AuthForm() {
                 <form onSubmit={handleSubmit} style={styles.form}>
                     {!isLogin && (
                         <>
+                            <label
+                                htmlFor="name"
+                                style={{
+                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                }}
+                            >
+                                Full Name
+                            </label>
                             <input
                                 name="name"
                                 type="text"
@@ -145,6 +153,15 @@ export default function AuthForm() {
                                 required
                             />
 
+                            <label
+                                htmlFor="role"
+                                style={{
+                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                }}
+                            >
+                                Role
+                            </label>
+
                             <select
                                 name="role"
                                 value={form.role}
@@ -155,6 +172,15 @@ export default function AuthForm() {
                                 <option value="CONSUMER">Consumer</option>
                                 <option value="SHOPKEEPER">Shopkeeper</option>
                             </select>
+
+                            <label
+                                htmlFor="address"
+                                style={{
+                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                }}
+                            >
+                                Address
+                            </label>
 
                             <input
                                 name="address"
@@ -180,6 +206,15 @@ export default function AuthForm() {
                         </>
                     )}
 
+                    <label
+                        htmlFor="email"
+                        style={{
+                            color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                        }}
+                    >
+                        Email
+                    </label>
+
                     <input
                         name="email"
                         type="email"
@@ -199,6 +234,16 @@ export default function AuthForm() {
                         )}
                         required
                     />
+
+                    <label
+                        htmlFor="password"
+                        style={{
+                            color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                            marginTop: "10px",
+                        }}
+                    >
+                        Password
+                    </label>
 
                     <input
                         name="password"
@@ -230,6 +275,7 @@ export default function AuthForm() {
                                 onSuccess={handleSuccess}
                                 onError={handleError}
                                 text={isLogin ? "signin_with" : "signup_with"}
+                                shape="pill"
                             />
                         </div>
 
@@ -249,6 +295,8 @@ export default function AuthForm() {
                         </button>
                     </div>
                 </form>
+
+                <div className="divider" style={styles.divider}></div>
 
                 <div style={styles.switchWrapper}>
                     <span style={styles.switchText}>
@@ -271,9 +319,18 @@ export default function AuthForm() {
 }
 
 const styles = {
+    divider: {
+        display: "flex",
+        height: "1px",
+        width: "100%",
+        backgroundColor: "rgb(75 85 99)",
+        margin: "30px 0",
+    },
     loginButtonWrapper: {
         display: "flex",
-        gap: "10px",
+        gap: "20px",
+        flexDirection: "column",
+        marginTop: "20px",
     },
     container: {
         minHeight: "100vh",
@@ -284,8 +341,7 @@ const styles = {
         position: "relative",
         overflow: "hidden",
         // base gradient
-        background:
-            "linear-gradient(135deg, #3b82f6 0%, #6366f1 55%, #a78bfa 100%)",
+        background: "rgb(17 24 39)",
     },
 
     /* soft organic “blobs” (no pseudo-elements needed) */
@@ -295,8 +351,6 @@ const styles = {
         height: "70vmax",
         left: "-20vmax",
         top: "-15vmax",
-        background:
-            "radial-gradient(closest-side, rgba(255,255,255,0.28), rgba(255,255,255,0) 70%)",
         filter: "blur(20px)",
         mixBlendMode: "screen",
         pointerEvents: "none",
@@ -307,55 +361,55 @@ const styles = {
         height: "70vmax",
         right: "-25vmax",
         bottom: "-20vmax",
-        background:
-            "radial-gradient(closest-side, rgba(0,0,0,0.22), rgba(0,0,0,0) 70%)",
         filter: "blur(28px)",
         mixBlendMode: "multiply",
         opacity: 0.7,
         pointerEvents: "none",
     },
     formWrapper: {
-        backgroundColor: "white",
-        borderRadius: "8px",
+        backgroundColor: "rgb(31 41 55 / 0.5)",
+        borderRadius: "1rem",
         padding: "40px",
         boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
         width: "100%",
-        maxWidth: "400px",
+        maxWidth: "360px",
+        border: "1px solid rgb(55, 65, 81)",
     },
     title: {
         textAlign: "center",
-        marginBottom: "30px",
-        color: "#333",
-        fontSize: "24px",
+        marginBottom: "50px",
+        color: "rgb(255 255 255 / 1)",
+        fontSize: "28px",
         fontWeight: "600",
     },
     form: {
         display: "flex",
         flexDirection: "column",
-        gap: "16px",
+        gap: "15px",
     },
     input: {
         padding: "12px",
-        border: "1px solid #ddd",
-        borderRadius: "4px",
+        border: "1px solid rgb(75 85 99)",
+        borderRadius: "12px",
         fontSize: "16px",
         transition: "border-color 0.3s",
         outline: "none",
+        backgroundColor: "rgb(55 65 81 / var(--tw-bg-opacity, 1))",
     },
     select: {
         padding: "12px",
-        border: "1px solid #ddd",
-        borderRadius: "4px",
+        border: "1px solid rgb(75 85 99)",
+        borderRadius: "12px",
         fontSize: "16px",
-        backgroundColor: "white",
         outline: "none",
+        backgroundColor: "rgb(55 65 81 / var(--tw-bg-opacity, 1))",
     },
     submitButton: {
         padding: "10px",
-        backgroundColor: "#007bff",
+        backgroundColor: "rgb(79 70 229)",
         color: "white",
         border: "none",
-        borderRadius: "4px",
+        borderRadius: "25px",
         fontSize: "16px",
         fontWeight: "600",
         cursor: "pointer",
@@ -377,7 +431,7 @@ const styles = {
     switchButton: {
         background: "none",
         border: "none",
-        color: "#007bff",
+        color: "rgb(79 70 229)",
         cursor: "pointer",
         fontSize: "14px",
         textDecoration: "underline",
@@ -386,7 +440,7 @@ const styles = {
         backgroundColor: "#f8d7da",
         color: "#721c24",
         padding: "12px",
-        borderRadius: "4px",
+        borderRadius: "12px",
         marginBottom: "16px",
         border: "1px solid #f5c6cb",
     },
