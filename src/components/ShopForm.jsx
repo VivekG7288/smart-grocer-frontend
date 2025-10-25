@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { CiShop } from "react-icons/ci";
+import { MdOutlineShoppingCart } from "react-icons/md";
 
 export default function ShopForm() {
     const { user } = useContext(AuthContext);
@@ -37,7 +38,7 @@ export default function ShopForm() {
         }
 
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyD2TeCSHqgbJIHKG0zVgGDddi4bLzNEn8o&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDeUObAPbugkptlPWUnYgWnNsHgggiRo4c&libraries=places`;
         script.async = true;
         script.onload = () => {
             setTimeout(initAutocomplete, 100);
@@ -366,7 +367,12 @@ export default function ShopForm() {
     return (
         <div style={styles.container}>
             <div style={styles.shopInfo}>
-                <h3>🏪 {shop.name}</h3>
+                <h3>
+                    <MdOutlineShoppingCart
+                        style={{ marginRight: "5px", marginBottom: "-2px" }}
+                    />{" "}
+                    {shop.name}
+                </h3>
                 <div style={styles.locationDetails}>
                     <p>
                         <strong>📍 Location:</strong>{" "}
