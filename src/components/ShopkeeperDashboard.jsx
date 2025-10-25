@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import ShopForm from './ShopForm';
+import PaymentPage from './PaymentPage';
 import OrderList from './OrderList';
 import RefillRequests from './RefillRequests'; // New component
 import ShopkeeperNotifications from './ShopkeeperNotifications'; // New component
@@ -69,6 +70,7 @@ export default function ShopkeeperDashboard() {
       <div style={styles.content}>
         <Routes>
           <Route path="/" element={<ShopForm />} />
+          <Route path="/payment" element={<PaymentPage />} />
           <Route path="/refill-requests" element={<RefillRequests />} />
           <Route path="/orders" element={<OrderList />} />
           <Route path="/notifications" element={<ShopkeeperNotifications />} />
