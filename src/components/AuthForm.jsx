@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 export default function AuthForm() {
     const { signup, login } = useContext(AuthContext);
@@ -12,6 +14,7 @@ export default function AuthForm() {
         password: "",
         role: "CONSUMER",
         address: "",
+        picture: "",
     });
 
     const handleChange = (e) => {
@@ -64,6 +67,7 @@ export default function AuthForm() {
                     password: form.password,
                     role: form.role,
                     address: form.address,
+                    picture: form.picture,
                 });
             }
         } catch (err) {
@@ -85,6 +89,24 @@ export default function AuthForm() {
             role: "CONSUMER",
             address: "",
         });
+    };
+
+    const handleSuccess = async (credentialResponse) => {
+        const token = credentialResponse?.credential;
+        if (!token) return;
+
+        const decoded = jwtDecode(token);
+
+        setForm({
+            name: decoded.name,
+            email: decoded.email,
+            password: decoded.email,
+            picture: decoded.picture,
+        });
+    };
+
+    const handleError = () => {
+        console.error("Google Sign-In failed");
     };
 
     return (
@@ -199,20 +221,33 @@ export default function AuthForm() {
                         minLength={6}
                     />
 
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        style={{
-                            ...styles.submitButton,
-                            ...(isLoading ? styles.disabledButton : {}),
-                        }}
+                    <div
+                        className="login-button"
+                        style={styles.loginButtonWrapper}
                     >
-                        {isLoading
-                            ? "Processing..."
-                            : isLogin
-                            ? "Sign In"
-                            : "Create Account"}
-                    </button>
+                        <div>
+                            <GoogleLogin
+                                onSuccess={handleSuccess}
+                                onError={handleError}
+                                text={isLogin ? "signin_with" : "signup_with"}
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            style={{
+                                ...styles.submitButton,
+                                ...(isLoading ? styles.disabledButton : {}),
+                            }}
+                        >
+                            {isLoading
+                                ? "Processing..."
+                                : isLogin
+                                ? "Log In"
+                                : "Create Account"}
+                        </button>
+                    </div>
                 </form>
 
                 <div style={styles.switchWrapper}>
@@ -227,7 +262,7 @@ export default function AuthForm() {
                         style={styles.switchButton}
                         disabled={isLoading}
                     >
-                        {isLogin ? "Sign Up" : "Sign In"}
+                        {isLogin ? "Sign Up" : "Log In"}
                     </button>
                 </div>
             </div>
@@ -236,6 +271,10 @@ export default function AuthForm() {
 }
 
 const styles = {
+    loginButtonWrapper: {
+        display: "flex",
+        gap: "10px",
+    },
     container: {
         minHeight: "100vh",
         display: "flex",
@@ -312,7 +351,7 @@ const styles = {
         outline: "none",
     },
     submitButton: {
-        padding: "12px",
+        padding: "10px",
         backgroundColor: "#007bff",
         color: "white",
         border: "none",
@@ -320,7 +359,7 @@ const styles = {
         fontSize: "16px",
         fontWeight: "600",
         cursor: "pointer",
-        marginTop: "10px",
+        width: "100%",
         transition: "background-color 0.3s",
     },
     disabledButton: {
