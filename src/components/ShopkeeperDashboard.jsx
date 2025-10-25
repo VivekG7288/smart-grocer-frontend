@@ -5,6 +5,10 @@ import ShopForm from "./ShopForm";
 import OrderList from "./OrderList";
 import RefillRequests from "./RefillRequests"; // New component
 import ShopkeeperNotifications from "./ShopkeeperNotifications"; // New component
+import { IoIosNotifications } from "react-icons/io";
+import { FaCartShopping } from "react-icons/fa6";
+import { CiRedo } from "react-icons/ci";
+import { AiFillAccountBook } from "react-icons/ai";
 
 export default function ShopkeeperDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -49,11 +53,14 @@ export default function ShopkeeperDashboard() {
                             }}
                         />
                     )}
-                    <h2>Welcome, {user.name}!</h2>
+                    <h2 style={{ color: "white" }}>Welcome, {user.name}!</h2>
                 </div>
                 <div style={styles.headerActions}>
                     <Link to="/notifications" style={styles.notificationButton}>
-                        🔔{" "}
+                        <IoIosNotifications
+                            style={{ fontSize: "35px", color: "white" }}
+                        />
+
                         {unreadNotifications > 0 && (
                             <span style={styles.notificationBadge}>
                                 {unreadNotifications}
@@ -73,7 +80,10 @@ export default function ShopkeeperDashboard() {
                         isActive("/") ? styles.activeNavLink : styles.navLink
                     }
                 >
-                    🏪 My Shop
+                    <FaCartShopping
+                        style={{ marginRight: "5px", marginBottom: "-2px" }}
+                    />{" "}
+                    My Shop
                 </Link>
                 <Link
                     to="/refill-requests"
@@ -83,7 +93,10 @@ export default function ShopkeeperDashboard() {
                             : styles.navLink
                     }
                 >
-                    🔔 Refill Requests
+                    <CiRedo
+                        style={{ marginRight: "5px", marginBottom: "-2px" }}
+                    />{" "}
+                    Refill Requests
                 </Link>
                 <Link
                     to="/orders"
@@ -93,7 +106,10 @@ export default function ShopkeeperDashboard() {
                             : styles.navLink
                     }
                 >
-                    📦 Orders
+                    <AiFillAccountBook
+                        style={{ marginRight: "5px", marginBottom: "-2px" }}
+                    />{" "}
+                    Orders
                 </Link>
             </nav>
 
@@ -125,7 +141,7 @@ const styles = {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "20px",
-        backgroundColor: "#fff",
+        backgroundColor: "rgb(17, 24, 39)",
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
     },
     headerActions: {
@@ -161,25 +177,32 @@ const styles = {
     },
     nav: {
         display: "flex",
-        backgroundColor: "#fff",
-        borderBottom: "1px solid #ddd",
+        backgroundColor: "rgb(17, 24, 39)",
         padding: "0 20px",
     },
     navLink: {
         padding: "15px 20px",
         textDecoration: "none",
-        color: "#666",
+        color: "whitesmoke",
         borderBottom: "3px solid transparent",
         transition: "all 0.3s",
+    },
+    activeNavLinkIcon: {
+        fontSize: "20px",
+        color: "rgb(17, 24, 39)",
+        marginRight: "5px",
+        marginBottom: "-3px",
     },
     activeNavLink: {
         padding: "15px 20px",
         textDecoration: "none",
-        color: "#007bff",
-        borderBottom: "3px solid #007bff",
+        color: "rgb(31, 41, 55)",
         fontWeight: "bold",
+        backgroundColor: "whitesmoke",
+        borderRadius: "10px 10px 0px 0px",
     },
     content: {
         padding: "20px",
+        backgroundColor: "whitesmoke",
     },
 };
