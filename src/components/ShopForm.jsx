@@ -536,7 +536,7 @@ export default function ShopForm() {
 const styles = {
     container: {
         padding: "20px",
-        maxWidth: "1200px",
+        maxWidth: "600px",
         margin: "0 auto",
     },
     loading: {
