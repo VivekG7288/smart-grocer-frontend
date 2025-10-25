@@ -388,6 +388,7 @@ const styles = {
         gap: "15px",
     },
     input: {
+        color: "white",
         padding: "12px",
         border: "1px solid rgb(75 85 99)",
         borderRadius: "12px",
