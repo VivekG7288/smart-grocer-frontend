@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
+import { MdProductionQuantityLimits } from "react-icons/md";
+import { MdInventory } from "react-icons/md";
 
 function Inventory() {
     const { user } = useContext(AuthContext);
@@ -157,9 +159,14 @@ function Inventory() {
         return <div style={styles.loading}>Loading your shop...</div>;
     }
     return (
-        <div>
+        <div className="inventory-container">
             <div style={styles.section}>
-                <h4>📦 Add New Product</h4>
+                <h4 style={{ fontSize: "20px", margin: "10px" }}>
+                    <MdProductionQuantityLimits
+                        style={{ fontSize: "25px", marginBottom: "-4px" }}
+                    />{" "}
+                    Add New Product
+                </h4>
                 <div style={styles.productForm}>
                     <div style={styles.formRow}>
                         <input
@@ -230,7 +237,12 @@ function Inventory() {
             </div>
 
             <div style={styles.section}>
-                <h4>📋 Current Inventory ({products.length} items)</h4>
+                <h4>
+                    <MdInventory
+                        style={{ marginRight: "5px", marginBottom: "-2px" }}
+                    />{" "}
+                    Current Inventory ({products.length} items)
+                </h4>
                 {products.length === 0 ? (
                     <div style={styles.emptyState}>
                         <p>
@@ -298,29 +310,10 @@ function Inventory() {
 export default Inventory;
 
 const styles = {
-    container: {
-        padding: "20px",
-        maxWidth: "600px",
-        margin: "0 auto",
-    },
     loading: {
         textAlign: "center",
         padding: "50px",
         fontSize: "18px",
-    },
-    createShopCard: {
-        backgroundColor: "rgb(31, 41, 55)",
-        padding: "30px",
-        borderRadius: "12px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        border: "1px solid #ddd",
-        color: "white",
-    },
-    form: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "15px",
-        marginTop: "20px",
     },
     input: {
         padding: "12px",
@@ -331,28 +324,6 @@ const styles = {
         outline: "none",
         transition: "border-color 0.3s",
         backgroundColor: "rgb(55 65 81 )",
-    },
-    radiusContainer: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-    },
-    radiusLabel: {
-        fontSize: "14px",
-        color: "white",
-    },
-    slider: {
-        width: "100%",
-        height: "6px",
-        borderRadius: "3px",
-        background: "#ddd",
-        outline: "none",
-    },
-    radiusHint: {
-        display: "flex",
-        justifyContent: "space-between",
-        fontSize: "12px",
-        color: "white",
     },
     button: {
         padding: "14px",
@@ -374,19 +345,6 @@ const styles = {
         cursor: "not-allowed",
         fontSize: "16px",
         fontWeight: "600",
-    },
-    shopInfo: {
-        backgroundColor: "#e8f5e8",
-        padding: "20px",
-        borderRadius: "8px",
-        marginBottom: "30px",
-        border: "2px solid #28a745",
-    },
-    locationDetails: {
-        backgroundColor: "#fff",
-        padding: "15px",
-        borderRadius: "6px",
-        marginTop: "10px",
     },
     section: {
         marginBottom: "40px",
