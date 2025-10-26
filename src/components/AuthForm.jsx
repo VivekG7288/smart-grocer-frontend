@@ -19,7 +19,7 @@ export default function AuthForm() {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        if (error) setError(""); // Clear error when user starts typing
+        if (error) setError("");
     };
 
     const validateForm = () => {

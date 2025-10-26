@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { CiShop } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 import { MdOutlineShoppingCart } from "react-icons/md";
 
 export default function ShopForm() {
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [shop, setShop] = useState(null);
     const [loading, setLoading] = useState(true);
     const [creatingShop, setCreatingShop] = useState(false);
@@ -156,20 +158,15 @@ export default function ShopForm() {
                 address: shopData.address.trim(),
                 phone: shopData.phone.trim(),
                 deliveryRadius: parseInt(shopData.deliveryRadius),
+                registrationFee: 10,
             };
 
-            console.log("Creating shop with payload:", payload);
-            const res = await api.post("/shops", payload);
-            console.log("Shop created successfully:", res.data);
-
-            setShop(res.data);
-            alert(
-                `Shop "${res.data.name}" created successfully!\nLocation: ${
-                    res.data.location?.city || "Unknown"
-                }\nDelivery Radius: ${res.data.deliveryRadius} km`
-            );
+            console.log("Saving pending shop (awaiting payment):", payload);
+            localStorage.setItem("pendingShop", JSON.stringify(payload));
+            // Navigate to payment page which will create Razorpay order and finalize registration
+            navigate("/payment");
         } catch (err) {
-            console.error("Error creating shop:", err);
+            console.error("Error creating shop (pre-payment):", err);
             const errorMsg = err.response?.data?.error || err.message;
             alert("Error creating shop: " + errorMsg);
         } finally {
