@@ -18,14 +18,37 @@ export default function PaymentPage() {
     }, []);
 
     const loadRazorpayScript = () => {
-        return new Promise((res) => {
+        return new Promise((res, rej) => {
+            // 1. Check if the script is ALREADY loaded
+            if (window.Razorpay) {
+                return res(true);
+            }
+
+            // 2. Check if the script tag is already in the DOM (maybe loading)
             const id = "razorpay-script";
-            if (document.getElementById(id)) return res(true);
-            const script = document.createElement("script");
-            script.id = id;
-            script.src = "https://checkout.razorpay.com/v1/checkout.js";
-            script.onload = () => res(true);
-            document.body.appendChild(script);
+            let script = document.getElementById(id);
+
+            if (script) {
+                // If the tag exists, it's either loaded (handled by check #1)
+                // or it's currently loading. We just need to add our
+                // event listeners to wait for it to finish.
+                script.addEventListener("load", () => res(true));
+                script.addEventListener("error", () => {
+                    rej(new Error("Razorpay script failed to load."));
+                });
+            } else {
+                // 3. If tag doesn't exist, create it and load the script
+                script = document.createElement("script");
+                script.id = id;
+                script.src = "https://checkout.razorpay.com/v1/checkout.js";
+                script.onload = () => res(true);
+                script.onerror = () => {
+                    // Optional: remove the failed script tag
+                    document.body.removeChild(script);
+                    rej(new Error("Razorpay script failed to load."));
+                };
+                document.body.appendChild(script);
+            }
         });
     };
 
