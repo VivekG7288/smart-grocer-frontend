@@ -6,10 +6,12 @@ import PaymentPage from "./PaymentPage";
 import OrderList from "./OrderList";
 import RefillRequests from "./RefillRequests"; // New component
 import ShopkeeperNotifications from "./ShopkeeperNotifications"; // New component
+import Inventory from "./Inventory";
 import { IoIosNotifications } from "react-icons/io";
 import { FaCartShopping } from "react-icons/fa6";
 import { CiRedo } from "react-icons/ci";
 import { AiFillAccountBook } from "react-icons/ai";
+import { MdInventory } from "react-icons/md";
 
 export default function ShopkeeperDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -112,6 +114,19 @@ export default function ShopkeeperDashboard() {
                     />{" "}
                     Orders
                 </Link>
+                <Link
+                    to="/inventory"
+                    style={
+                        isActive("/inventory")
+                            ? styles.activeNavLink
+                            : styles.navLink
+                    }
+                >
+                    <MdInventory
+                        style={{ marginRight: "5px", marginBottom: "-2px" }}
+                    />{" "}
+                    Inventory
+                </Link>
             </nav>
 
             <div style={styles.content}>
@@ -123,6 +138,7 @@ export default function ShopkeeperDashboard() {
                         element={<RefillRequests />}
                     />
                     <Route path="/orders" element={<OrderList />} />
+                    <Route path="/inventory" element={<Inventory />} />
                     <Route
                         path="/notifications"
                         element={<ShopkeeperNotifications />}
