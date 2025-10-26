@@ -302,7 +302,7 @@ function Inventory() {
             </div>
 
             <div style={styles.section}>
-                <h4>
+                <h4 style={{ margin: "10px", fontSize: "20px" }}>
                     <MdInventory
                         style={{ marginRight: "5px", marginBottom: "-2px" }}
                     />{" "}
@@ -465,9 +465,9 @@ const styles = {
         borderRadius: "8px",
     },
     productGrid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+        display: "flex",
         gap: "20px",
+        flexWrap: "wrap",
     },
     productCard: {
         border: "1px solid #ddd",
