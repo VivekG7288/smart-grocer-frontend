@@ -296,7 +296,7 @@ function Inventory() {
                     >
                         {addingProduct
                             ? "➕ Adding Product..."
-                            : "➕ Add Product"}
+                            : ` Add Product`}
                     </button>
                 </div>
             </div>
@@ -447,11 +447,11 @@ const styles = {
         marginBottom: "15px",
     },
     addButton: {
-        padding: "12px",
-        backgroundColor: "#28a745",
+        padding: "15px",
+        backgroundColor: "rgb(79 70 229)",
         color: "white",
         border: "none",
-        borderRadius: "6px",
+        borderRadius: "25px",
         cursor: "pointer",
         fontSize: "14px",
         fontWeight: "600",
