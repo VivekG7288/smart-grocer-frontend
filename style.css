@@ -21,3 +21,14 @@ body {
     display: flex;
     gap: 20px;
 }
+
+input::placeholder {
+    color: whitesmoke;
+    opacity: 0.6;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

@@ -169,56 +169,121 @@ function Inventory() {
                 </h4>
                 <div style={styles.productForm}>
                     <div style={styles.formRow}>
-                        <input
-                            name="name"
-                            placeholder="Product Name *"
-                            value={product.name}
-                            onChange={handleProductChange}
-                            style={styles.productInput}
-                        />
-                        <input
-                            name="category"
-                            placeholder="Category (e.g., Fruits, Vegetables)"
-                            value={product.category}
-                            onChange={handleProductChange}
-                            style={styles.productInput}
-                        />
+                        <div className="input-container">
+                            <label
+                                htmlFor="name"
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                Name
+                            </label>
+                            <input
+                                name="name"
+                                placeholder="Product Name *"
+                                value={product.name}
+                                onChange={handleProductChange}
+                                style={styles.productInput}
+                            />
+                        </div>
+
+                        <div className="input-container">
+                            <label
+                                htmlFor="name"
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                Category
+                            </label>
+                            <input
+                                name="category"
+                                placeholder="Category "
+                                value={product.category}
+                                onChange={handleProductChange}
+                                style={styles.productInput}
+                            />
+                        </div>
                     </div>
 
                     <div style={styles.formRow}>
-                        <input
-                            name="price"
-                            type="number"
-                            step="0.01"
-                            placeholder="Price (₹) *"
-                            value={product.price}
-                            onChange={handleProductChange}
-                            style={styles.productInput}
-                        />
-                        <input
-                            name="stock"
-                            type="number"
-                            placeholder="Stock Quantity *"
-                            value={product.stock}
-                            onChange={handleProductChange}
-                            style={styles.productInput}
-                        />
-                        <input
-                            name="unit"
-                            placeholder="Unit (kg, ltr, pcs)"
-                            value={product.unit}
-                            onChange={handleProductChange}
-                            style={styles.productInput}
-                        />
+                        <div className="input-container">
+                            <label
+                                htmlFor="price"
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                Price
+                            </label>
+                            <input
+                                name="price"
+                                type="number"
+                                step="0.01"
+                                placeholder="Price (₹) *"
+                                value={product.price}
+                                onChange={handleProductChange}
+                                style={styles.productInput}
+                            />
+                        </div>
+
+                        <div className="input-container">
+                            <label
+                                htmlFor="unit"
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                Unit
+                            </label>
+                            <input
+                                name="unit"
+                                placeholder="Unit (kg, ltr, pcs)"
+                                value={product.unit}
+                                onChange={handleProductChange}
+                                style={styles.productInput}
+                            />
+                        </div>
                     </div>
 
-                    <input
-                        name="image"
-                        placeholder="Image URL (optional)"
-                        value={product.image}
-                        onChange={handleProductChange}
-                        style={styles.imageInput}
-                    />
+                    <div style={{ display: "flex", gap: "15px" }}>
+                        <div className="input-container">
+                            <label
+                                htmlFor="stock"
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                Stock
+                            </label>
+                            <input
+                                name="stock"
+                                type="number"
+                                placeholder="Stock Quantity *"
+                                value={product.stock}
+                                onChange={handleProductChange}
+                                style={styles.productInput}
+                            />
+                        </div>
+
+                        <div className="input-container">
+                            <label
+                                htmlFor="image"
+                                style={{
+                                    color: "white",
+                                }}
+                            >
+                                Image
+                            </label>
+                            <input
+                                name="image"
+                                placeholder="Image URL (optional)"
+                                value={product.image}
+                                onChange={handleProductChange}
+                                style={styles.imageInput}
+                            />
+                        </div>
+                    </div>
 
                     <button
                         onClick={addProduct}
@@ -350,7 +415,7 @@ const styles = {
         marginBottom: "40px",
     },
     productForm: {
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "rgb(55 65 81 )",
         padding: "20px",
         borderRadius: "8px",
         border: "1px solid #ddd",
@@ -361,17 +426,23 @@ const styles = {
         marginBottom: "15px",
     },
     productInput: {
-        flex: 1,
         padding: "10px",
-        border: "1px solid #ddd",
-        borderRadius: "4px",
+        border: "1px solid rgb(75 85 99)",
+        backgroundColor: "rgba(31, 41, 55, 0.5)",
+        borderRadius: "12px",
         fontSize: "14px",
+        transition: "border-color 0.3s",
+        outline: "none",
+        color: "white",
+        display: "flex",
+        width: "fit-content",
     },
     imageInput: {
-        width: "100%",
         padding: "10px",
-        border: "1px solid #ddd",
-        borderRadius: "4px",
+        border: "1px solid rgb(75 85 99)",
+        backgroundColor: "rgba(31, 41, 55, 0.5)",
+        borderRadius: "12px",
+        color: "white",
         fontSize: "14px",
         marginBottom: "15px",
     },
