@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyDeUObAPbugkptlPWUnYgWnNsHgggiRo4c";
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
 export const geocodeAddress = async (address) => {
     try {
