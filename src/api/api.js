@@ -10,7 +10,8 @@ const api = axios.create({
   baseURL: (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.PROD)
     ? prodBase
     : '/api',
-  headers: { 'Content-Type': 'application/json' }
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true
 });
 
 // Attach token if present
