@@ -19,6 +19,3 @@ zone_id = "" # Add your Cloudflare Zone ID here
 [build]
 command = "npm run build"
 upload.format = "service-worker"
-
-[build.upload]
-format = "service-worker"
