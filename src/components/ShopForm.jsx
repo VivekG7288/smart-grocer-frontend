@@ -253,8 +253,8 @@ export default function ShopForm() {
 
     return (
         <div style={styles.container}>
-            <div style={styles.shopInfo}>
-                <div className="shop-card-left">
+            {/* <div style={styles.shopInfo}> */}
+                {/* <div className="shop-card-left">
                     <h3 className="shop-titlle">
                         <MdOutlineShoppingCart
                             style={{
@@ -267,8 +267,8 @@ export default function ShopForm() {
                         {shop.name}
                     </h3>
                     <FcShop className="shop-icon" />
-                </div>
-                <div style={styles.locationDetails}>
+                </div> */}
+                {/* <div style={styles.locationDetails}>
                     <p>
                         <strong>📍 Location:</strong>{" "}
                         {shop.location?.formattedAddress ||
@@ -294,8 +294,8 @@ export default function ShopForm() {
                     <p>
                         <strong>🆔 Shop ID:</strong> {shop._id}
                     </p>
-                </div>
-            </div>
+                </div> */}
+            {/* </div> */}
         </div>
     );
 }

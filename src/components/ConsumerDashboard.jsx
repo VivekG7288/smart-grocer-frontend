@@ -8,6 +8,7 @@ import ProductList from "./ProductList";
 import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
 import NotificationCenter from "./NotificationCenter"; // We'll create this too
+import ExpenseTracker from "./ExpenseTracker";
 
 export default function ConsumerDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -135,6 +136,16 @@ export default function ConsumerDashboard() {
                 >
                     📋 Orders
                 </Link>
+                <Link
+                    to="/expenses"
+                    style={
+                        isActive("/expenses")
+                            ? styles.activeNavLink
+                            : styles.navLink
+                    }
+                >
+                    💰 Expenses
+                </Link>
             </nav>
 
             <div style={styles.content}>
@@ -154,6 +165,10 @@ export default function ConsumerDashboard() {
                     <Route
                         path="/notifications"
                         element={<NotificationCenter />}
+                    />
+                    <Route
+                        path="/expenses"
+                        element={<ExpenseTracker />}
                     />
                 </Routes>
             </div>
