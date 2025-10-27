@@ -366,7 +366,7 @@ export default function ShopkeeperDashboard() {
                                                 "linear-gradient(135deg,#ecfff4,#fff)",
                                         }}
                                     >
-                                        <h4>Total Revenue</h4>
+                                        <h4>Total Revenuee</h4>
                                         <p style={styles.metricValue}>
                                             ₹
                                             {analytics.totalRevenue?.toFixed(
