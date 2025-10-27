@@ -1,13 +1,10 @@
 name = "smart-grocer-frontend"
 compatibility_date = "2025-10-27"
-compatibility_flags = ["nodejs_compat"]
 
 # Static site configuration
 [site]
 bucket = "./dist"
+entry-point = "workers-site"
 
 [build]
 command = "npm run build"
-
-# Workers Site configuration
-main = "./workers-site/index.js"

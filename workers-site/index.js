@@ -1,47 +1,36 @@
-import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    
+    // Serve static assets from the dist directory
+    try {
+      // Security headers to add to all responses
+      const securityHeaders = {
+        'X-XSS-Protection': '1; mode=block',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Feature-Policy': "camera 'none'; microphone 'none'",
+        'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+      };
 
-addEventListener('fetch', event => {
-  event.respondWith(handleEvent(event))
-})
+      // Try to serve the requested file from the assets
+      let response = await env.ASSETS.fetch(request);
 
-async function handleEvent(event) {
-  try {
-    // Try to get the asset from KV
-    let response = await getAssetFromKV(event)
+      // For SPA routing, serve index.html for any HTML request that doesn't find a file
+      if (!response.ok && request.headers.get('accept')?.includes('text/html')) {
+        response = await env.ASSETS.fetch(`${url.origin}/index.html`);
+      }
 
-    // If the request is for the root path, serve index.html
-    if (new URL(event.request.url).pathname === '/') {
-      response = await getAssetFromKV(event, {
-        mapRequestToAsset: req => new Request(`${new URL(req.url).origin}/index.html`, req),
-      })
+      // Add security headers to the response
+      const newResponse = new Response(response.body, response);
+      Object.entries(securityHeaders).forEach(([key, value]) => {
+        newResponse.headers.set(key, value);
+      });
+
+      return newResponse;
+    } catch (e) {
+      return new Response('Not Found', { status: 404 });
     }
-
-    // Enable SPA routing by serving index.html for all HTML requests
-    if (!response.ok && event.request.headers.get('accept').includes('text/html')) {
-      response = await getAssetFromKV(event, {
-        mapRequestToAsset: req => new Request(`${new URL(req.url).origin}/index.html`, req),
-      })
-    }
-
-    // Add security headers
-    response = new Response(response.body, { ...response })
-    response.headers.set('X-XSS-Protection', '1; mode=block')
-    response.headers.set('X-Content-Type-Options', 'nosniff')
-    response.headers.set('X-Frame-Options', 'DENY')
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-    response.headers.set('Feature-Policy', "camera 'none'; microphone 'none'")
-
-    return response
-  } catch (e) {
-    // Fall back to serving index.html for SPA routing
-    if (e.status === 404) {
-      try {
-        let notFoundResponse = await getAssetFromKV(event, {
-          mapRequestToAsset: req => new Request(`${new URL(req.url).origin}/index.html`, req),
-        })
-        return new Response(notFoundResponse.body, { ...notFoundResponse, status: 200 })
-      } catch (e) {}
-    }
-    return new Response(e.message || 'Error', { status: e.status || 500 })
-  }
-}
+  },
+};
