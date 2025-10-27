@@ -1,8 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, use } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { MdProductionQuantityLimits } from "react-icons/md";
-import { MdInventory } from "react-icons/md";
+import { MdInventory, MdOutlineBakeryDining } from "react-icons/md";
+import { TbCategory2 } from "react-icons/tb";
+import { GiFruitBowl, GiCannedFish, GiFastNoodles } from "react-icons/gi";
+import { PiGrainsFill } from "react-icons/pi";
+import { RiDrinks2Fill } from "react-icons/ri";
+import { FaBabyCarriage, FaHome } from "react-icons/fa";
+import { FaPumpSoap } from "react-icons/fa6";
+import { BsFillBasketFill } from "react-icons/bs";
+import { IoIosBasket } from "react-icons/io";
 
 function Inventory() {
     const { user } = useContext(AuthContext);
@@ -10,7 +18,196 @@ function Inventory() {
     const [addingProduct, setAddingProduct] = useState(false);
     const [shop, setShop] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedCategoryProducts, setSelectedCategoryProducts] = useState(
+        []
+    );
 
+    const [selectoryCategory, setSelectoryCategory] = useState("All");
+
+    const onCatagorySelect = (value) => {
+        setSelectoryCategory(value);
+    };
+
+    useEffect(() => {
+        switch (selectoryCategory) {
+            case "All":
+                setSelectedCategoryProducts(products);
+                break;
+            case "Fresh & Perishable":
+                setSelectedCategoryProducts(
+                    products.filter((p) => p.category === "Fresh & Perishable")
+                );
+                break;
+            case "Bakery & Ready-to-Eat":
+                setSelectedCategoryProducts(
+                    products.filter(
+                        (p) => p.category === "Bakery & Ready-to-Eat"
+                    )
+                );
+                break;
+            case "Staples & Grains":
+                setSelectedCategoryProducts(
+                    products.filter((p) => p.category === "Staples & Grains")
+                );
+                break;
+            case "Beverages":
+                setSelectedCategoryProducts(
+                    products.filter((p) => p.category === "Beverages")
+                );
+                break;
+            case "Packaged & Canned Goods":
+                setSelectedCategoryProducts(
+                    products.filter(
+                        (p) => p.category === "Packaged & Canned Goods"
+                    )
+                );
+                break;
+            case "Confectionery & Snacks":
+                setSelectedCategoryProducts(
+                    products.filter(
+                        (p) => p.category === "Confectionery & Snacks"
+                    )
+                );
+                break;
+            case "Baby & Kids":
+                setSelectedCategoryProducts(
+                    products.filter((p) => p.category === "Baby & Kids")
+                );
+                break;
+            case "Personal Care & Beauty":
+                setSelectedCategoryProducts(
+                    products.filter(
+                        (p) => p.category === "Personal Care & Beauty"
+                    )
+                );
+                break;
+            case "Home & Cleaning":
+                setSelectedCategoryProducts(
+                    products.filter((p) => p.category === "Home & Cleaning")
+                );
+                break;
+            case "others":
+                setSelectedCategoryProducts(
+                    products.filter((p) => p.category === "others")
+                );
+                break;
+            default:
+                setSelectedCategoryProducts(products);
+        }
+    }, [products, selectoryCategory]);
+
+    const productCategory = [
+        [
+            "All",
+            <IoIosBasket
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Fresh & Perishable",
+            <GiFruitBowl
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Bakery & Ready-to-Eat",
+            <MdOutlineBakeryDining
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Staples & Grains",
+            <PiGrainsFill
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Beverages",
+            <RiDrinks2Fill
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Packaged & Canned Goods",
+            <GiCannedFish
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Confectionery & Snacks",
+            <GiFastNoodles
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Baby & Kids",
+            <FaBabyCarriage
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Personal Care & Beauty",
+            <FaPumpSoap
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "Home & Cleaning",
+            <FaHome
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+        [
+            "others",
+            <BsFillBasketFill
+                style={{
+                    fontSize: "55px",
+                    color: "rgb(79 70 229)",
+                    marginTop: "-11px",
+                }}
+            />,
+        ],
+    ];
     const [product, setProduct] = useState({
         name: "",
         category: "",
@@ -196,13 +393,19 @@ function Inventory() {
                             >
                                 Category
                             </label>
-                            <input
+                            <select
                                 name="category"
-                                placeholder="Category "
                                 value={product.category}
                                 onChange={handleProductChange}
                                 style={styles.productInput}
-                            />
+                            >
+                                <option value="">Select Category</option>
+                                {productCategory.map((cat) => (
+                                    <option key={cat[0]} value={cat[0]}>
+                                        {cat[0]}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 
@@ -301,22 +504,54 @@ function Inventory() {
                 </div>
             </div>
 
+            <div className="inventory-filter">
+                <h4
+                    style={{
+                        fontSize: "20px",
+                        margin: "10px",
+                        display: "flex",
+                        gap: "8px",
+                    }}
+                >
+                    <TbCategory2
+                        style={{ fontSize: "25px", marginBottom: "-4px" }}
+                    />{" "}
+                    Category
+                </h4>
+                <div className="category-list">
+                    {productCategory.map((cat) => (
+                        <button
+                            onClick={() => onCatagorySelect(cat[0])}
+                            key={cat[0]}
+                            className={`category-list-button ${
+                                cat[0] === selectoryCategory
+                                    ? "selected-category"
+                                    : ""
+                            }`}
+                        >
+                            {cat[1]} {cat[0]}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <div style={styles.section}>
                 <h4 style={{ margin: "10px", fontSize: "20px" }}>
                     <MdInventory
                         style={{ marginRight: "5px", marginBottom: "-2px" }}
                     />{" "}
-                    Current Inventory ({products.length} items)
+                    Current Inventory ({selectedCategoryProducts.length} items)
                 </h4>
-                {products.length === 0 ? (
+                {selectedCategoryProducts.length === 0 ? (
                     <div style={styles.emptyState}>
                         <p>
-                            No products added yet. Add your first product above!
+                            No selected category products added yet. Add your
+                            first product above!
                         </p>
                     </div>
                 ) : (
                     <div style={styles.productGrid}>
-                        {products.map((p) => (
+                        {selectedCategoryProducts.map((p) => (
                             <div key={p._id} style={styles.productCard}>
                                 {p.image && (
                                     <img

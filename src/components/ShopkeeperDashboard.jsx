@@ -66,8 +66,11 @@ export default function ShopkeeperDashboard() {
                 const userShop = shopsRes.data.find(
                     (s) =>
                         s.ownerId === user._id ||
-                        (s.ownerId && s.ownerId.toString && s.ownerId.toString() === user._id.toString()) ||
-                        (typeof s.ownerId === "object" && s.ownerId._id === user._id)
+                        (s.ownerId &&
+                            s.ownerId.toString &&
+                            s.ownerId.toString() === user._id.toString()) ||
+                        (typeof s.ownerId === "object" &&
+                            s.ownerId._id === user._id)
                 );
 
                 if (!userShop) {
@@ -89,10 +92,15 @@ export default function ShopkeeperDashboard() {
 
                 // Orders
                 const ordersRes = await api.get("/orders");
-                const shopOrders = ordersRes.data.filter((order) =>
-                    order.shopId === userShop._id ||
-                    (order.shopId && order.shopId.toString && order.shopId.toString() === userShop._id.toString()) ||
-                    (typeof order.shopId === "object" && order.shopId._id === userShop._id)
+                const shopOrders = ordersRes.data.filter(
+                    (order) =>
+                        order.shopId === userShop._id ||
+                        (order.shopId &&
+                            order.shopId.toString &&
+                            order.shopId.toString() ===
+                                userShop._id.toString()) ||
+                        (typeof order.shopId === "object" &&
+                            order.shopId._id === userShop._id)
                 );
 
                 const ordersByStatus = shopOrders.reduce((acc, o) => {
@@ -103,16 +111,25 @@ export default function ShopkeeperDashboard() {
 
                 const recentOrders = shopOrders
                     .slice()
-                    .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
+                    .sort(
+                        (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
+                    )
                     .slice(0, 5);
 
                 // Calculate order revenue (use order.totalAmount if present, else sum items)
                 const orderRevenue = shopOrders.reduce((sum, o) => {
-                    if (typeof o.totalAmount === "number") return sum + o.totalAmount;
+                    if (typeof o.totalAmount === "number")
+                        return sum + o.totalAmount;
                     if (Array.isArray(o.items)) {
                         return (
                             sum +
-                            o.items.reduce((s2, it) => s2 + (Number(it.price || 0) * Number(it.quantity || 0)), 0)
+                            o.items.reduce(
+                                (s2, it) =>
+                                    s2 +
+                                    Number(it.price || 0) *
+                                        Number(it.quantity || 0),
+                                0
+                            )
                         );
                     }
                     return sum;
@@ -121,16 +138,22 @@ export default function ShopkeeperDashboard() {
                 // Refill requests
                 let refillRequests = [];
                 try {
-                    const refillRes = await api.get(`/pantry/shop/${userShop._id}/requests`);
+                    const refillRes = await api.get(
+                        `/pantry/shop/${userShop._id}/requests`
+                    );
                     refillRequests = refillRes.data || [];
                 } catch (e) {
                     console.warn("Refill requests endpoint not available", e);
                 }
 
-                const refillPending = refillRequests.filter(r => r.status === "REFILL_REQUESTED").length;
+                const refillPending = refillRequests.filter(
+                    (r) => r.status === "REFILL_REQUESTED"
+                ).length;
                 const recentRefills = refillRequests
                     .slice()
-                    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                    .sort(
+                        (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+                    )
                     .slice(0, 5);
 
                 // Calculate refill revenue (price * packsOwned)
@@ -145,9 +168,16 @@ export default function ShopkeeperDashboard() {
                 try {
                     const usersRes = await api.get("/users");
                     const users = usersRes.data || [];
-                    subscribers = users.filter(u => Array.isArray(u.subscriptions) && u.subscriptions.includes(userShop._id)).length;
+                    subscribers = users.filter(
+                        (u) =>
+                            Array.isArray(u.subscriptions) &&
+                            u.subscriptions.includes(userShop._id)
+                    ).length;
                 } catch (e) {
-                    console.warn("Could not load users for subscriber count", e);
+                    console.warn(
+                        "Could not load users for subscriber count",
+                        e
+                    );
                 }
 
                 setAnalytics({
@@ -272,40 +302,98 @@ export default function ShopkeeperDashboard() {
                         ) : shop ? (
                             <>
                                 <div style={styles.analyticsGrid}>
-                                    <div style={{...styles.metricCard, background: 'linear-gradient(135deg,#fff7e6,#fff)'}}>
+                                    <div
+                                        style={{
+                                            ...styles.metricCard,
+                                            background:
+                                                "linear-gradient(135deg,#fff7e6,#fff)",
+                                        }}
+                                    >
                                         <h4>Total Orders</h4>
-                                        <p style={styles.metricValue}>{analytics.ordersTotal}</p>
-                                        <small>Pending: {analytics.ordersByStatus?.PENDING || 0} • Delivered: {analytics.ordersByStatus?.DELIVERED || 0}</small>
+                                        <p style={styles.metricValue}>
+                                            {analytics.ordersTotal}
+                                        </p>
+                                        <small>
+                                            Pending:{" "}
+                                            {analytics.ordersByStatus
+                                                ?.PENDING || 0}{" "}
+                                            • Delivered:{" "}
+                                            {analytics.ordersByStatus
+                                                ?.DELIVERED || 0}
+                                        </small>
                                     </div>
 
-                                    <div style={{...styles.metricCard, background: 'linear-gradient(135deg,#e8f7ff,#fff)'}}>
+                                    <div
+                                        style={{
+                                            ...styles.metricCard,
+                                            background:
+                                                "linear-gradient(135deg,#e8f7ff,#fff)",
+                                        }}
+                                    >
                                         <h4>Order Revenue</h4>
-                                        <p style={styles.metricValue}>₹{analytics.orderRevenue?.toFixed(2) || '0.00'}</p>
-                                        <small>From confirmed/delivered orders</small>
+                                        <p style={styles.metricValue}>
+                                            ₹
+                                            {analytics.orderRevenue?.toFixed(
+                                                2
+                                            ) || "0.00"}
+                                        </p>
+                                        <small>
+                                            From confirmed/delivered orders
+                                        </small>
                                     </div>
 
-                                    <div style={{...styles.metricCard, background: 'linear-gradient(135deg,#f0f7ff,#fff)'}}>
+                                    <div
+                                        style={{
+                                            ...styles.metricCard,
+                                            background:
+                                                "linear-gradient(135deg,#f0f7ff,#fff)",
+                                        }}
+                                    >
                                         <h4>Refill Revenue</h4>
-                                        <p style={styles.metricValue}>₹{analytics.refillRevenue?.toFixed(2) || '0.00'}</p>
+                                        <p style={styles.metricValue}>
+                                            ₹
+                                            {analytics.refillRevenue?.toFixed(
+                                                2
+                                            ) || "0.00"}
+                                        </p>
                                         <small>From refill requests</small>
                                     </div>
 
-                                    <div style={{...styles.metricCard, background: 'linear-gradient(135deg,#ecfff4,#fff)'}}>
+                                    <div
+                                        style={{
+                                            ...styles.metricCard,
+                                            background:
+                                                "linear-gradient(135deg,#ecfff4,#fff)",
+                                        }}
+                                    >
                                         <h4>Total Revenue</h4>
-                                        <p style={styles.metricValue}>₹{analytics.totalRevenue?.toFixed(2) || '0.00'}</p>
+                                        <p style={styles.metricValue}>
+                                            ₹
+                                            {analytics.totalRevenue?.toFixed(
+                                                2
+                                            ) || "0.00"}
+                                        </p>
                                         <small>Orders + Refills</small>
                                     </div>
 
                                     <div style={styles.metricCard}>
                                         <h4>Refill Requests</h4>
-                                        <p style={styles.metricValue}>{analytics.refillTotal}</p>
-                                        <small>Pending: {analytics.refillPending}</small>
+                                        <p style={styles.metricValue}>
+                                            {analytics.refillTotal}
+                                        </p>
+                                        <small>
+                                            Pending: {analytics.refillPending}
+                                        </small>
                                     </div>
 
                                     <div style={styles.metricCard}>
                                         <h4>Subscribers</h4>
-                                        <p style={styles.metricValue}>{analytics.subscribers}</p>
-                                        <small>Users subscribed to your shop</small>
+                                        <p style={styles.metricValue}>
+                                            {analytics.subscribers}
+                                        </p>
+                                        <small>
+                                            Users subscribed to your shop
+                                        </small>
                                     </div>
                                 </div>
 
@@ -313,7 +401,9 @@ export default function ShopkeeperDashboard() {
                                 <div style={styles.shopDetailsCard}>
                                     <div style={styles.shopDetailsHeader}>
                                         <h4>Shop Details</h4>
-                                        <Link to="/" style={styles.editButton}>Edit Details</Link>
+                                        <Link to="/" style={styles.editButton}>
+                                            Edit Details
+                                        </Link>
                                     </div>
                                     <div style={styles.shopDetailsGrid}>
                                         <div style={styles.detailGroup}>
@@ -322,27 +412,50 @@ export default function ShopkeeperDashboard() {
                                         </div>
                                         <div style={styles.detailGroup}>
                                             <label>Phone</label>
-                                            <p>{shop.phone || 'Not provided'}</p>
+                                            <p>
+                                                {shop.phone || "Not provided"}
+                                            </p>
                                         </div>
                                         <div style={styles.detailGroup}>
                                             <label>City</label>
-                                            <p>{shop.location?.city || 'Not provided'}</p>
+                                            <p>
+                                                {shop.location?.city ||
+                                                    "Not provided"}
+                                            </p>
                                         </div>
                                         <div style={styles.detailGroup}>
                                             <label>Pincode</label>
-                                            <p>{shop.location?.pincode || 'Not provided'}</p>
+                                            <p>
+                                                {shop.location?.pincode ||
+                                                    "Not provided"}
+                                            </p>
                                         </div>
                                         <div style={styles.detailGroup}>
                                             <label>Delivery Radius</label>
                                             <p>{shop.deliveryRadius || 5} km</p>
                                         </div>
-                                        <div style={{...styles.detailGroup, gridColumn: '1 / -1'}}>
+                                        <div
+                                            style={{
+                                                ...styles.detailGroup,
+                                                gridColumn: "1 / -1",
+                                            }}
+                                        >
                                             <label>Address</label>
-                                            <p>{shop.location?.address || 'Address not provided'}</p>
+                                            <p>
+                                                {shop.location?.address ||
+                                                    "Address not provided"}
+                                            </p>
                                         </div>
-                                        <div style={{...styles.detailGroup, gridColumn: '1 / -1'}}>
+                                        <div
+                                            style={{
+                                                ...styles.detailGroup,
+                                                gridColumn: "1 / -1",
+                                            }}
+                                        >
                                             <label>Shop ID</label>
-                                            <p style={styles.shopId}>{shop._id}</p>
+                                            <p style={styles.shopId}>
+                                                {shop._id}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -354,32 +467,57 @@ export default function ShopkeeperDashboard() {
                                             <p>No recent orders</p>
                                         ) : (
                                             <ul>
-                                                {analytics.recentOrders.map(o => (
-                                                    <li key={o._id}>#{o._id.slice(-6)} — {o.status} — {new Date(o.orderDate).toLocaleDateString()}</li>
-                                                ))}
+                                                {analytics.recentOrders.map(
+                                                    (o) => (
+                                                        <li key={o._id}>
+                                                            #{o._id.slice(-6)} —{" "}
+                                                            {o.status} —{" "}
+                                                            {new Date(
+                                                                o.orderDate
+                                                            ).toLocaleDateString()}
+                                                        </li>
+                                                    )
+                                                )}
                                             </ul>
                                         )}
-                                        <Link to="/orders">View all orders</Link>
+                                        <Link to="/orders">
+                                            View all orders
+                                        </Link>
                                     </div>
 
                                     <div style={styles.recentCard}>
                                         <h5>Recent Refill Requests</h5>
-                                        {analytics.recentRefills.length === 0 ? (
+                                        {analytics.recentRefills.length ===
+                                        0 ? (
                                             <p>No recent refill requests</p>
                                         ) : (
                                             <ul>
-                                                {analytics.recentRefills.map(r => (
-                                                    <li key={r._id}>{r.productName || 'Product'} — {r.status} — {new Date(r.updatedAt).toLocaleDateString()}</li>
-                                                ))}
+                                                {analytics.recentRefills.map(
+                                                    (r) => (
+                                                        <li key={r._id}>
+                                                            {r.productName ||
+                                                                "Product"}{" "}
+                                                            — {r.status} —{" "}
+                                                            {new Date(
+                                                                r.updatedAt
+                                                            ).toLocaleDateString()}
+                                                        </li>
+                                                    )
+                                                )}
                                             </ul>
                                         )}
-                                        <Link to="/refill-requests">View refill requests</Link>
+                                        <Link to="/refill-requests">
+                                            View refill requests
+                                        </Link>
                                     </div>
                                 </div>
                             </>
                         ) : (
                             <div>
-                                <p>You need to create a shop first to see analytics.</p>
+                                <p>
+                                    You need to create a shop first to see
+                                    analytics.
+                                </p>
                                 <Link to="/">Create / Manage Shop</Link>
                             </div>
                         )}
@@ -454,7 +592,7 @@ const styles = {
         display: "flex",
         gap: "12px",
         alignItems: "center",
-        padding: "12px 20px",
+        padding: "20px 20px 0px 40px",
         background: "transparent",
     },
     navLink: {
@@ -478,9 +616,8 @@ const styles = {
         textDecoration: "none",
         color: "#0b1220",
         fontWeight: "700",
-        backgroundColor: "#fff",
-        borderRadius: "12px",
-        boxShadow: "0 4px 10px rgba(2,6,23,0.08)",
+        backgroundColor: "whitesmoke",
+        borderRadius: "12px 12px 0 0",
     },
     content: {
         padding: "20px",
