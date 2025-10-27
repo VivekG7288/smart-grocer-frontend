@@ -1,5 +1,15 @@
 {
-    "name": "worker-name",
+    "name": "smart-grocer",
     "compatibility_date": "2025-10-27",
-    "main": "src/main.jsx"
+    "main": "src/main.jsx",
+    "build": {
+        "command": "npm run build",
+        "watch_dir": "src"
+    },
+    "site": {
+        "bucket": "./dist"
+    },
+    "module": true,
+    "format": "modules",
+    "jsx": "automatic"
 }

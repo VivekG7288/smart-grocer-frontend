@@ -5,7 +5,6 @@ export default defineConfig({
     plugins: [react()],
     server: {
         proxy: {
-            // Proxy /api/* to backend at localhost:5000
             "/api": {
                 target: "http://localhost:4000",
                 changeOrigin: true,
@@ -13,4 +12,14 @@ export default defineConfig({
             },
         },
     },
+    build: {
+        target: 'esnext',
+        outDir: 'dist',
+        assetsDir: 'assets',
+        rollupOptions: {
+            output: {
+                format: 'es'
+            }
+        }
+    }
 });
