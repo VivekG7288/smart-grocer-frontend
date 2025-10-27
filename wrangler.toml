@@ -1,0 +1,24 @@
+[env.production]
+name = "smart-grocer-frontend"
+compatibility_date = "2025-10-27"
+
+# Assets configuration
+[site]
+bucket = "./dist"
+
+# Enable static assets handling
+[site.static]
+directory = "./dist"
+
+# Define route patterns
+[env.production.route]
+pattern = "*/*"
+zone_id = "" # Add your Cloudflare Zone ID here
+
+# Configure build output directory
+[build]
+command = "npm run build"
+upload.format = "service-worker"
+
+[build.upload]
+format = "service-worker"

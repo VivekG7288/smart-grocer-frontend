@@ -18,6 +18,10 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
+
+# Cloudflare Wrangler
+.wrangler/
+.env
 *.ntvs*
 *.njsproj
 *.sln
