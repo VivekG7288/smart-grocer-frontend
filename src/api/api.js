@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: process.env.NODE_ENV === 'production'
+    ? 'https://smart-grocer-backend.onrender.com/api'
+    : '/api',
   headers: { 'Content-Type': 'application/json' }
 });
 
