@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: process.env.NODE_ENV === 'production'
-    ? 'https://smart-grocer-backend.onrender.com/api'
+    ? 'https://smart-grocer-backend-1.onrender.com/api'
     : '/api',
   headers: { 'Content-Type': 'application/json' }
 });
