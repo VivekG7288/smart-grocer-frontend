@@ -17,13 +17,16 @@ export function AuthProvider({ children }) {
     };
 
     const login = async (credentials) => {
-        const res = await api.post("/auth/login", credentials);
+        const res = await api.post("/auth/login", credentials, {
+            withCredentials: true // <<< This is critical for CORS+cookies
+        });
         const user = res.data;
         console.log("API", user);
         localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
         return user;
     };
+
 
     const logout = () => {
         localStorage.removeItem("user");
