@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, use } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { MdProductionQuantityLimits } from "react-icons/md";
@@ -15,8 +15,6 @@ import { IoIosBasket } from "react-icons/io";
 function Inventory() {
     const { user } = useContext(AuthContext);
     const [products, setProducts] = useState([]);
-    const [addingProduct, setAddingProduct] = useState(false);
-    const [shop, setShop] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedCategoryProducts, setSelectedCategoryProducts] = useState(
         []
@@ -208,14 +206,6 @@ function Inventory() {
             />,
         ],
     ];
-    const [product, setProduct] = useState({
-        name: "",
-        category: "",
-        price: 0,
-        stock: 0,
-        unit: "",
-        image: "",
-    });
     useEffect(() => {
         findUserShop();
     }, [user]);
@@ -246,7 +236,6 @@ function Inventory() {
             console.log("Found user shop:", userShop);
 
             if (userShop) {
-                setShop(userShop);
                 await loadProducts(userShop._id);
             }
         } catch (err) {
@@ -271,53 +260,6 @@ function Inventory() {
             setProducts(shopProducts);
         } catch (err) {
             console.error("Error loading products:", err);
-        }
-    };
-    const handleProductChange = (e) => {
-        const { name, value, type } = e.target;
-        const processedValue =
-            type === "number" ? parseFloat(value) || 0 : value;
-        setProduct({ ...product, [name]: processedValue });
-    };
-    const addProduct = async () => {
-        try {
-            if (!product.name.trim() || !product.price || !product.stock) {
-                alert("Product name, price, and stock are required");
-                return;
-            }
-
-            setAddingProduct(true);
-
-            const payload = {
-                shopId: shop._id,
-                name: product.name.trim(),
-                category: product.category.trim(),
-                price: parseFloat(product.price),
-                stock: parseInt(product.stock),
-                unit: product.unit.trim() || "pcs",
-                image: product.image.trim(),
-            };
-
-            console.log("Adding product with payload:", payload);
-            const res = await api.post("/products", payload);
-            console.log("Product added:", res.data);
-
-            setProducts([...products, res.data]);
-            setProduct({
-                name: "",
-                category: "",
-                price: 0,
-                stock: 0,
-                unit: "",
-                image: "",
-            });
-            alert("Product added successfully!");
-        } catch (err) {
-            console.error("Error adding product:", err);
-            const errorMsg = err.response?.data?.error || err.message;
-            alert("Error adding product: " + errorMsg);
-        } finally {
-            setAddingProduct(false);
         }
     };
 
@@ -357,153 +299,6 @@ function Inventory() {
     }
     return (
         <div className="inventory-container">
-            <div style={styles.section}>
-                <h4 style={{ fontSize: "20px", margin: "10px" }}>
-                    <MdProductionQuantityLimits
-                        style={{ fontSize: "25px", marginBottom: "-4px" }}
-                    />{" "}
-                    Add New Product
-                </h4>
-                <div style={styles.productForm}>
-                    <div style={styles.formRow}>
-                        <div className="input-container">
-                            <label
-                                htmlFor="name"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Name
-                            </label>
-                            <input
-                                name="name"
-                                placeholder="Product Name *"
-                                value={product.name}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-
-                        <div className="input-container">
-                            <label
-                                htmlFor="name"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Category
-                            </label>
-                            <select
-                                name="category"
-                                value={product.category}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            >
-                                <option value="">Select Category</option>
-                                {productCategory.map((cat) => (
-                                    <option key={cat[0]} value={cat[0]}>
-                                        {cat[0]}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style={styles.formRow}>
-                        <div className="input-container">
-                            <label
-                                htmlFor="price"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Price
-                            </label>
-                            <input
-                                name="price"
-                                type="number"
-                                step="0.01"
-                                placeholder="Price (₹) *"
-                                value={product.price}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-
-                        <div className="input-container">
-                            <label
-                                htmlFor="unit"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Unit
-                            </label>
-                            <input
-                                name="unit"
-                                placeholder="Unit (kg, ltr, pcs)"
-                                value={product.unit}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-                    </div>
-
-                    <div style={{ display: "flex", gap: "15px" }}>
-                        <div className="input-container">
-                            <label
-                                htmlFor="stock"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Stock
-                            </label>
-                            <input
-                                name="stock"
-                                type="number"
-                                placeholder="Stock Quantity *"
-                                value={product.stock}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-
-                        <div className="input-container">
-                            <label
-                                htmlFor="image"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Image
-                            </label>
-                            <input
-                                name="image"
-                                placeholder="Image URL (optional)"
-                                value={product.image}
-                                onChange={handleProductChange}
-                                style={styles.imageInput}
-                            />
-                        </div>
-                    </div>
-
-                    <button
-                        onClick={addProduct}
-                        disabled={addingProduct}
-                        style={
-                            addingProduct
-                                ? styles.disabledButton
-                                : styles.addButton
-                        }
-                    >
-                        {addingProduct
-                            ? "➕ Adding Product..."
-                            : ` Add Product`}
-                    </button>
-                </div>
-            </div>
-
             <div className="inventory-filter">
                 <h4
                     style={{

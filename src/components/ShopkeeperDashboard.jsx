@@ -7,12 +7,14 @@ import OrderList from "./OrderList";
 import RefillRequests from "./RefillRequests"; // New component
 import ShopkeeperNotifications from "./ShopkeeperNotifications"; // New component
 import Inventory from "./Inventory";
+import AddNewProduct from "./AddNewProduct";
 import { IoIosNotifications } from "react-icons/io";
 import { FaCartShopping } from "react-icons/fa6";
-import { CiBluetooth, CiRedo } from "react-icons/ci";
+import { CiRedo } from "react-icons/ci";
 import { AiFillAccountBook } from "react-icons/ai";
 import { MdInventory } from "react-icons/md";
 import api from "../api/api";
+import { TbBrowserPlus } from "react-icons/tb";
 
 export default function ShopkeeperDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -291,6 +293,19 @@ export default function ShopkeeperDashboard() {
                     />{" "}
                     Inventory
                 </Link>
+                <Link
+                    to="/addNewProduct"
+                    style={
+                        isActive("/addNewProduct")
+                            ? styles.activeNavLink
+                            : styles.navLink
+                    }
+                >
+                    <TbBrowserPlus
+                        style={{ marginRight: "5px", marginBottom: "-2px" }}
+                    />{" "}
+                    Add new product
+                </Link>
             </nav>
 
             <div style={styles.content}>
@@ -533,6 +548,7 @@ export default function ShopkeeperDashboard() {
                     />
                     <Route path="/orders" element={<OrderList />} />
                     <Route path="/inventory" element={<Inventory />} />
+                    <Route path="/addNewProduct" element={<AddNewProduct />} />
                     <Route
                         path="/notifications"
                         element={<ShopkeeperNotifications />}
