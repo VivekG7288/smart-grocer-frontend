@@ -7,7 +7,7 @@ import { TbCategory2 } from "react-icons/tb";
 import { GiFruitBowl, GiCannedFish, GiFastNoodles } from "react-icons/gi";
 import { PiGrainsFill } from "react-icons/pi";
 import { RiDrinks2Fill } from "react-icons/ri";
-import { FaBabyCarriage, FaHome } from "react-icons/fa";
+import { FaBabyCarriage, FaHome, FaSearch } from "react-icons/fa";
 import { FaPumpSoap } from "react-icons/fa6";
 import { BsFillBasketFill } from "react-icons/bs";
 import { IoIosBasket } from "react-icons/io";
@@ -15,6 +15,7 @@ import { IoIosBasket } from "react-icons/io";
 function Inventory() {
     const { user } = useContext(AuthContext);
     const [products, setProducts] = useState([]);
+    const [query, setQuery] = useState("");
     const [loading, setLoading] = useState(true);
     const [selectedCategoryProducts, setSelectedCategoryProducts] = useState(
         []
@@ -25,6 +26,19 @@ function Inventory() {
     const onCatagorySelect = (value) => {
         setSelectoryCategory(value);
     };
+
+    useEffect(() => {
+        if (query.trim() === "") {
+            setSelectedCategoryProducts(products);
+        } else {
+            setSelectoryCategory("All");
+            const lowerCaseQuery = query.toLowerCase();
+            const filteredProducts = products.filter((p) =>
+                p.name.toLowerCase().includes(lowerCaseQuery)
+            );
+            setSelectedCategoryProducts(filteredProducts);
+        }
+    }, [query, products]);
 
     useEffect(() => {
         switch (selectoryCategory) {
@@ -209,37 +223,52 @@ function Inventory() {
     }
     return (
         <div className="inventory-container">
-            <div className="inventory-filter">
-                <h4 className="category-title">
-                    <TbCategory2
-                        style={{ fontSize: "25px", marginBottom: "-4px" }}
-                    />{" "}
-                    Category
-                </h4>
-                <div className="category-list">
-                    {productCategory.map((cat) => (
-                        <button
-                            onClick={() => onCatagorySelect(cat[0])}
-                            key={cat[0]}
-                            className={`category-list-button ${
-                                cat[0] === selectoryCategory
-                                    ? "selected-category"
-                                    : ""
-                            }`}
-                        >
-                            {cat[1]} {cat[0]}
-                        </button>
-                    ))}
+            {query === "" && (
+                <div className="inventory-filter">
+                    <h4 className="category-title">
+                        <TbCategory2
+                            style={{ fontSize: "25px", marginBottom: "-4px" }}
+                        />{" "}
+                        Category
+                    </h4>
+                    <div className="category-list">
+                        {productCategory.map((cat) => (
+                            <button
+                                onClick={() => onCatagorySelect(cat[0])}
+                                key={cat[0]}
+                                className={`category-list-button ${
+                                    cat[0] === selectoryCategory
+                                        ? "selected-category"
+                                        : ""
+                                }`}
+                            >
+                                {cat[1]} {cat[0]}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div style={styles.section}>
-                <h4 className="current-inventory-title">
-                    <MdInventory
-                        style={{ marginRight: "5px", marginBottom: "-2px" }}
-                    />{" "}
-                    Current Inventory ({selectedCategoryProducts.length} items)
-                </h4>
+                <div className="search-container">
+                    <h4 className="current-inventory-title">
+                        <MdInventory
+                            style={{ marginRight: "5px", marginBottom: "-2px" }}
+                        />{" "}
+                        Current Inventory ({selectedCategoryProducts.length}{" "}
+                        items)
+                    </h4>
+                    <div className="search-bar-wrapper">
+                        <FaSearch className="search-icon" />
+                        <input
+                            className="search-bar"
+                            type="text"
+                            value={query}
+                            placeholder="Search grocery..."
+                            onChange={(e) => setQuery(e.target.value)}
+                        />
+                    </div>
+                </div>
                 {selectedCategoryProducts.length === 0 ? (
                     <div style={styles.emptyState}>
                         <p>
