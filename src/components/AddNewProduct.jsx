@@ -179,7 +179,7 @@ function AddNewProduct() {
                     </div>
                 </div>
 
-                <div style={styles.formRow}>
+                <div className="customer-details-shopkeeper-dashboard">
                     <div className="input-container">
                         <label
                             htmlFor="price"

@@ -42,9 +42,9 @@ input::placeholder {
 }
 
 .selected-category {
-    color: white;
-    background: #0ca335bf;
-    border: 3px solid rgb(79 70 229);
+    color: white !important;
+    background: #0ca335bf !important;
+    border: 3px solid rgb(79 70 229) !important;
 }
 
 .add-new-product-container {
@@ -54,7 +54,10 @@ input::placeholder {
         max-width: none;
     }
     @media (max-width: 800px) {
-        max-width: 700px;
+        max-width: 500px;
+    }
+    @media (max-width: 1200px) {
+        max-width: 600px;
     }
 }
 
@@ -211,6 +214,37 @@ input::placeholder {
     @media (max-width: 1023px) {
         width: 30px;
     }
+}
+
+.search-container {
+    display: flex;
+    gap: 20px;
+    @media (max-width: 750px) {
+        gap: 5px;
+        flex-direction: column;
+    }
+}
+.search-bar-wrapper {
+    display: flex;
+    margin-bottom: 10px;
+}
+.search-icon {
+    color: white;
+    position: absolute;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.search-bar {
+    color: white;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid rgb(75 85 99);
+    border-radius: 12px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    outline: none;
+    background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
+    width: 300px;
 }
 
 /*shopkeeper dashboard styles*/
