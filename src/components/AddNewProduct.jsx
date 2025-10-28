@@ -135,7 +135,7 @@ function AddNewProduct() {
                 Add New Product
             </h4>
             <div style={styles.productForm}>
-                <div style={styles.formRow}>
+                <div className="add-new-product-form-row">
                     <div className="input-container">
                         <label
                             htmlFor="name"
@@ -219,7 +219,7 @@ function AddNewProduct() {
                     </div>
                 </div>
 
-                <div style={{ display: "flex", gap: "15px" }}>
+                <div className="add-new-product-form-row-image">
                     <div className="input-container">
                         <label
                             htmlFor="stock"
@@ -316,11 +316,6 @@ const styles = {
         padding: "20px",
         borderRadius: "8px",
         border: "1px solid #ddd",
-    },
-    formRow: {
-        display: "flex",
-        gap: "15px",
-        marginBottom: "15px",
     },
     productInput: {
         padding: "10px",

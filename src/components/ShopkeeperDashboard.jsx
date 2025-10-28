@@ -15,6 +15,7 @@ import { AiFillAccountBook } from "react-icons/ai";
 import { MdInventory } from "react-icons/md";
 import api from "../api/api";
 import { TbBrowserPlus } from "react-icons/tb";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 export default function ShopkeeperDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -34,6 +35,8 @@ export default function ShopkeeperDashboard() {
     });
     const [analyticsLoading, setAnalyticsLoading] = React.useState(true);
     const location = useLocation();
+    const [menuOpen, setMenuOpen] = React.useState(false);
+    const navRef = React.useRef(null);
 
     // Load unread notification count
     React.useEffect(() => {
@@ -207,9 +210,28 @@ export default function ShopkeeperDashboard() {
     const isActive = (path) => location.pathname === path;
 
     return (
-        <div style={styles.container}>
+        <div className="shop-keeper-dashboard-container">
             <div style={styles.header}>
                 <div style={styles.headerActions}>
+                    <button
+                        className="hamburger-button"
+                        aria-expanded={menuOpen}
+                        aria-label={
+                            menuOpen ? "Close navigation" : "Open navigation"
+                        }
+                        onClick={() => setMenuOpen((s) => !s)}
+                        style={{
+                            background: "transparent",
+                            border: "none",
+                            padding: 0,
+                            margin: 0,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <GiHamburgerMenu className="hamburger-icon" />
+                    </button>
                     {user.picture && (
                         <img
                             src={user.picture}
@@ -242,7 +264,7 @@ export default function ShopkeeperDashboard() {
                 </div>
             </div>
 
-            <nav style={styles.nav}>
+            <nav ref={navRef} className="shop-keeper-dashboard-nav-desktop">
                 <Link
                     to="/"
                     style={
@@ -307,6 +329,77 @@ export default function ShopkeeperDashboard() {
                     Add new product
                 </Link>
             </nav>
+
+            {/* Mobile panel that opens with hamburger — duplicates nav links in a vertical layout */}
+            <div
+                className={"hamburger-panel" + (menuOpen ? " open" : "")}
+                role="dialog"
+                aria-modal="true"
+                aria-hidden={!menuOpen}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px",
+                    }}
+                >
+                    <Link
+                        to="/"
+                        style={{
+                            ...styles.navLink,
+                            background: "transparent",
+                        }}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        <FaCartShopping style={{ marginRight: "8px" }} /> My
+                        Shop
+                    </Link>
+                    <Link
+                        to="/refill-requests"
+                        style={{
+                            ...styles.navLink,
+                            background: "transparent",
+                        }}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        <CiRedo style={{ marginRight: "8px" }} /> Refill
+                        Requests
+                    </Link>
+                    <Link
+                        to="/orders"
+                        style={{
+                            ...styles.navLink,
+                            background: "transparent",
+                        }}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        <AiFillAccountBook style={{ marginRight: "8px" }} />{" "}
+                        Orders
+                    </Link>
+                    <Link
+                        to="/inventory"
+                        style={{
+                            ...styles.navLink,
+                            background: "transparent",
+                        }}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        <MdInventory style={{ marginRight: "8px" }} /> Inventory
+                    </Link>
+                    <Link
+                        to="/addNewProduct"
+                        style={{
+                            ...styles.navLink,
+                            background: "transparent",
+                        }}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        <TbBrowserPlus style={{ marginRight: "8px" }} /> Add new
+                        product
+                    </Link>
+                </div>
+            </div>
 
             <div style={styles.content}>
                 {location.pathname === "/" && (
@@ -561,7 +654,6 @@ export default function ShopkeeperDashboard() {
 
 const styles = {
     container: {
-        // minHeight: "100vh",
         backgroundColor: "#0b1220",
     },
     header: {
@@ -603,13 +695,6 @@ const styles = {
         border: "none",
         borderRadius: "4px",
         cursor: "pointer",
-    },
-    nav: {
-        display: "flex",
-        gap: "12px",
-        alignItems: "center",
-        padding: "20px 20px 0px 40px",
-        background: "transparent",
     },
     navLink: {
         padding: "10px 14px",

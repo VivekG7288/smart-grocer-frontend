@@ -637,6 +637,8 @@ const styles = {
         borderRadius: "6px",
         fontSize: "14px",
         outline: "none",
+        color: "white",
+        background: "linear-gradient(90deg,#0f172a,#111827)",
     },
     confirmButton: {
         padding: "15px",

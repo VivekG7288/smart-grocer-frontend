@@ -95,116 +95,26 @@ function Inventory() {
     }, [products, selectoryCategory]);
 
     const productCategory = [
-        [
-            "All",
-            <IoIosBasket
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Fresh & Perishable",
-            <GiFruitBowl
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
+        ["All", <IoIosBasket className="category-icons" />],
+        ["Fresh & Perishable", <GiFruitBowl className="category-icons" />],
         [
             "Bakery & Ready-to-Eat",
-            <MdOutlineBakeryDining
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
+            <MdOutlineBakeryDining className="category-icons" />,
         ],
-        [
-            "Staples & Grains",
-            <PiGrainsFill
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Beverages",
-            <RiDrinks2Fill
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
+        ["Staples & Grains", <PiGrainsFill className="category-icons" />],
+        ["Beverages", <RiDrinks2Fill className="category-icons" />],
         [
             "Packaged & Canned Goods",
-            <GiCannedFish
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
+            <GiCannedFish className="category-icons" />,
         ],
         [
             "Confectionery & Snacks",
-            <GiFastNoodles
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
+            <GiFastNoodles className="category-icons" />,
         ],
-        [
-            "Baby & Kids",
-            <FaBabyCarriage
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Personal Care & Beauty",
-            <FaPumpSoap
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Home & Cleaning",
-            <FaHome
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "others",
-            <BsFillBasketFill
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
+        ["Baby & Kids", <FaBabyCarriage className="category-icons" />],
+        ["Personal Care & Beauty", <FaPumpSoap className="category-icons" />],
+        ["Home & Cleaning", <FaHome className="category-icons" />],
+        ["others", <BsFillBasketFill className="category-icons" />],
     ];
     useEffect(() => {
         findUserShop();
@@ -300,14 +210,7 @@ function Inventory() {
     return (
         <div className="inventory-container">
             <div className="inventory-filter">
-                <h4
-                    style={{
-                        fontSize: "20px",
-                        margin: "10px",
-                        display: "flex",
-                        gap: "8px",
-                    }}
-                >
+                <h4 className="category-title">
                     <TbCategory2
                         style={{ fontSize: "25px", marginBottom: "-4px" }}
                     />{" "}
@@ -331,7 +234,7 @@ function Inventory() {
             </div>
 
             <div style={styles.section}>
-                <h4 style={{ margin: "10px", fontSize: "20px" }}>
+                <h4 className="current-inventory-title">
                     <MdInventory
                         style={{ marginRight: "5px", marginBottom: "-2px" }}
                     />{" "}
@@ -345,7 +248,7 @@ function Inventory() {
                         </p>
                     </div>
                 ) : (
-                    <div style={styles.productGrid}>
+                    <div className="product-grid">
                         {selectedCategoryProducts.map((p) => (
                             <div key={p._id} style={styles.productCard}>
                                 {p.image && (
@@ -355,7 +258,7 @@ function Inventory() {
                                         style={styles.productImage}
                                     />
                                 )}
-                                <div style={styles.productContent}>
+                                <div className="product-content">
                                     <h5 style={styles.productName}>{p.name}</h5>
                                     <p style={styles.productCategory}>
                                         {p.category}
@@ -376,7 +279,7 @@ function Inventory() {
                                                         0
                                                 )
                                             }
-                                            style={styles.stockInput}
+                                            className="stock-input"
                                             min="0"
                                         />
                                         <span style={styles.stockUnit}>
@@ -494,11 +397,6 @@ const styles = {
         backgroundColor: "#f8f9fa",
         borderRadius: "8px",
     },
-    productGrid: {
-        display: "flex",
-        gap: "20px",
-        flexWrap: "wrap",
-    },
     productCard: {
         border: "1px solid #ddd",
         borderRadius: "8px",
@@ -511,9 +409,6 @@ const styles = {
         width: "100%",
         height: "150px",
         objectFit: "cover",
-    },
-    productContent: {
-        padding: "15px",
     },
     productName: {
         margin: "0 0 8px 0",
@@ -537,13 +432,6 @@ const styles = {
         gap: "8px",
         marginBottom: "15px",
     },
-    stockInput: {
-        width: "80px",
-        padding: "5px",
-        border: "1px solid #ddd",
-        borderRadius: "4px",
-        textAlign: "center",
-    },
     stockUnit: {
         fontSize: "14px",
         color: "#666",
@@ -551,6 +439,7 @@ const styles = {
     productActions: {
         display: "flex",
         gap: "10px",
+        justifyContent: "center",
     },
     deleteButton: {
         padding: "6px 12px",
