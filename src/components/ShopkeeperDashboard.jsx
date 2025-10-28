@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import ShopForm from "./ShopForm";
@@ -19,9 +19,9 @@ import { GiHamburgerMenu } from "react-icons/gi";
 
 export default function ShopkeeperDashboard() {
     const { user, logout } = useContext(AuthContext);
-    const [unreadNotifications, setUnreadNotifications] = React.useState(0);
-    const [shop, setShop] = React.useState(null);
-    const [analytics, setAnalytics] = React.useState({
+    const [unreadNotifications, setUnreadNotifications] = useState(0);
+    const [shop, setShop] = useState(null);
+    const [analytics, setAnalytics] = useState({
         ordersTotal: 0,
         ordersByStatus: {},
         recentOrders: [],
@@ -33,9 +33,10 @@ export default function ShopkeeperDashboard() {
         refillRevenue: 0,
         totalRevenue: 0,
     });
-    const [analyticsLoading, setAnalyticsLoading] = React.useState(true);
+    const [analyticsLoading, setAnalyticsLoading] = useState(true);
     const location = useLocation();
-    const [menuOpen, setMenuOpen] = React.useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [notificationOpen, setNotificationOpen] = useState(false);
     const navRef = React.useRef(null);
 
     // Load unread notification count
@@ -247,7 +248,10 @@ export default function ShopkeeperDashboard() {
                     <h2 style={{ color: "white" }}>Welcome, {user.name}!</h2>
                 </div>
                 <div style={styles.headerActions}>
-                    <Link to="/notifications" style={styles.notificationButton}>
+                    <button
+                        style={styles.notificationButton}
+                        onClick={() => setNotificationOpen(!notificationOpen)}
+                    >
                         <IoIosNotifications
                             style={{ fontSize: "35px", color: "white" }}
                         />
@@ -257,7 +261,15 @@ export default function ShopkeeperDashboard() {
                                 {unreadNotifications}
                             </span>
                         )}
-                    </Link>
+                    </button>
+                    <div
+                        className={
+                            "notification-div" +
+                            (notificationOpen ? " open" : "")
+                        }
+                    >
+                        <ShopkeeperNotifications />
+                    </div>
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
                     </button>
@@ -642,10 +654,6 @@ export default function ShopkeeperDashboard() {
                     <Route path="/orders" element={<OrderList />} />
                     <Route path="/inventory" element={<Inventory />} />
                     <Route path="/addNewProduct" element={<AddNewProduct />} />
-                    <Route
-                        path="/notifications"
-                        element={<ShopkeeperNotifications />}
-                    />
                 </Routes>
             </div>
         </div>
@@ -675,6 +683,9 @@ const styles = {
         padding: "8px 12px",
         textDecoration: "none",
         fontSize: "20px",
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
     },
     notificationBadge: {
         position: "absolute",

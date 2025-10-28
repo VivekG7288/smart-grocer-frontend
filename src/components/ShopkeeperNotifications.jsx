@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
+import { IoIosNotifications } from "react-icons/io";
 
 export default function ShopkeeperNotifications() {
     const { user } = useContext(AuthContext);
@@ -41,7 +42,16 @@ export default function ShopkeeperNotifications() {
 
     return (
         <div style={styles.container}>
-            <h3>🔔 Shop Notifications</h3>
+            <h3>
+                <IoIosNotifications
+                    style={{
+                        fontSize: "35px",
+                        color: "white",
+                        marginBottom: "-11px",
+                    }}
+                />{" "}
+                Shop Notifications
+            </h3>
 
             {notifications.length === 0 ? (
                 <div style={styles.emptyState}>
@@ -113,7 +123,7 @@ const styles = {
     emptyState: {
         textAlign: "center",
         padding: "50px",
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "red",
         borderRadius: "8px",
         color: "#666",
     },
@@ -123,15 +133,15 @@ const styles = {
         gap: "15px",
     },
     unreadNotification: {
-        backgroundColor: "#fff3cd",
-        border: "2px solid #ffc107",
+        backgroundColor: "rgba(31, 41, 55, 0.5)",
+        border: "2px solid rgb(55, 65, 81)",
         borderRadius: "8px",
         padding: "15px",
         cursor: "pointer",
     },
     readNotification: {
-        backgroundColor: "#f8f9fa",
-        border: "1px solid #ddd",
+        backgroundColor: "rgba(31, 41, 55, 0.5)",
+        border: "2px solid rgb(55, 65, 81)",
         borderRadius: "8px",
         padding: "15px",
     },
@@ -147,7 +157,7 @@ const styles = {
     },
     metadata: {
         marginTop: "10px",
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "#0ca335bf",
         padding: "10px",
         borderRadius: "4px",
         fontSize: "14px",
