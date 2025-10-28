@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, use } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { MdProductionQuantityLimits } from "react-icons/md";
@@ -15,8 +15,6 @@ import { IoIosBasket } from "react-icons/io";
 function Inventory() {
     const { user } = useContext(AuthContext);
     const [products, setProducts] = useState([]);
-    const [addingProduct, setAddingProduct] = useState(false);
-    const [shop, setShop] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedCategoryProducts, setSelectedCategoryProducts] = useState(
         []
@@ -97,125 +95,27 @@ function Inventory() {
     }, [products, selectoryCategory]);
 
     const productCategory = [
-        [
-            "All",
-            <IoIosBasket
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Fresh & Perishable",
-            <GiFruitBowl
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
+        ["All", <IoIosBasket className="category-icons" />],
+        ["Fresh & Perishable", <GiFruitBowl className="category-icons" />],
         [
             "Bakery & Ready-to-Eat",
-            <MdOutlineBakeryDining
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
+            <MdOutlineBakeryDining className="category-icons" />,
         ],
-        [
-            "Staples & Grains",
-            <PiGrainsFill
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Beverages",
-            <RiDrinks2Fill
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
+        ["Staples & Grains", <PiGrainsFill className="category-icons" />],
+        ["Beverages", <RiDrinks2Fill className="category-icons" />],
         [
             "Packaged & Canned Goods",
-            <GiCannedFish
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
+            <GiCannedFish className="category-icons" />,
         ],
         [
             "Confectionery & Snacks",
-            <GiFastNoodles
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
+            <GiFastNoodles className="category-icons" />,
         ],
-        [
-            "Baby & Kids",
-            <FaBabyCarriage
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Personal Care & Beauty",
-            <FaPumpSoap
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "Home & Cleaning",
-            <FaHome
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
-        [
-            "others",
-            <BsFillBasketFill
-                style={{
-                    fontSize: "55px",
-                    color: "rgb(79 70 229)",
-                    marginTop: "-11px",
-                }}
-            />,
-        ],
+        ["Baby & Kids", <FaBabyCarriage className="category-icons" />],
+        ["Personal Care & Beauty", <FaPumpSoap className="category-icons" />],
+        ["Home & Cleaning", <FaHome className="category-icons" />],
+        ["others", <BsFillBasketFill className="category-icons" />],
     ];
-    const [product, setProduct] = useState({
-        name: "",
-        category: "",
-        price: 0,
-        stock: 0,
-        unit: "",
-        image: "",
-    });
     useEffect(() => {
         findUserShop();
     }, [user]);
@@ -246,7 +146,6 @@ function Inventory() {
             console.log("Found user shop:", userShop);
 
             if (userShop) {
-                setShop(userShop);
                 await loadProducts(userShop._id);
             }
         } catch (err) {
@@ -271,53 +170,6 @@ function Inventory() {
             setProducts(shopProducts);
         } catch (err) {
             console.error("Error loading products:", err);
-        }
-    };
-    const handleProductChange = (e) => {
-        const { name, value, type } = e.target;
-        const processedValue =
-            type === "number" ? parseFloat(value) || 0 : value;
-        setProduct({ ...product, [name]: processedValue });
-    };
-    const addProduct = async () => {
-        try {
-            if (!product.name.trim() || !product.price || !product.stock) {
-                alert("Product name, price, and stock are required");
-                return;
-            }
-
-            setAddingProduct(true);
-
-            const payload = {
-                shopId: shop._id,
-                name: product.name.trim(),
-                category: product.category.trim(),
-                price: parseFloat(product.price),
-                stock: parseInt(product.stock),
-                unit: product.unit.trim() || "pcs",
-                image: product.image.trim(),
-            };
-
-            console.log("Adding product with payload:", payload);
-            const res = await api.post("/products", payload);
-            console.log("Product added:", res.data);
-
-            setProducts([...products, res.data]);
-            setProduct({
-                name: "",
-                category: "",
-                price: 0,
-                stock: 0,
-                unit: "",
-                image: "",
-            });
-            alert("Product added successfully!");
-        } catch (err) {
-            console.error("Error adding product:", err);
-            const errorMsg = err.response?.data?.error || err.message;
-            alert("Error adding product: " + errorMsg);
-        } finally {
-            setAddingProduct(false);
         }
     };
 
@@ -357,162 +209,8 @@ function Inventory() {
     }
     return (
         <div className="inventory-container">
-            <div style={styles.section}>
-                <h4 style={{ fontSize: "20px", margin: "10px" }}>
-                    <MdProductionQuantityLimits
-                        style={{ fontSize: "25px", marginBottom: "-4px" }}
-                    />{" "}
-                    Add New Product
-                </h4>
-                <div style={styles.productForm}>
-                    <div style={styles.formRow}>
-                        <div className="input-container">
-                            <label
-                                htmlFor="name"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Name
-                            </label>
-                            <input
-                                name="name"
-                                placeholder="Product Name *"
-                                value={product.name}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-
-                        <div className="input-container">
-                            <label
-                                htmlFor="name"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Category
-                            </label>
-                            <select
-                                name="category"
-                                value={product.category}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            >
-                                <option value="">Select Category</option>
-                                {productCategory.map((cat) => (
-                                    <option key={cat[0]} value={cat[0]}>
-                                        {cat[0]}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style={styles.formRow}>
-                        <div className="input-container">
-                            <label
-                                htmlFor="price"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Price
-                            </label>
-                            <input
-                                name="price"
-                                type="number"
-                                step="0.01"
-                                placeholder="Price (₹) *"
-                                value={product.price}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-
-                        <div className="input-container">
-                            <label
-                                htmlFor="unit"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Unit
-                            </label>
-                            <input
-                                name="unit"
-                                placeholder="Unit (kg, ltr, pcs)"
-                                value={product.unit}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-                    </div>
-
-                    <div style={{ display: "flex", gap: "15px" }}>
-                        <div className="input-container">
-                            <label
-                                htmlFor="stock"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Stock
-                            </label>
-                            <input
-                                name="stock"
-                                type="number"
-                                placeholder="Stock Quantity *"
-                                value={product.stock}
-                                onChange={handleProductChange}
-                                style={styles.productInput}
-                            />
-                        </div>
-
-                        <div className="input-container">
-                            <label
-                                htmlFor="image"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Image
-                            </label>
-                            <input
-                                name="image"
-                                placeholder="Image URL (optional)"
-                                value={product.image}
-                                onChange={handleProductChange}
-                                style={styles.imageInput}
-                            />
-                        </div>
-                    </div>
-
-                    <button
-                        onClick={addProduct}
-                        disabled={addingProduct}
-                        style={
-                            addingProduct
-                                ? styles.disabledButton
-                                : styles.addButton
-                        }
-                    >
-                        {addingProduct
-                            ? "➕ Adding Product..."
-                            : ` Add Product`}
-                    </button>
-                </div>
-            </div>
-
             <div className="inventory-filter">
-                <h4
-                    style={{
-                        fontSize: "20px",
-                        margin: "10px",
-                        display: "flex",
-                        gap: "8px",
-                    }}
-                >
+                <h4 className="category-title">
                     <TbCategory2
                         style={{ fontSize: "25px", marginBottom: "-4px" }}
                     />{" "}
@@ -536,7 +234,7 @@ function Inventory() {
             </div>
 
             <div style={styles.section}>
-                <h4 style={{ margin: "10px", fontSize: "20px" }}>
+                <h4 className="current-inventory-title">
                     <MdInventory
                         style={{ marginRight: "5px", marginBottom: "-2px" }}
                     />{" "}
@@ -550,7 +248,7 @@ function Inventory() {
                         </p>
                     </div>
                 ) : (
-                    <div style={styles.productGrid}>
+                    <div className="product-grid">
                         {selectedCategoryProducts.map((p) => (
                             <div key={p._id} style={styles.productCard}>
                                 {p.image && (
@@ -560,7 +258,7 @@ function Inventory() {
                                         style={styles.productImage}
                                     />
                                 )}
-                                <div style={styles.productContent}>
+                                <div className="product-content">
                                     <h5 style={styles.productName}>{p.name}</h5>
                                     <p style={styles.productCategory}>
                                         {p.category}
@@ -581,7 +279,7 @@ function Inventory() {
                                                         0
                                                 )
                                             }
-                                            style={styles.stockInput}
+                                            className="stock-input"
                                             min="0"
                                         />
                                         <span style={styles.stockUnit}>
@@ -699,11 +397,6 @@ const styles = {
         backgroundColor: "#f8f9fa",
         borderRadius: "8px",
     },
-    productGrid: {
-        display: "flex",
-        gap: "20px",
-        flexWrap: "wrap",
-    },
     productCard: {
         border: "1px solid #ddd",
         borderRadius: "8px",
@@ -716,9 +409,6 @@ const styles = {
         width: "100%",
         height: "150px",
         objectFit: "cover",
-    },
-    productContent: {
-        padding: "15px",
     },
     productName: {
         margin: "0 0 8px 0",
@@ -742,13 +432,6 @@ const styles = {
         gap: "8px",
         marginBottom: "15px",
     },
-    stockInput: {
-        width: "80px",
-        padding: "5px",
-        border: "1px solid #ddd",
-        borderRadius: "4px",
-        textAlign: "center",
-    },
     stockUnit: {
         fontSize: "14px",
         color: "#666",
@@ -756,6 +439,7 @@ const styles = {
     productActions: {
         display: "flex",
         gap: "10px",
+        justifyContent: "center",
     },
     deleteButton: {
         padding: "6px 12px",

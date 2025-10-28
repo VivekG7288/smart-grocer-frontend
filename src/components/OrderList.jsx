@@ -148,7 +148,7 @@ export default function OrderList() {
                             {/* Enhanced Customer & Delivery Information */}
                             <div style={styles.deliveryInfo}>
                                 <h5>🚚 Delivery Information:</h5>
-                                <div style={styles.customerDetails}>
+                                <div className="customer-details-shopkeeper-dashboard">
                                     <div style={styles.contactInfo}>
                                         <p>
                                             <strong>Customer:</strong>{" "}
@@ -394,12 +394,6 @@ const styles = {
         borderRadius: "6px",
         marginBottom: "15px",
         border: "1px solid #b8daff",
-    },
-    customerDetails: {
-        display: "grid",
-        gridTemplateColumns: "1fr 2fr",
-        gap: "20px",
-        marginTop: "10px",
     },
     contactInfo: {
         backgroundColor: "#fff",
