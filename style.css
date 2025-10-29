@@ -291,3 +291,22 @@ input::placeholder {
         flex-direction: column;
     }
 }
+
+.shop-title-customer-dashboard {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-delivery-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    background: #800000e8;
+    padding: 5px;
+    border-radius: 12px;
+    color: white;
+    flex-wrap: wrap;
+}
