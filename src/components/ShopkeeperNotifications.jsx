@@ -4,7 +4,7 @@ import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { IoIosNotifications } from "react-icons/io";
 
-export default function ShopkeeperNotifications() {
+export default function ShopkeeperNotifications({ setNotificationOpen }) {
     const { user } = useContext(AuthContext);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -14,14 +14,21 @@ export default function ShopkeeperNotifications() {
     }, [user]);
 
     const loadNotifications = async () => {
-        try {
-            const res = await api.get(`/notifications/user/${user._id}`);
-            setNotifications(res.data);
-        } catch (err) {
-            console.error("Error loading notifications:", err);
-        } finally {
-            setLoading(false);
-        }
+        const reloadNotifications = async () => {
+            try {
+                const res = await api.get(`/notifications/user/${user._id}`);
+                setNotifications(res.data);
+            } catch (err) {
+                console.error("Error loading notifications:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        reloadNotifications();
+        // Poll every 10 seconds for new notifications
+        const interval = setInterval(reloadNotifications, 10000);
+        return () => clearInterval(interval);
     };
 
     const markAsRead = async (notificationId) => {
@@ -74,7 +81,8 @@ export default function ShopkeeperNotifications() {
                                 }
                                 onClick={() =>
                                     !notification.isRead &&
-                                    markAsRead(notification._id)
+                                    markAsRead(notification._id) &&
+                                    setNotificationOpen(false)
                                 }
                             >
                                 <div style={styles.notificationHeader}>

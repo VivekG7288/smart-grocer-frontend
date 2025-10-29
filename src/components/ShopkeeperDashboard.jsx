@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import ShopForm from "./ShopForm";
 import PaymentPage from "./PaymentPage";
 import OrderList from "./OrderList";
-import RefillRequests from "./RefillRequests"; // New component
-import ShopkeeperNotifications from "./ShopkeeperNotifications"; // New component
+import RefillRequests from "./RefillRequests";
+import ShopkeeperNotifications from "./ShopkeeperNotifications";
 import Inventory from "./Inventory";
 import AddNewProduct from "./AddNewProduct";
 import { IoIosNotifications } from "react-icons/io";
@@ -38,6 +38,29 @@ export default function ShopkeeperDashboard() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
     const navRef = React.useRef(null);
+    const notificationRef = React.useRef(null);
+
+    // Handle clicks outside notification panel
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                notificationRef.current &&
+                !notificationRef.current.contains(event.target) &&
+                !event.target.closest(
+                    'button[aria-label="Toggle notifications"]'
+                )
+            ) {
+                setNotificationOpen(false);
+            }
+        }
+
+        if (notificationOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [notificationOpen]);
 
     const loadUnreadCount = () => {
         const loadUnreadCount = async () => {
@@ -53,13 +76,13 @@ export default function ShopkeeperDashboard() {
         };
 
         loadUnreadCount();
-        // Poll every 30 seconds for new notifications
-        const interval = setInterval(loadUnreadCount, 30000);
+        // Poll every 10 seconds for new notifications
+        const interval = setInterval(loadUnreadCount, 10000);
         return () => clearInterval(interval);
     };
 
     // Load shop analytics (orders, refill requests, subscribers)
-    React.useEffect(() => {
+    useEffect(() => {
         if (!user) return;
 
         const loadAnalytics = async () => {
@@ -251,6 +274,8 @@ export default function ShopkeeperDashboard() {
                     <button
                         style={styles.notificationButton}
                         onClick={() => setNotificationOpen(!notificationOpen)}
+                        aria-label="Toggle notifications"
+                        aria-expanded={notificationOpen}
                     >
                         <IoIosNotifications
                             style={{ fontSize: "35px", color: "white" }}
@@ -263,12 +288,17 @@ export default function ShopkeeperDashboard() {
                         )}
                     </button>
                     <div
+                        ref={notificationRef}
                         className={
                             "notification-div" +
                             (notificationOpen ? " open" : "")
                         }
+                        role="dialog"
+                        aria-label="Notifications"
                     >
-                        <ShopkeeperNotifications />
+                        <ShopkeeperNotifications
+                            setNotificationOpen={setNotificationOpen}
+                        />
                     </div>
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
