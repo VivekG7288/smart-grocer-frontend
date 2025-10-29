@@ -269,6 +269,9 @@ input::placeholder {
     outline: none;
     background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
     width: 300px;
+    @media (max-width: 500px) {
+        width: 200px;
+    }
 }
 
 /*shopkeeper dashboard styles*/
