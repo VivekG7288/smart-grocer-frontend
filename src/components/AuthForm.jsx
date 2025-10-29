@@ -1,7 +1,5 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 
 export default function AuthForm() {
     const { signup, login } = useContext(AuthContext);
@@ -89,24 +87,6 @@ export default function AuthForm() {
             role: "CONSUMER",
             address: "",
         });
-    };
-
-    const handleSuccess = async (credentialResponse) => {
-        const token = credentialResponse?.credential;
-        if (!token) return;
-
-        const decoded = jwtDecode(token);
-
-        setForm({
-            name: decoded.name,
-            email: decoded.email,
-            password: decoded.email,
-            picture: decoded.picture,
-        });
-    };
-
-    const handleError = () => {
-        console.error("Google Sign-In failed");
     };
 
     return (
@@ -270,15 +250,6 @@ export default function AuthForm() {
                         className="login-button"
                         style={styles.loginButtonWrapper}
                     >
-                        <div>
-                            <GoogleLogin
-                                onSuccess={handleSuccess}
-                                onError={handleError}
-                                text={isLogin ? "signin_with" : "signup_with"}
-                                shape="pill"
-                            />
-                        </div>
-
                         <button
                             type="submit"
                             disabled={isLoading}
@@ -403,6 +374,7 @@ const styles = {
         borderRadius: "12px",
         fontSize: "16px",
         outline: "none",
+        color: "white",
         backgroundColor: "rgb(55 65 81 / var(--tw-bg-opacity, 1))",
     },
     submitButton: {

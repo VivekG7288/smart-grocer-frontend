@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
-import { MdProductionQuantityLimits } from "react-icons/md";
 import { MdInventory, MdOutlineBakeryDining } from "react-icons/md";
 import { TbCategory2 } from "react-icons/tb";
 import { GiFruitBowl, GiCannedFish, GiFastNoodles } from "react-icons/gi";
