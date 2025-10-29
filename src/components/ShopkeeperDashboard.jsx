@@ -16,6 +16,7 @@ import { MdInventory } from "react-icons/md";
 import api from "../api/api";
 import { TbBrowserPlus } from "react-icons/tb";
 import { GiHamburgerMenu } from "react-icons/gi";
+import Switch from "@mui/material/Switch";
 
 export default function ShopkeeperDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -79,6 +80,10 @@ export default function ShopkeeperDashboard() {
         // Poll every 10 seconds for new notifications
         const interval = setInterval(loadUnreadCount, 10000);
         return () => clearInterval(interval);
+    };
+
+    const onSwitchChange = (event) => {
+        console.log(event.target.checked);
     };
 
     // Load shop analytics (orders, refill requests, subscribers)
@@ -556,6 +561,17 @@ export default function ShopkeeperDashboard() {
                                 <div style={styles.shopDetailsCard}>
                                     <div style={styles.shopDetailsHeader}>
                                         <h4>Shop Details</h4>
+                                        <div className="home-delivery-icon-wrapper">
+                                            <label htmlFor="home-delivery">
+                                                Home delivery
+                                            </label>
+                                            <Switch
+                                                defaultChecked
+                                                color="secondary"
+                                                onChange={onSwitchChange}
+                                            />
+                                        </div>
+
                                         <Link to="/" style={styles.editButton}>
                                             Edit Details
                                         </Link>

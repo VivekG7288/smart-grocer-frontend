@@ -250,54 +250,6 @@ export default function ShopForm() {
             </div>
         );
     }
-
-    return (
-        <div style={styles.container}>
-            {/* <div style={styles.shopInfo}> */}
-                {/* <div className="shop-card-left">
-                    <h3 className="shop-titlle">
-                        <MdOutlineShoppingCart
-                            style={{
-                                marginRight: "5px",
-                                marginBottom: "-10px",
-                                fontSize: "50px",
-                                color: "white",
-                            }}
-                        />{" "}
-                        {shop.name}
-                    </h3>
-                    <FcShop className="shop-icon" />
-                </div> */}
-                {/* <div style={styles.locationDetails}>
-                    <p>
-                        <strong>📍 Location:</strong>{" "}
-                        {shop.location?.formattedAddress ||
-                            shop.location?.address ||
-                            "Location not available"}
-                    </p>
-                    <p>
-                        <strong>🏙️ City:</strong>{" "}
-                        {shop.location?.city || "Unknown"}
-                    </p>
-                    <p>
-                        <strong>📮 Pincode:</strong>{" "}
-                        {shop.location?.pincode || "Unknown"}
-                    </p>
-                    <p>
-                        <strong>🚚 Delivery Radius:</strong>{" "}
-                        {shop.deliveryRadius} km
-                    </p>
-                    <p>
-                        <strong>📞 Phone:</strong>{" "}
-                        {shop.phone || "Not provided"}
-                    </p>
-                    <p>
-                        <strong>🆔 Shop ID:</strong> {shop._id}
-                    </p>
-                </div> */}
-            {/* </div> */}
-        </div>
-    );
 }
 
 const styles = {

@@ -276,6 +276,12 @@ input::placeholder {
 
 /*shopkeeper dashboard styles*/
 
+.home-delivery-icon-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .customer-details-shopkeeper-dashboard {
     display: flex;
     flex-direction: row;
