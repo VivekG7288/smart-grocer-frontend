@@ -9,6 +9,9 @@ import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
 import NotificationCenter from "./NotificationCenter"; // We'll create this too
 import ExpenseTracker from "./ExpenseTracker";
+import { SlLocationPin } from "react-icons/sl";
+import { IoIosNotifications } from "react-icons/io";
+import { IoStorefrontSharp } from "react-icons/io5";
 
 export default function ConsumerDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -53,25 +56,13 @@ export default function ConsumerDashboard() {
             <div style={styles.header}>
                 <div style={styles.locationInfo}>
                     <div style={styles.headerActions}>
-                        {user.picture && (
-                            <img
-                                src={user.picture}
-                                alt="Profile"
-                                style={{
-                                    width: "50px",
-                                    height: "50px",
-                                    borderRadius: "25px",
-                                    objectFit: "cover",
-                                }}
-                            />
-                        )}
                         <h2>Welcome, {user.name}!</h2>
                     </div>
 
                     <div style={styles.deliveryAddress}>
-                        ß
                         <span>
-                            📍 Delivering to: {deliveryAddress.area},{" "}
+                            <SlLocationPin style={{ marginBottom: "-2px" }} />{" "}
+                            Delivering to: {deliveryAddress.area},{" "}
                             {deliveryAddress.city}
                         </span>
                         <button
@@ -84,7 +75,9 @@ export default function ConsumerDashboard() {
                 </div>
                 <div style={styles.headerActions}>
                     <Link to="/notifications" style={styles.notificationButton}>
-                        🔔{" "}
+                        <IoIosNotifications
+                            style={{ fontSize: "35px", color: "white" }}
+                        />{" "}
                         {unreadNotifications > 0 && (
                             <span style={styles.notificationBadge}>
                                 {unreadNotifications}
@@ -97,14 +90,18 @@ export default function ConsumerDashboard() {
                 </div>
             </div>
 
-            <nav style={styles.nav}>
+            <nav
+                className="shop-keeper-dashboard-nav-desktop"
+                style={styles.nav}
+            >
                 <Link
                     to="/"
                     style={
                         isActive("/") ? styles.activeNavLink : styles.navLink
                     }
                 >
-                    🏠 My Pantry
+                    <IoStorefrontSharp style={{ marginBottom: "-2px" }} /> My
+                    Pantry
                 </Link>
                 <Link
                     to="/shops"
@@ -166,10 +163,7 @@ export default function ConsumerDashboard() {
                         path="/notifications"
                         element={<NotificationCenter />}
                     />
-                    <Route
-                        path="/expenses"
-                        element={<ExpenseTracker />}
-                    />
+                    <Route path="/expenses" element={<ExpenseTracker />} />
                 </Routes>
             </div>
         </div>
@@ -186,7 +180,8 @@ const styles = {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "20px",
-        backgroundColor: "#fff",
+        backgroundColor: "#0b1220",
+        color: "white",
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
     },
     locationInfo: {
@@ -199,14 +194,13 @@ const styles = {
         alignItems: "center",
         gap: "10px",
         fontSize: "14px",
-        color: "#666",
     },
     changeLocationButton: {
-        padding: "4px 8px",
-        backgroundColor: "transparent",
-        color: "#007bff",
-        border: "1px solid #007bff",
-        borderRadius: "4px",
+        padding: "10px",
+        backgroundColor: "rgb(79 70 229)",
+        color: "white",
+        border: "none",
+        borderRadius: "25px",
         cursor: "pointer",
         fontSize: "12px",
     },
@@ -242,26 +236,26 @@ const styles = {
         cursor: "pointer",
     },
     nav: {
-        display: "flex",
-        backgroundColor: "#fff",
-        borderBottom: "1px solid #ddd",
-        padding: "0 20px",
+        background: "linear-gradient(90deg,#0f172a,#111827)",
+        boxShadow: "0 6px 18px rgba(2,6,23,0.35)",
+        marginBottom: "-1px",
     },
     navLink: {
         padding: "15px 20px",
         textDecoration: "none",
-        color: "#666",
-        borderBottom: "3px solid transparent",
+        color: "white",
         transition: "all 0.3s",
     },
     activeNavLink: {
         padding: "15px 20px",
         textDecoration: "none",
-        color: "#007bff",
-        borderBottom: "3px solid #007bff",
+        color: "rgb(11, 18, 32)",
         fontWeight: "bold",
+        backgroundColor: "white",
+        borderRadius: "12px 12px 0px 0px",
     },
     content: {
         padding: "20px",
+        backgroundColor: "white",
     },
 };

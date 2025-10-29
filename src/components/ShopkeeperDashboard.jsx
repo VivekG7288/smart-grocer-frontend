@@ -284,18 +284,6 @@ export default function ShopkeeperDashboard() {
                     >
                         <GiHamburgerMenu className="hamburger-icon" />
                     </button>
-                    {user.picture && (
-                        <img
-                            src={user.picture}
-                            alt="Profile"
-                            style={{
-                                width: "50px",
-                                height: "50px",
-                                borderRadius: "25px",
-                                objectFit: "cover",
-                            }}
-                        />
-                    )}
                     <h2 style={{ color: "white" }}>Welcome, {user.name}!</h2>
                 </div>
                 <div style={styles.headerActions}>
