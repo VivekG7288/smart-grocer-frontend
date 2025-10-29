@@ -39,8 +39,7 @@ export default function ShopkeeperDashboard() {
     const [notificationOpen, setNotificationOpen] = useState(false);
     const navRef = React.useRef(null);
 
-    // Load unread notification count
-    React.useEffect(() => {
+    const loadUnreadCount = () => {
         const loadUnreadCount = async () => {
             try {
                 const res = await fetch(
@@ -57,7 +56,7 @@ export default function ShopkeeperDashboard() {
         // Poll every 30 seconds for new notifications
         const interval = setInterval(loadUnreadCount, 30000);
         return () => clearInterval(interval);
-    }, [user._id]);
+    };
 
     // Load shop analytics (orders, refill requests, subscribers)
     React.useEffect(() => {
@@ -206,6 +205,7 @@ export default function ShopkeeperDashboard() {
         };
 
         loadAnalytics();
+        loadUnreadCount();
     }, [user]);
 
     const isActive = (path) => location.pathname === path;
@@ -580,7 +580,7 @@ export default function ShopkeeperDashboard() {
                                     </div>
                                 </div>
 
-                                <div style={styles.recentGrid}>
+                                <div className="add-new-product-form-row-image">
                                     <div style={styles.recentCard}>
                                         <h5>Recent Orders</h5>
                                         {analytics.recentOrders.length === 0 ? (
@@ -654,6 +654,10 @@ export default function ShopkeeperDashboard() {
                     <Route path="/orders" element={<OrderList />} />
                     <Route path="/inventory" element={<Inventory />} />
                     <Route path="/addNewProduct" element={<AddNewProduct />} />
+                    <Route
+                        path="/refill-requests"
+                        element={<RefillRequests />}
+                    />
                 </Routes>
             </div>
         </div>
@@ -760,11 +764,6 @@ const styles = {
         fontSize: "28px",
         fontWeight: "700",
         margin: "8px 0",
-    },
-    recentGrid: {
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "16px",
     },
     recentCard: {
         padding: "12px",

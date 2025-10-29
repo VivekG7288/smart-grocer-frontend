@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { IoIosNotifications } from "react-icons/io";
@@ -60,51 +61,55 @@ export default function ShopkeeperNotifications() {
                 </div>
             ) : (
                 <div style={styles.notificationsList}>
-                    {notifications.map((notification) => (
-                        <div
-                            key={notification._id}
-                            style={
-                                notification.isRead
-                                    ? styles.readNotification
-                                    : styles.unreadNotification
-                            }
-                            onClick={() =>
-                                !notification.isRead &&
-                                markAsRead(notification._id)
-                            }
-                        >
-                            <div style={styles.notificationHeader}>
-                                <h4>{notification.title}</h4>
-                                <span style={styles.timestamp}>
-                                    {new Date(
-                                        notification.createdAt
-                                    ).toLocaleDateString("en-IN")}
-                                </span>
-                            </div>
-                            <p>{notification.message}</p>
-                            {notification.metadata && (
-                                <div style={styles.metadata}>
-                                    <p>
-                                        <strong>Customer:</strong>{" "}
-                                        {notification.metadata.customerName}
-                                    </p>
-                                    <p>
-                                        <strong>Product:</strong>{" "}
-                                        {notification.metadata.productName}
-                                    </p>
-                                    <p>
-                                        <strong>Quantity:</strong>{" "}
-                                        {notification.metadata.quantity}
-                                    </p>
+                    {notifications
+                        .filter((x) => !x.isRead)
+                        .map((notification) => (
+                            <Link
+                                to="/refill-requests"
+                                key={notification._id}
+                                style={
+                                    notification.isRead
+                                        ? styles.readNotification
+                                        : styles.unreadNotification
+                                }
+                                onClick={() =>
+                                    !notification.isRead &&
+                                    markAsRead(notification._id)
+                                }
+                            >
+                                <div style={styles.notificationHeader}>
+                                    <h4>{notification.title}</h4>
+                                    <span style={styles.timestamp}>
+                                        {new Date(
+                                            notification.createdAt
+                                        ).toLocaleDateString("en-IN")}
+                                    </span>
                                 </div>
-                            )}
-                            {notification.actionRequired && (
-                                <div style={styles.actionRequired}>
-                                    ⚡ Action Required - Check Refill Requests
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                                <p>{notification.message}</p>
+                                {notification.metadata && (
+                                    <div style={styles.metadata}>
+                                        <p>
+                                            <strong>Customer:</strong>{" "}
+                                            {notification.metadata.customerName}
+                                        </p>
+                                        <p>
+                                            <strong>Product:</strong>{" "}
+                                            {notification.metadata.productName}
+                                        </p>
+                                        <p>
+                                            <strong>Quantity:</strong>{" "}
+                                            {notification.metadata.quantity}
+                                        </p>
+                                    </div>
+                                )}
+                                {notification.actionRequired && (
+                                    <div style={styles.actionRequired}>
+                                        ⚡ Action Required - Check Refill
+                                        Requests
+                                    </div>
+                                )}
+                            </Link>
+                        ))}
                 </div>
             )}
         </div>
@@ -123,9 +128,10 @@ const styles = {
     emptyState: {
         textAlign: "center",
         padding: "50px",
-        backgroundColor: "red",
+        backgroundColor: "rgba(31, 41, 55, 0.5)",
         borderRadius: "8px",
-        color: "#666",
+        color: "white",
+        border: "2px solid rgb(55, 65, 81)",
     },
     notificationsList: {
         display: "flex",
@@ -138,12 +144,16 @@ const styles = {
         borderRadius: "8px",
         padding: "15px",
         cursor: "pointer",
+        textDecoration: "none",
+        color: "white",
     },
     readNotification: {
         backgroundColor: "rgba(31, 41, 55, 0.5)",
         border: "2px solid rgb(55, 65, 81)",
         borderRadius: "8px",
         padding: "15px",
+        textDecoration: "none",
+        color: "white",
     },
     notificationHeader: {
         display: "flex",
