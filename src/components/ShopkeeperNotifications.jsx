@@ -4,7 +4,10 @@ import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { IoIosNotifications } from "react-icons/io";
 
-export default function ShopkeeperNotifications({ setNotificationOpen }) {
+export default function ShopkeeperNotifications({
+    setNotificationOpen,
+    onNotificationRead,
+}) {
     const { user } = useContext(AuthContext);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,13 +37,18 @@ export default function ShopkeeperNotifications({ setNotificationOpen }) {
     const markAsRead = async (notificationId) => {
         try {
             await api.put(`/notifications/${notificationId}/read`);
-            setNotifications(
-                notifications.map((n) =>
+            setNotifications((prev) =>
+                prev.map((n) =>
                     n._id === notificationId ? { ...n, isRead: true } : n
                 )
             );
+            // Inform parent that one notification was read so it can decrement the count
+            if (typeof onNotificationRead === "function")
+                onNotificationRead(notificationId);
+            return true;
         } catch (err) {
             console.error("Error marking notification as read:", err);
+            return false;
         }
     };
 
@@ -79,11 +87,20 @@ export default function ShopkeeperNotifications({ setNotificationOpen }) {
                                         ? styles.readNotification
                                         : styles.unreadNotification
                                 }
-                                onClick={() =>
-                                    !notification.isRead &&
-                                    markAsRead(notification._id) &&
-                                    setNotificationOpen(false)
-                                }
+                                onClick={async () => {
+                                    // If unread, mark as read on the server and update parent counter
+                                    if (!notification.isRead) {
+                                        const ok = await markAsRead(
+                                            notification._id
+                                        );
+                                        if (ok) {
+                                            // close notifications panel if parent provided setter
+                                            setNotificationOpen &&
+                                                setNotificationOpen(false);
+                                            // onNotificationRead already called inside markAsRead
+                                        }
+                                    }
+                                }}
                             >
                                 <div style={styles.notificationHeader}>
                                     <h4>{notification.title}</h4>

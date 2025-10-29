@@ -298,6 +298,11 @@ export default function ShopkeeperDashboard() {
                     >
                         <ShopkeeperNotifications
                             setNotificationOpen={setNotificationOpen}
+                            onNotificationRead={() =>
+                                setUnreadNotifications((n) =>
+                                    Math.max(0, n - 1)
+                                )
+                            }
                         />
                     </div>
                     <button onClick={logout} style={styles.logoutButton}>
