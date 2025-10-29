@@ -16,6 +16,7 @@ import { MdInventory } from "react-icons/md";
 import api from "../api/api";
 import { TbBrowserPlus } from "react-icons/tb";
 import { GiHamburgerMenu } from "react-icons/gi";
+import Switch from "@mui/material/Switch";
 
 export default function ShopkeeperDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -33,6 +34,8 @@ export default function ShopkeeperDashboard() {
         refillRevenue: 0,
         totalRevenue: 0,
     });
+    const [homeDelivery, setHomeDelivery] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const [analyticsLoading, setAnalyticsLoading] = useState(true);
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -81,6 +84,29 @@ export default function ShopkeeperDashboard() {
         return () => clearInterval(interval);
     };
 
+    const onSwitchChange = async (event) => {
+        const newValue = event.target.checked;
+        setIsUpdating(true);
+        try {
+            await api.put(`/shops/${shop._id}`, {
+                ...shop,
+                homeDelivery: newValue,
+            });
+            setHomeDelivery(newValue);
+            // Update shop state to reflect changes
+            setShop((prev) => ({
+                ...prev,
+                homeDelivery: newValue,
+            }));
+        } catch (error) {
+            console.error("Error updating home delivery status:", error);
+            // Revert the switch if the API call fails
+            setHomeDelivery(!newValue);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
     // Load shop analytics (orders, refill requests, subscribers)
     useEffect(() => {
         if (!user) return;
@@ -117,6 +143,8 @@ export default function ShopkeeperDashboard() {
                 }
 
                 setShop(userShop);
+                // Initialize home delivery status from shop data
+                setHomeDelivery(userShop.homeDelivery ?? true);
 
                 // Orders
                 const ordersRes = await api.get("/orders");
@@ -556,6 +584,18 @@ export default function ShopkeeperDashboard() {
                                 <div style={styles.shopDetailsCard}>
                                     <div style={styles.shopDetailsHeader}>
                                         <h4>Shop Details</h4>
+                                        <div className="home-delivery-icon-wrapper">
+                                            <label htmlFor="home-delivery">
+                                                Home delivery
+                                            </label>
+                                            <Switch
+                                                checked={homeDelivery}
+                                                disabled={isUpdating}
+                                                color="secondary"
+                                                onChange={onSwitchChange}
+                                            />
+                                        </div>
+
                                         <Link to="/" style={styles.editButton}>
                                             Edit Details
                                         </Link>

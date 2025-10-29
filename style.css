@@ -276,6 +276,12 @@ input::placeholder {
 
 /*shopkeeper dashboard styles*/
 
+.home-delivery-icon-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .customer-details-shopkeeper-dashboard {
     display: flex;
     flex-direction: row;
@@ -284,4 +290,23 @@ input::placeholder {
     @media (max-width: 1023px) {
         flex-direction: column;
     }
+}
+
+.shop-title-customer-dashboard {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-delivery-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    background: #800000e8;
+    padding: 5px;
+    border-radius: 12px;
+    color: white;
+    flex-wrap: wrap;
 }
