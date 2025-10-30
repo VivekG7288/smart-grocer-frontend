@@ -41,6 +41,12 @@ input::placeholder {
     margin-top: 20px;
 }
 
+.category-list-customer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .selected-category {
     color: white !important;
     background: #0ca335bf !important;
@@ -196,6 +202,26 @@ input::placeholder {
     align-items: center;
     flex-direction: column;
     width: 150px;
+    cursor: pointer;
+    @media (max-width: 1023px) {
+        width: 80px;
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+.category-list-button-customer {
+    border: none;
+    background: #808080b3;
+    color: rgb(55 65 81);
+    font-weight: bold;
+    font-size: 15px;
+    padding: 15px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 120px;
     cursor: pointer;
     @media (max-width: 1023px) {
         width: 80px;
