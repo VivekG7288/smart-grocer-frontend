@@ -6,6 +6,7 @@ export default function AuthForm() {
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -48,6 +49,7 @@ export default function AuthForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setSuccessMessage("");
 
         if (!validateForm()) return;
 
@@ -67,6 +69,13 @@ export default function AuthForm() {
                     address: form.address,
                     picture: form.picture,
                 });
+                setSuccessMessage(
+                    "Account created successfully! You can now log in."
+                );
+                setTimeout(() => {
+                    setSuccessMessage("");
+                    setIsLogin(true);
+                }, 5000);
             }
         } catch (err) {
             const errorMessage =
@@ -103,6 +112,11 @@ export default function AuthForm() {
                 <form onSubmit={handleSubmit} style={styles.form}>
                     {!isLogin && (
                         <>
+                            {successMessage && (
+                                <div className="success-message">
+                                    {successMessage}
+                                </div>
+                            )}
                             <label
                                 htmlFor="name"
                                 style={{

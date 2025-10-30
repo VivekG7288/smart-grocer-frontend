@@ -310,3 +310,10 @@ input::placeholder {
     color: white;
     flex-wrap: wrap;
 }
+
+.success-message {
+    background: #8dda8d;
+    padding: 10px 15px;
+    border-radius: 12px;
+    color: black;
+}
