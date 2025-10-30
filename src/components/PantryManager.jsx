@@ -230,8 +230,6 @@ const getStatusBadgeStyle = (status) => ({
 
 const styles = {
     container: {
-        maxWidth: "1200px",
-        margin: "0 auto",
         padding: "20px",
     },
     loading: {
