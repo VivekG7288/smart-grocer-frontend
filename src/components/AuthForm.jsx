@@ -70,12 +70,12 @@ export default function AuthForm() {
                     picture: form.picture,
                 });
                 setSuccessMessage(
-                    "Account created successfully! You can now log in."
+                    "Account created successfully! You will be re-directed to login page. You can now log in."
                 );
                 setTimeout(() => {
                     setSuccessMessage("");
                     setIsLogin(true);
-                }, 5000);
+                }, 3000);
             }
         } catch (err) {
             const errorMessage =

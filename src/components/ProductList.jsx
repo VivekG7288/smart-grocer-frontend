@@ -19,11 +19,26 @@ export default function ProductList() {
     const [selectedCategoryProducts, setSelectedCategoryProducts] = useState(
         []
     );
+    const [query, setQuery] = useState("");
+
     const [selectoryCategory, setSelectoryCategory] = useState("All");
 
     const onCatagorySelect = (value) => {
         setSelectoryCategory(value);
     };
+
+    useEffect(() => {
+        if (query.trim() === "") {
+            setSelectedCategoryProducts(products);
+        } else {
+            setSelectoryCategory("All");
+            const lowerCaseQuery = query.toLowerCase();
+            const filteredProducts = products.filter((p) =>
+                p.name.toLowerCase().includes(lowerCaseQuery)
+            );
+            setSelectedCategoryProducts(filteredProducts);
+        }
+    }, [query, products]);
 
     const productCategory = [
         ["All", <IoIosBasket className="category-icons" />],
@@ -218,11 +233,22 @@ export default function ProductList() {
                     </p>
                 </div>
             )}
-
-            <h4>Available Products ({selectedCategoryProducts.length})</h4>
+            <div className="search-container">
+                <h4>Available Products ({selectedCategoryProducts.length})</h4>
+                <div className="search-bar-wrapper">
+                    <FaSearch className="search-icon" />
+                    <input
+                        className="search-bar"
+                        type="text"
+                        value={query}
+                        placeholder="Search grocery..."
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                </div>
+            </div>
 
             <div className="inventory-container">
-                {products.length !== 0 && (
+                {query === "" && (
                     <div className="category-list-customer">
                         {productCategory.map((cat) => (
                             <button
