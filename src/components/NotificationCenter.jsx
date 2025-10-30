@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 
-export default function NotificationCenter() {
+export default function NotificationCenter({ onNotificationRead }) {
     const { user } = useContext(AuthContext);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -30,6 +30,9 @@ export default function NotificationCenter() {
                     n._id === notificationId ? { ...n, isRead: true } : n
                 )
             );
+            if (typeof onNotificationRead === "function")
+                onNotificationRead(notificationId);
+            return true;
         } catch (err) {
             console.error("Error marking notification as read:", err);
         }
@@ -114,17 +117,12 @@ const styles = {
         gap: "15px",
     },
     unreadNotification: {
-        backgroundColor: "#fff3cd",
+        backgroundColor: "rgb(55 65 81 / var(--tw-bg-opacity, 1))",
         border: "1px solid #ffc107",
         borderRadius: "8px",
         padding: "15px",
         cursor: "pointer",
-    },
-    readNotification: {
-        backgroundColor: "#f8f9fa",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        padding: "15px",
+        color: "white",
     },
     notificationHeader: {
         display: "flex",

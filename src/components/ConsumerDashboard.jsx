@@ -18,6 +18,9 @@ export default function ConsumerDashboard() {
     const [deliveryAddress, setDeliveryAddress] = useState(null);
     const [unreadNotifications, setUnreadNotifications] = useState(0);
     const location = useLocation();
+    const [notificationOpen, setNotificationOpen] = useState(false);
+    const navRef = React.useRef(null);
+    const notificationRef = React.useRef(null);
 
     const handleAddressConfirmed = (address) => {
         setDeliveryAddress(address);
@@ -26,6 +29,27 @@ export default function ConsumerDashboard() {
             JSON.stringify(address)
         );
     };
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                notificationRef.current &&
+                !notificationRef.current.contains(event.target) &&
+                !event.target.closest(
+                    'button[aria-label="Toggle notifications"]'
+                )
+            ) {
+                setNotificationOpen(false);
+            }
+        }
+
+        if (notificationOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [notificationOpen]);
 
     const loadUnreadCount = () => {
         const loadUnreadCount = async () => {
@@ -97,7 +121,12 @@ export default function ConsumerDashboard() {
                     </div>
                 </div>
                 <div style={styles.headerActions}>
-                    <Link to="/notifications" style={styles.notificationButton}>
+                    <button
+                        style={styles.notificationButton}
+                        onClick={() => setNotificationOpen(!notificationOpen)}
+                        aria-label="Toggle notifications"
+                        aria-expanded={notificationOpen}
+                    >
                         <IoIosNotifications
                             style={{ fontSize: "35px", color: "white" }}
                         />{" "}
@@ -106,7 +135,25 @@ export default function ConsumerDashboard() {
                                 {unreadNotifications}
                             </span>
                         )}
-                    </Link>
+                    </button>
+                    <div
+                        ref={notificationRef}
+                        className={
+                            "notification-div" +
+                            (notificationOpen ? " open" : "")
+                        }
+                        style={{ marginTop: "2%" }}
+                        role="dialog"
+                        aria-label="Notifications"
+                    >
+                        <NotificationCenter
+                            onNotificationRead={() =>
+                                setUnreadNotifications((n) =>
+                                    Math.max(0, n - 1)
+                                )
+                            }
+                        />
+                    </div>
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
                     </button>
@@ -182,10 +229,7 @@ export default function ConsumerDashboard() {
                         element={<Cart deliveryAddress={deliveryAddress} />}
                     />
                     <Route path="/orders" element={<OrderHistory />} />
-                    <Route
-                        path="/notifications"
-                        element={<NotificationCenter />}
-                    />
+
                     <Route path="/expenses" element={<ExpenseTracker />} />
                 </Routes>
             </div>
@@ -237,6 +281,9 @@ const styles = {
         padding: "8px 12px",
         textDecoration: "none",
         fontSize: "20px",
+        border: "none",
+        background: "none",
+        cursor: "pointer",
     },
     notificationBadge: {
         position: "absolute",
