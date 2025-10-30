@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
+import { IoIosNotifications } from "react-icons/io";
 
 export default function NotificationCenter({ onNotificationRead }) {
     const { user } = useContext(AuthContext);
@@ -44,7 +45,16 @@ export default function NotificationCenter({ onNotificationRead }) {
 
     return (
         <div style={styles.container}>
-            <h3>🔔 Notifications</h3>
+            <h3>
+                <IoIosNotifications
+                    style={{
+                        fontSize: "35px",
+                        color: "white",
+                        marginBottom: "-11px",
+                    }}
+                />{" "}
+                Notifications
+            </h3>
 
             {notifications.length === 0 ? (
                 <div style={styles.emptyState}>
