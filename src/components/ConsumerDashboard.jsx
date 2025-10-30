@@ -247,7 +247,7 @@ const styles = {
         transition: "all 0.3s",
     },
     activeNavLink: {
-        padding: "15px 20px",
+        padding: "18px 20px",
         textDecoration: "none",
         color: "rgb(11, 18, 32)",
         fontWeight: "bold",
