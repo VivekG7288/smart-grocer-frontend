@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import AddressSelector from "./AddressSelector";
@@ -27,13 +27,36 @@ export default function ConsumerDashboard() {
         );
     };
 
+    const loadUnreadCount = () => {
+        const loadUnreadCount = async () => {
+            try {
+                const res = await fetch(
+                    `/api/notifications/user/${user._id}/unread-count`
+                );
+                const data = await res.json();
+                setUnreadNotifications(data.count);
+            } catch (err) {
+                console.error("Error loading notification count:", err);
+            }
+        };
+
+        loadUnreadCount();
+        // Poll every 10 seconds for new notifications
+        const interval = setInterval(loadUnreadCount, 10000);
+        return () => clearInterval(interval);
+    };
+
+    useEffect(() => {
+        loadUnreadCount();
+    }, [user]);
+
     const changeLocation = () => {
         setDeliveryAddress(null);
         localStorage.removeItem(`deliveryAddress_${user._id}`);
     };
 
     // Check for saved address on load
-    React.useEffect(() => {
+    useEffect(() => {
         const savedAddress = localStorage.getItem(
             `deliveryAddress_${user._id}`
         );
