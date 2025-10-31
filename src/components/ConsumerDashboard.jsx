@@ -170,11 +170,13 @@ export default function ConsumerDashboard() {
                         aria-label="Notifications"
                     >
                         <NotificationCenter
+                            setNotificationOpen={setNotificationOpen}
                             onNotificationRead={() =>
                                 setUnreadNotifications((n) =>
                                     Math.max(0, n - 1)
                                 )
                             }
+                            unreadNotifications={unreadNotifications}
                         />
                     </div>
                     <button onClick={logout} style={styles.logoutButton}>

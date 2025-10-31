@@ -3,14 +3,18 @@ import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { IoIosNotifications } from "react-icons/io";
 
-export default function NotificationCenter({ onNotificationRead }) {
+export default function NotificationCenter({
+    onNotificationRead,
+    setNotificationOpen,
+    unreadNotifications,
+}) {
     const { user } = useContext(AuthContext);
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadNotifications();
-    }, [user]);
+    }, [user, unreadNotifications]);
 
     const loadNotifications = async () => {
         try {
@@ -76,10 +80,20 @@ export default function NotificationCenter({ onNotificationRead }) {
                                         ? styles.readNotification
                                         : styles.unreadNotification
                                 }
-                                onClick={() =>
-                                    !notification.isRead &&
-                                    markAsRead(notification._id)
-                                }
+                                onClick={async () => {
+                                    // If unread, mark as read on the server and update parent counter
+                                    if (!notification.isRead) {
+                                        const ok = await markAsRead(
+                                            notification._id
+                                        );
+                                        if (ok) {
+                                            // close notifications panel if parent provided setter
+                                            setNotificationOpen &&
+                                                setNotificationOpen(false);
+                                            // onNotificationRead already called inside markAsRead
+                                        }
+                                    }
+                                }}
                             >
                                 <div style={styles.notificationHeader}>
                                     <h4>{notification.title}</h4>
