@@ -12,6 +12,7 @@ import ExpenseTracker from "./ExpenseTracker";
 import { SlLocationPin } from "react-icons/sl";
 import { IoIosNotifications } from "react-icons/io";
 import { IoStorefrontSharp } from "react-icons/io5";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 export default function ConsumerDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -19,7 +20,8 @@ export default function ConsumerDashboard() {
     const [unreadNotifications, setUnreadNotifications] = useState(0);
     const location = useLocation();
     const [notificationOpen, setNotificationOpen] = useState(false);
-    const navRef = React.useRef(null);
+    const [menuOpen, setMenuOpen] = useState(false);
+
     const notificationRef = React.useRef(null);
 
     const handleAddressConfirmed = (address) => {
@@ -103,6 +105,27 @@ export default function ConsumerDashboard() {
             <div style={styles.header}>
                 <div style={styles.locationInfo}>
                     <div style={styles.headerActions}>
+                        <button
+                            className="hamburger-button"
+                            aria-expanded={menuOpen}
+                            aria-label={
+                                menuOpen
+                                    ? "Close navigation"
+                                    : "Open navigation"
+                            }
+                            onClick={() => setMenuOpen((s) => !s)}
+                            style={{
+                                background: "transparent",
+                                border: "none",
+                                padding: 0,
+                                margin: 0,
+                                display: "inline-flex",
+                                alignItems: "center",
+                                cursor: "pointer",
+                            }}
+                        >
+                            <GiHamburgerMenu className="hamburger-icon" />
+                        </button>
                         <h2>Welcome, {user.name}!</h2>
                     </div>
 
@@ -214,6 +237,59 @@ export default function ConsumerDashboard() {
                     💰 Expenses
                 </Link>
             </nav>
+
+            <div
+                className={"hamburger-panel" + (menuOpen ? " open" : "")}
+                role="dialog"
+                aria-modal="true"
+                aria-hidden={!menuOpen}
+                style={{ marginTop: 0 }}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px",
+                    }}
+                >
+                    <Link
+                        to="/"
+                        style={styles.navLink}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        <IoStorefrontSharp style={{ marginBottom: "-2px" }} />{" "}
+                        My Pantry
+                    </Link>
+                    <Link
+                        to="/shops"
+                        style={styles.navLink}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        🏪 Find Shops
+                    </Link>
+                    <Link
+                        to="/cart"
+                        style={styles.navLink}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        🛒 Cart
+                    </Link>
+                    <Link
+                        to="/orders"
+                        style={styles.navLink}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        📋 Orders
+                    </Link>
+                    <Link
+                        to="/expenses"
+                        style={styles.navLink}
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        💰 Expenses
+                    </Link>
+                </div>
+            </div>
 
             <div style={styles.content}>
                 <Routes>

@@ -343,3 +343,12 @@ input::placeholder {
     border-radius: 12px;
     color: black;
 }
+
+.active-nav-link-customer-dashboard {
+    padding: 18px 20px;
+    text-decoration: none;
+    color: rgb(11, 18, 32);
+    font-weight: bold;
+    background-color: white;
+    border-radius: 12px 12px 0px 0px;
+}
