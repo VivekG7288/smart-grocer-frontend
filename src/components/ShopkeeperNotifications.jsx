@@ -80,7 +80,12 @@ export default function ShopkeeperNotifications({
                         .filter((x) => !x.isRead)
                         .map((notification) => (
                             <Link
-                                to="/refill-requests"
+                                to={
+                                    notification.type === "ORDER"
+                                        ? "/orders"
+                                        : "/refill-requests"
+                                }
+                                // to="/refill-requests"
                                 key={notification._id}
                                 style={
                                     notification.isRead
