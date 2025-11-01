@@ -12,7 +12,9 @@ export default function OrderList() {
     const [shop, setShop] = useState(null);
     const [loading, setLoading] = useState(true);
     const [slicedOrders, setSlicesOrders] = useState([]);
-    // const [currentPageIndex, setCurrentPageIndex] = useState(1)
+    const [currentPageIndex, setCurrentPageIndex] = useState(1);
+    const [visibleStart, setVisibleStart] = useState(1);
+    const maxVisible = 6;
 
     useEffect(() => {
         setPaginationCount(Math.ceil(orders.length / 5));
@@ -90,8 +92,32 @@ export default function OrderList() {
     const refreshOrders = () => {
         findShopAndLoadOrders();
     };
-    const updatePagination = (count) => {
-        const end = count * 5 > orders.length ? orders.length : count * 5;
+    const handleNext = () => {
+        if (visibleStart + maxVisible - 1 < paginationCount) {
+            setVisibleStart(visibleStart + 1);
+        }
+    };
+
+    const handlePrev = () => {
+        if (visibleStart > 1) {
+            setVisibleStart(visibleStart - 1);
+        }
+    };
+    const getVisiblePages = () => {
+        const end = Math.min(visibleStart + maxVisible - 1, paginationCount);
+        return Array.from(
+            { length: end - visibleStart + 1 },
+            (_, i) => visibleStart + i
+        );
+    };
+    useEffect(() => {
+        updatePagination();
+    }, [currentPageIndex]);
+    const updatePagination = () => {
+        const end =
+            currentPageIndex * 5 > orders.length
+                ? orders.length
+                : currentPageIndex * 5;
         setSlicesOrders(orders.slice(end - 5, end));
     };
 
@@ -350,17 +376,50 @@ export default function OrderList() {
 
             {orders.length > 5 && (
                 <div className="pagination-wrapper">
-                    {[...Array(paginationCount)].map((_, index) => {
-                        return (
-                            <button
-                                onClick={() => updatePagination(index + 1)}
-                                className="pagination-button"
-                                key={index}
-                            >
-                                {index + 1}
-                            </button>
-                        );
-                    })}
+                    {paginationCount > maxVisible && (
+                        <button
+                            onClick={handlePrev}
+                            className="pagination-button"
+                            disabled={visibleStart === 1}
+                        >
+                            {"<"}
+                        </button>
+                    )}
+
+                    {visibleStart > 1 && <span>...</span>}
+                    {getVisiblePages().map((page) => (
+                        <button
+                            key={page}
+                            onClick={() => setCurrentPageIndex(page)}
+                            className={`pagination-button ${
+                                page === currentPageIndex ? "active" : ""
+                            }`}
+                            style={{
+                                background:
+                                    page === currentPageIndex ? "#333" : "#fff",
+                                color:
+                                    page === currentPageIndex ? "#fff" : "#000",
+                            }}
+                        >
+                            {page}
+                        </button>
+                    ))}
+
+                    {visibleStart + maxVisible - 1 < paginationCount && (
+                        <span>...</span>
+                    )}
+
+                    {paginationCount > maxVisible && (
+                        <button
+                            onClick={handleNext}
+                            className="pagination-button"
+                            disabled={
+                                visibleStart + maxVisible - 1 >= paginationCount
+                            }
+                        >
+                            {">"}
+                        </button>
+                    )}
                 </div>
             )}
         </div>

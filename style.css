@@ -373,4 +373,5 @@ input::placeholder {
     border: 2px solid grey;
     border-radius: 4px;
     cursor: pointer;
+    width: 40px;
 }
