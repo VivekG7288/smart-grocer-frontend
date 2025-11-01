@@ -12,6 +12,7 @@ export default function OrderList() {
     const [shop, setShop] = useState(null);
     const [loading, setLoading] = useState(true);
     const [slicedOrders, setSlicesOrders] = useState([]);
+    // const [currentPageIndex, setCurrentPageIndex] = useState(1)
 
     useEffect(() => {
         setPaginationCount(Math.ceil(orders.length / 5));
@@ -89,15 +90,14 @@ export default function OrderList() {
     const refreshOrders = () => {
         findShopAndLoadOrders();
     };
-
-    if (loading) {
-        return <div style={styles.loading}>Loading orders...</div>;
-    }
-
     const updatePagination = (count) => {
         const end = count * 5 > orders.length ? orders.length : count * 5;
         setSlicesOrders(orders.slice(end - 5, end));
     };
+
+    if (loading) {
+        return <div style={styles.loading}>Loading orders...</div>;
+    }
 
     if (!shop) {
         return (
@@ -348,7 +348,7 @@ export default function OrderList() {
                 </div>
             )}
 
-            {paginationCount > 0 && (
+            {orders.length > 5 && (
                 <div className="pagination-wrapper">
                     {[...Array(paginationCount)].map((_, index) => {
                         return (
