@@ -3,12 +3,27 @@ import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { BsFillBookmarkPlusFill } from "react-icons/bs";
+import { FaSearch } from "react-icons/fa";
 
 export default function PantryManager() {
     const { user } = useContext(AuthContext);
     const [pantryItems, setPantryItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [query, setQuery] = useState("");
+    const [filteredProduct, setFilteredProducts] = useState([pantryItems]);
+
+    useEffect(() => {
+        if (query.trim() === "") {
+            setFilteredProducts(pantryItems);
+        } else {
+            const lowerCaseQuery = query.toLowerCase();
+            const filteredProducts = pantryItems.filter((p) =>
+                p.productName.toLowerCase().includes(lowerCaseQuery)
+            );
+            setFilteredProducts(filteredProducts);
+        }
+    }, [query, pantryItems, user]);
 
     useEffect(() => {
         loadPantryItems();
@@ -68,10 +83,21 @@ export default function PantryManager() {
 
     return (
         <div style={styles.container}>
-            <div style={styles.header}>
+            <div className="pantry-header-wrapper" style={styles.header}>
                 <h3>
                     <IoStorefrontSharp /> Your Smart Pantry
                 </h3>
+
+                <div className="search-bar-wrapper">
+                    <FaSearch className="search-icon" />
+                    <input
+                        className="search-bar"
+                        type="text"
+                        value={query}
+                        placeholder="Search grocery..."
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                </div>
                 <button
                     onClick={() => setShowAddForm(true)}
                     style={styles.addButton}
@@ -91,7 +117,7 @@ export default function PantryManager() {
                 </div>
             ) : (
                 <div style={styles.pantryGrid}>
-                    {pantryItems.map((item) => (
+                    {filteredProduct.map((item) => (
                         <div
                             key={item._id}
                             style={getItemCardStyle(item.status)}

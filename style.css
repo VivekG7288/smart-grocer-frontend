@@ -103,6 +103,12 @@ input::placeholder {
     }
 }
 
+.pantry-header-wrapper {
+    @media (max-width: 550px) {
+        flex-direction: column !important;
+    }
+}
+
 .shop-keeper-dashboard-nav-desktop {
     display: flex;
     gap: 12px;
