@@ -8,8 +8,15 @@ import { GrRefresh } from "react-icons/gr";
 export default function OrderList() {
     const { user } = useContext(AuthContext);
     const [orders, setOrders] = useState([]);
+    const [paginationCount, setPaginationCount] = useState(0);
     const [shop, setShop] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [slicedOrders, setSlicesOrders] = useState([]);
+
+    useEffect(() => {
+        setPaginationCount(Math.ceil(orders.length / 5));
+        setSlicesOrders(orders.slice(0, orders.length > 5 ? 5 : orders.length));
+    }, [orders]);
 
     useEffect(() => {
         if (user) {
@@ -87,6 +94,11 @@ export default function OrderList() {
         return <div style={styles.loading}>Loading orders...</div>;
     }
 
+    const updatePagination = (count) => {
+        const end = count * 5 > orders.length ? orders.length : count * 5;
+        setSlicesOrders(orders.slice(end - 5, end));
+    };
+
     if (!shop) {
         return (
             <div style={styles.container}>
@@ -129,7 +141,7 @@ export default function OrderList() {
                 </div>
             ) : (
                 <div style={styles.ordersList}>
-                    {orders.map((order) => (
+                    {slicedOrders.map((order) => (
                         <div key={order._id} style={styles.orderCard}>
                             <div style={styles.orderHeader}>
                                 <h4>Order #{order._id.slice(-6)}</h4>
@@ -333,6 +345,22 @@ export default function OrderList() {
                             </div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {paginationCount > 0 && (
+                <div className="pagination-wrapper">
+                    {[...Array(paginationCount)].map((_, index) => {
+                        return (
+                            <button
+                                onClick={() => updatePagination(index + 1)}
+                                className="pagination-button"
+                                key={index}
+                            >
+                                {index + 1}
+                            </button>
+                        );
+                    })}
                 </div>
             )}
         </div>
