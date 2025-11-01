@@ -210,6 +210,7 @@ export default function ShopForm() {
                             onChange={handleShopDataChange}
                             style={styles.input}
                             type="tel"
+                            required
                         />
 
                         <div style={styles.radiusContainer}>

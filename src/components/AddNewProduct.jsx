@@ -24,11 +24,13 @@ function AddNewProduct() {
     ];
     const [products, setProducts] = useState([]);
 
+    const unitsOption = ["Kg", "Ltr", "packet", "piece", "Bottle"];
+
     const [product, setProduct] = useState({
         name: "",
         category: "",
-        price: 0,
-        stock: 0,
+        price: "",
+        stock: "",
         unit: "",
         image: "",
     });
@@ -209,13 +211,21 @@ function AddNewProduct() {
                         >
                             Unit
                         </label>
-                        <input
+                        <select
                             name="unit"
-                            placeholder="Unit (kg, ltr, pcs)"
                             value={product.unit}
                             onChange={handleProductChange}
                             style={styles.productInput}
-                        />
+                        >
+                            <option value="">
+                                Select Unit (Kg, Ltr, ...etc)
+                            </option>
+                            {unitsOption.map((units) => (
+                                <option key={units} value={units}>
+                                    {units}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
