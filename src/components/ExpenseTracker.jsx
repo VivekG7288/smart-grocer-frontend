@@ -20,18 +20,33 @@ export default function ExpenseTracker() {
     const loadExpenses = async () => {
         try {
             setLoading(true);
-            
-            // Get orders for this user
-            const ordersRes = await api.get(`/orders?customerId=${user._id}`);
-            console.log('User orders:', ordersRes.data);
-            const userOrders = ordersRes.data;
 
-            // Get user's pantry items with refill requests or delivered refills
-            const pantryRes = await api.get(`/pantry/user/${user._id}`);
-            console.log('User pantry:', pantryRes.data);
-            const userRefills = pantryRes.data.filter(item => 
+            // ✅ Get user from context or localStorage fallback
+            let currentUser = user;
+            if (!currentUser?._id) {
+                const stored = localStorage.getItem("user");
+                if (stored) currentUser = JSON.parse(stored);
+            }
+
+            if (!currentUser?._id) {
+                console.error("❌ No user ID found; cannot load expenses");
+                return;
+            }
+
+            const userId = currentUser._id;
+            console.log(`🔍 Loading expenses for user ID: ${userId} with timeframe: ${timeframe}`);
+            // ✅ Call backend with userId as fallback
+            const ordersRes = await api.get(`/orders?customerId=${userId}`);
+            let userOrders = ordersRes.data || [];
+
+            userOrders = userOrders.filter(
+                (order) => order.customerId?._id === userId || order.customerId === userId
+            );
+
+            const pantryRes = await api.get(`/pantry/user/${userId}`);
+            const userRefills = (pantryRes.data || []).filter(item =>
                 ['REFILL_REQUESTED', 'CONFIRMED', 'OUT_FOR_DELIVERY', 'DELIVERED'].includes(item.status) ||
-                (item.status === 'STOCKED' && item.lastRefilled) // Include completed refills
+                (item.status === 'STOCKED' && item.lastRefilled)
             );
 
             // Combine orders and refills for total spending analysis
@@ -40,11 +55,11 @@ export default function ExpenseTracker() {
                     // Calculate total from items if totalAmount is not present
                     let amount = o.totalAmount;
                     if (!amount && Array.isArray(o.items)) {
-                        amount = o.items.reduce((sum, item) => 
+                        amount = o.items.reduce((sum, item) =>
                             sum + (Number(item.price || 0) * Number(item.quantity || 0)), 0
                         );
                     }
-                    
+
                     // Try to get shop name from shopId object if present
                     let shopName = o.shopName;
                     if (!shopName && o.shopId && typeof o.shopId === 'object') {
@@ -69,12 +84,12 @@ export default function ExpenseTracker() {
                 }),
                 ...userRefills.map(r => {
                     // Only count the cost if refill was delivered or is in progress
-                    const shouldCountCost = r.status === 'DELIVERED' || 
-                                         (r.status === 'STOCKED' && r.lastRefilled) ||
-                                         ['CONFIRMED', 'OUT_FOR_DELIVERY'].includes(r.status);
-                    
+                    const shouldCountCost = r.status === 'DELIVERED' ||
+                        (r.status === 'STOCKED' && r.lastRefilled) ||
+                        ['CONFIRMED', 'OUT_FOR_DELIVERY'].includes(r.status);
+
                     const amount = shouldCountCost ? (Number(r.price) || 0) * (Number(r.packsOwned) || 0) : 0;
-                    
+
                     console.log('Processing refill:', {
                         refillId: r._id,
                         status: r.status,
@@ -83,7 +98,7 @@ export default function ExpenseTracker() {
                         shouldCountCost,
                         calculatedAmount: amount
                     });
-                    
+
                     let shopName = r.shop?.name;
                     if (!shopName && r.shopId && typeof r.shopId === 'object') {
                         shopName = r.shopId.name;
@@ -105,7 +120,7 @@ export default function ExpenseTracker() {
             ].sort((a, b) => b.date - a.date);
 
             console.log('All transactions before filtering:', allTransactions);
-            
+
             // Filter by timeframe
             const now = new Date();
             const filteredTransactions = allTransactions.filter(t => {
@@ -127,7 +142,7 @@ export default function ExpenseTracker() {
                 // Normalize shop ID to handle both string and object IDs
                 const shopId = typeof t.shopId === 'object' ? t.shopId._id : t.shopId;
                 const key = shopId || 'unknown';
-                
+
                 // If this shop already exists, update its values
                 if (acc[key]) {
                     acc[key].total += t.amount;
@@ -181,8 +196,8 @@ export default function ExpenseTracker() {
         <div style={styles.container}>
             <div style={styles.header}>
                 <h2>Expense Tracker</h2>
-                <select 
-                    value={timeframe} 
+                <select
+                    value={timeframe}
                     onChange={(e) => setTimeframe(e.target.value)}
                     style={styles.timeframeSelect}
                 >
@@ -218,7 +233,7 @@ export default function ExpenseTracker() {
                                     <div style={styles.shopStats}>
                                         <small>{totalTransactions} transaction{totalTransactions > 1 ? 's' : ''} ({transactionText.join(' & ')})</small>
                                         <div style={styles.progressBar}>
-                                            <div 
+                                            <div
                                                 style={{
                                                     ...styles.progressFill,
                                                     width: `${(shop.total / expenses.totalSpent * 100)}%`
@@ -266,7 +281,7 @@ export default function ExpenseTracker() {
                             </div>
                             <div style={styles.transactionDetails}>
                                 <small style={styles.transactionDate}>
-                                    {t.date.toLocaleDateString('en-IN', { 
+                                    {t.date.toLocaleDateString('en-IN', {
                                         day: 'numeric',
                                         month: 'short',
                                         year: 'numeric'
