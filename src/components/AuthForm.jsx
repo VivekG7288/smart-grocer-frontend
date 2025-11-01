@@ -40,6 +40,7 @@ export default function AuthForm() {
 
         if (!isLogin && (form.phone.length < 10 || form.phone.length > 10)) {
             setError("Mobile number must be 10 digits");
+            return false;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

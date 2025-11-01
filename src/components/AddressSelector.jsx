@@ -215,6 +215,68 @@ export default function AddressSelector({ onAddressConfirmed }) {
         }
     };
 
+    function parseIndianAddress(addressString) {
+        if (!addressString) return {};
+
+        // Split address by commas
+        let parts = addressString.split(",").map((p) => p.trim());
+
+        // Find 6-digit pincode in any part
+        const pincodeRegex = /\b\d{6}\b/;
+
+        // Check if last part contains pincode
+        let lastPart = parts[parts.length - 1];
+        let pincodeMatch = lastPart.match(pincodeRegex);
+
+        // If last part doesn't have pincode, remove items from end until found
+        while (!pincodeMatch && parts.length > 0) {
+            parts.pop();
+            lastPart = parts[parts.length - 1];
+            pincodeMatch = lastPart ? lastPart.match(pincodeRegex) : null;
+        }
+
+        const pincode = pincodeMatch ? pincodeMatch[0] : "";
+
+        // Remove pincode and "India" if present
+        if (parts.length && parts[parts.length - 1].includes(pincode)) {
+            parts[parts.length - 1] = parts[parts.length - 1]
+                .replace(pincode, "")
+                .trim();
+        }
+
+        if (
+            parts.length &&
+            parts[parts.length - 1].toLowerCase().includes("india")
+        ) {
+            parts.pop();
+        }
+
+        // Assign heuristically based on remaining parts
+        const result = {
+            houseNumber: parts[0] || "",
+            streetName: parts[1] || "",
+            locality: parts[2] || "",
+            landmark: parts[3] || "",
+            city: parts[4] || "",
+            state: parts[5] || "",
+            pincode,
+        };
+
+        return result;
+    }
+
+    const updateAddressField = (location) => {
+        const res = parseIndianAddress(location);
+        setAddressDetails((prev) => ({
+            ...prev,
+            pincode: res.pincode,
+            city: res.city,
+            street: res.streetName,
+            area: res.locality,
+            building: res.houseNumber,
+        }));
+    };
+
     if (step === "select") {
         return (
             <div style={styles.container}>
@@ -327,9 +389,10 @@ export default function AddressSelector({ onAddressConfirmed }) {
                                 <strong>Detected:</strong> {detectedAddress}
                             </p>
                             <button
-                                onClick={() =>
-                                    setManualAddress(detectedAddress)
-                                }
+                                onClick={() => {
+                                    setManualAddress(detectedAddress);
+                                    updateAddressField(detectedAddress);
+                                }}
                                 style={styles.useDetectedButton}
                             >
                                 ✓ Use This Address
