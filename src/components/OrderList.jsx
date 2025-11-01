@@ -121,6 +121,15 @@ export default function OrderList() {
         setSlicesOrders(orders.slice(end - 5, end));
     };
 
+    const handleOpenMap = (address) => {
+        // Encode the address to make it URL-safe
+        const encodedAddress = encodeURIComponent(address);
+        // Construct the Google Maps search URL
+        const mapUrl = `https://www.google.com/maps?q=${encodedAddress}`;
+        // Open the map in a new tab
+        window.open(mapUrl, "_blank");
+    };
+
     if (loading) {
         return <div style={styles.loading}>Loading orders...</div>;
     }
@@ -207,7 +216,15 @@ export default function OrderList() {
                                         </p>
                                     </div>
 
-                                    <div style={styles.addressInfo}>
+                                    <button
+                                        onClick={() =>
+                                            handleOpenMap(
+                                                order.deliveryAddress
+                                                    .formattedAddress
+                                            )
+                                        }
+                                        style={styles.addressInfo}
+                                    >
                                         <p>
                                             <strong>
                                                 📍 Delivery Address:
@@ -277,7 +294,7 @@ export default function OrderList() {
                                                 </p>
                                             )}
                                         </div>
-                                    </div>
+                                    </button>
                                 </div>
                             </div>
 
@@ -493,6 +510,8 @@ const styles = {
         padding: "10px",
         borderRadius: "4px",
         border: "1px solid #ddd",
+        textAlign: "left",
+        cursor: "pointer",
     },
     fullAddress: {
         marginTop: "8px",
