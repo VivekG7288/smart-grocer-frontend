@@ -10,6 +10,7 @@ export default function AuthForm() {
     const [form, setForm] = useState({
         name: "",
         email: "",
+        phone: "",
         password: "",
         role: "CONSUMER",
         address: "",
@@ -35,6 +36,10 @@ export default function AuthForm() {
         if (form.password.length < 6) {
             setError("Password must be at least 6 characters");
             return false;
+        }
+
+        if (!isLogin && (form.phone.length < 10 || form.phone.length > 10)) {
+            setError("Mobile number must be 10 digits");
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -64,6 +69,7 @@ export default function AuthForm() {
                 await signup({
                     name: form.name,
                     email: form.email,
+                    phone: form.phone,
                     password: form.password,
                     role: form.role,
                     address: form.address,
@@ -92,6 +98,7 @@ export default function AuthForm() {
         setForm({
             name: "",
             email: "",
+            phone: "",
             password: "",
             role: "CONSUMER",
             address: "",
@@ -181,6 +188,37 @@ export default function AuthForm() {
                                 type="text"
                                 placeholder="Address"
                                 value={form.address}
+                                onChange={handleChange}
+                                style={styles.input}
+                                onFocus={(e) => (
+                                    (e.currentTarget.style.borderColor =
+                                        "#3b82f6"),
+                                    (e.currentTarget.style.boxShadow =
+                                        "0 0 0 4px rgba(59,130,246,.15)")
+                                )}
+                                onBlur={(e) => (
+                                    (e.currentTarget.style.borderColor =
+                                        "#e5e7eb"),
+                                    (e.currentTarget.style.boxShadow =
+                                        "0 0 0 0 rgba(0,0,0,0)")
+                                )}
+                                required
+                            />
+
+                            <label
+                                htmlFor="phone"
+                                style={{
+                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                }}
+                            >
+                                Phone number
+                            </label>
+
+                            <input
+                                name="phone"
+                                type="tel"
+                                placeholder="Phone Number"
+                                value={form.phone}
                                 onChange={handleChange}
                                 style={styles.input}
                                 onFocus={(e) => (

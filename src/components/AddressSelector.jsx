@@ -617,6 +617,7 @@ const styles = {
     },
     searchBox: {
         marginBottom: "10px",
+        background: "linear-gradient(90deg,#0f172a,#111827)",
     },
     searchInput: {
         width: "100%",
@@ -624,7 +625,9 @@ const styles = {
         border: "2px solid #ddd",
         borderRadius: "8px",
         fontSize: "16px",
+        background: "linear-gradient(90deg,#0f172a,#111827)",
         outline: "none",
+        color: "white",
     },
     addressGrid: {
         display: "grid",

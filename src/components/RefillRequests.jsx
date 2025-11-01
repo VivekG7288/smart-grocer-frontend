@@ -208,6 +208,9 @@ export default function RefillRequests() {
                                     <p style={styles.customerEmail}>
                                         {request.userId?.email}
                                     </p>
+                                    <p style={styles.customerEmail}>
+                                        {request.userId?.phone}
+                                    </p>
                                 </div>
                                 <span
                                     style={{
