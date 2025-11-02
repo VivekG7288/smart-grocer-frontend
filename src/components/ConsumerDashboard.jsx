@@ -151,7 +151,7 @@ export default function ConsumerDashboard() {
                         aria-expanded={notificationOpen}
                     >
                         <IoIosNotifications
-                            style={{ fontSize: "35px", color: "white" }}
+                            style={{ fontSize: "35px", color: "#2B4936" }}
                         />{" "}
                         {unreadNotifications > 0 && (
                             <span style={styles.notificationBadge}>
@@ -325,8 +325,8 @@ const styles = {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "20px",
-        backgroundColor: "#0b1220",
-        color: "white",
+        backgroundColor: "#FFFAF0",
+        color: "#2B4936",
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
     },
     locationInfo: {
@@ -342,7 +342,7 @@ const styles = {
     },
     changeLocationButton: {
         padding: "10px",
-        backgroundColor: "rgb(79 70 229)",
+        backgroundColor: "#89AA97",
         color: "white",
         border: "none",
         borderRadius: "25px",
@@ -384,7 +384,7 @@ const styles = {
         cursor: "pointer",
     },
     nav: {
-        background: "linear-gradient(90deg,#0f172a,#111827)",
+        background: "#2B4936",
         boxShadow: "0 6px 18px rgba(2,6,23,0.35)",
         marginBottom: "-1px",
     },
@@ -397,13 +397,13 @@ const styles = {
     activeNavLink: {
         padding: "18px 20px",
         textDecoration: "none",
-        color: "rgb(11, 18, 32)",
+        color: "#2B4936",
         fontWeight: "bold",
-        backgroundColor: "white",
+        backgroundColor: "#FFFAF0",
         borderRadius: "12px 12px 0px 0px",
     },
     content: {
         padding: "20px",
-        backgroundColor: "white",
+        backgroundColor: "#FFFAF0",
     },
 };

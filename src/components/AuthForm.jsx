@@ -128,7 +128,7 @@ export default function AuthForm() {
                             <label
                                 htmlFor="name"
                                 style={{
-                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                    color: "white",
                                 }}
                             >
                                 Full Name
@@ -158,7 +158,7 @@ export default function AuthForm() {
                             <label
                                 htmlFor="role"
                                 style={{
-                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                    color: "white",
                                 }}
                             >
                                 Role
@@ -178,7 +178,7 @@ export default function AuthForm() {
                             <label
                                 htmlFor="address"
                                 style={{
-                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                    color: "white",
                                 }}
                             >
                                 Address
@@ -209,7 +209,7 @@ export default function AuthForm() {
                             <label
                                 htmlFor="phone"
                                 style={{
-                                    color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                    color: "white",
                                 }}
                             >
                                 Phone number
@@ -242,7 +242,7 @@ export default function AuthForm() {
                     <label
                         htmlFor="email"
                         style={{
-                            color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                            color: "white",
                         }}
                     >
                         Email
@@ -271,7 +271,7 @@ export default function AuthForm() {
                     <label
                         htmlFor="password"
                         style={{
-                            color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                            color: "white",
                             marginTop: "10px",
                         }}
                     >
@@ -347,7 +347,7 @@ const styles = {
         display: "flex",
         height: "1px",
         width: "100%",
-        backgroundColor: "rgb(75 85 99)",
+        backgroundColor: "#2B4936",
         margin: "30px 0",
     },
     loginButtonWrapper: {
@@ -364,8 +364,7 @@ const styles = {
         padding: "20px",
         position: "relative",
         overflow: "hidden",
-        // base gradient
-        background: "rgb(17 24 39)",
+        background: "#FFFAF0",
     },
 
     /* soft organic “blobs” (no pseudo-elements needed) */
@@ -391,13 +390,13 @@ const styles = {
         pointerEvents: "none",
     },
     formWrapper: {
-        backgroundColor: "rgb(31 41 55 / 0.5)",
+        backgroundColor: "#89AA97",
         borderRadius: "1rem",
         padding: "40px",
         boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
         width: "100%",
         maxWidth: "360px",
-        border: "1px solid rgb(55, 65, 81)",
+        border: "1px solid #2B4936",
     },
     title: {
         textAlign: "center",
@@ -419,7 +418,7 @@ const styles = {
         fontSize: "16px",
         transition: "border-color 0.3s",
         outline: "none",
-        backgroundColor: "rgb(55 65 81 / var(--tw-bg-opacity, 1))",
+        backgroundColor: "#2B4936",
     },
     select: {
         padding: "12px",
@@ -428,12 +427,12 @@ const styles = {
         fontSize: "16px",
         outline: "none",
         color: "white",
-        backgroundColor: "rgb(55 65 81 / var(--tw-bg-opacity, 1))",
+        backgroundColor: "#2B4936",
     },
     submitButton: {
         padding: "10px",
-        backgroundColor: "rgb(79 70 229)",
-        color: "white",
+        backgroundColor: "#FFFAF0",
+        color: "#2B4936",
         border: "none",
         borderRadius: "25px",
         fontSize: "16px",
@@ -451,13 +450,13 @@ const styles = {
         marginTop: "20px",
     },
     switchText: {
-        color: "#666",
+        color: "white",
         marginRight: "8px",
     },
     switchButton: {
         background: "none",
         border: "none",
-        color: "rgb(79 70 229)",
+        color: "#2B4936",
         cursor: "pointer",
         fontSize: "14px",
         textDecoration: "underline",

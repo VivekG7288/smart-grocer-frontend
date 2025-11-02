@@ -84,7 +84,7 @@ export default function PantryManager() {
     return (
         <div style={styles.container}>
             <div className="pantry-header-wrapper" style={styles.header}>
-                <h3>
+                <h3 style={{ color: "#2B4936" }}>
                     <IoStorefrontSharp /> Your Smart Pantry
                 </h3>
 
@@ -271,7 +271,7 @@ const styles = {
     },
     addButton: {
         padding: "10px",
-        backgroundColor: "rgb(79 70 229)",
+        backgroundColor: "#89AA97",
         color: "white",
         border: "none",
         borderRadius: "25px",
