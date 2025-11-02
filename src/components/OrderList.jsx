@@ -229,6 +229,7 @@ export default function OrderList() {
                                             <strong>
                                                 📍 Delivery Address:
                                             </strong>
+                                            (Click to navigate)
                                         </p>
                                         <div style={styles.fullAddress}>
                                             {order.deliveryAddress ? (

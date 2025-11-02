@@ -336,7 +336,13 @@ function AddNewProduct() {
 
                 <hr style={{ borderColor: "white" }} />
                 <div className="upload-csv-wrapper">
-                    <h5 style={{ color: "white", textAlign: "center" }}>
+                    <h5
+                        style={{
+                            color: "white",
+                            textAlign: "center",
+                            margin: "10px 0",
+                        }}
+                    >
                         OR Upload Products via CSV
                     </h5>
                     <input

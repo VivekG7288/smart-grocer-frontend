@@ -96,6 +96,15 @@ export default function ShopList({ deliveryAddress }) {
             .sort((a, b) => a.distance - b.distance); // Sort by distance (nearest first)
     };
 
+    const handleOpenMap = (address) => {
+        // Encode the address to make it URL-safe
+        const encodedAddress = encodeURIComponent(address);
+        // Construct the Google Maps search URL
+        const mapUrl = `https://www.google.com/maps?q=${encodedAddress}`;
+        // Open the map in a new tab
+        window.open(mapUrl, "_blank");
+    };
+
     // Haversine formula to calculate distance between two points
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
         const R = 6371; // Radius of the Earth in km
@@ -198,11 +207,27 @@ export default function ShopList({ deliveryAddress }) {
                                             </div>
                                         )}
                                     </div>
-                                    <p>
-                                        📍{" "}
-                                        {shop.location?.address ||
-                                            "Address not available"}
-                                    </p>
+                                    {shop.location.address && (
+                                        <button
+                                            onClick={() =>
+                                                handleOpenMap(
+                                                    shop.location.address
+                                                )
+                                            }
+                                            style={{
+                                                padding: "10px",
+                                                background: "none",
+                                                border: "2px solid #007bff",
+                                                borderRadius: "12px",
+                                                cursor: "pointer",
+                                            }}
+                                        >
+                                            📍 {shop.location?.address}
+                                        </button>
+                                    )}
+                                    {!shop.location.address && (
+                                        <p>Address not available</p>
+                                    )}
                                     <p>📞 {shop.phone || "No phone"}</p>
                                     <p style={styles.distance}>
                                         🚚 {shop.distance} km away • Delivers
