@@ -381,3 +381,19 @@ input::placeholder {
     flex-direction: column;
     gap: 5px;
 }
+
+.place-order-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: baseline;
+}
+
+.checkbox-container {
+    text-align: left;
+}
