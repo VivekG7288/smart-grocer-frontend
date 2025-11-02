@@ -93,8 +93,8 @@ input::placeholder {
 .hamburger-icon {
     width: 30px;
     font-size: 20px;
-    color: white;
-    border: 1px solid white;
+    color: #2b4936;
+    border: 1px solid #2b4936;
     padding: 5px;
     border-radius: 4px;
     cursor: pointer;
@@ -146,7 +146,7 @@ input::placeholder {
 
 /* Mobile hamburger panel (shows nav links vertically) */
 .hamburger-panel {
-    background: linear-gradient(90deg, rgb(15, 23, 42), rgb(17, 24, 39));
+    background: #2b4936;
     box-shadow: 0 6px 18px rgba(2, 6, 23, 0.08);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     transition: all 0.5s ease-in-out;

@@ -166,17 +166,17 @@ export default function ShopList({ deliveryAddress }) {
         <div style={styles.container}>
             {/* Delivery Area Info */}
             <div style={styles.deliveryInfo}>
-                <h3>
-                    🚚 Delivery to: {deliveryAddress?.area},{" "}
+                <h3 style={{ color: "white" }}>
+                    Delivery to: {deliveryAddress?.area},{" "}
                     {deliveryAddress?.city}
                 </h3>
-                <p>
+                <p style={{ color: "white" }}>
                     {nearbyShops.length > 0
                         ? `Found ${nearbyShops.length} shops that deliver to your area`
                         : "No shops found in your delivery area"}
                 </p>
                 {deliveryAddress?.pincode && (
-                    <p>
+                    <p style={{ color: "white" }}>
                         <strong>Pincode:</strong> {deliveryAddress.pincode}
                     </p>
                 )}
@@ -184,7 +184,10 @@ export default function ShopList({ deliveryAddress }) {
 
             {/* Subscribed Shops */}
             <div style={styles.section}>
-                <h3>🏪 Your Subscribed Shops ({subscribedShops.length})</h3>
+                <h3 style={{ color: "#2B4936" }}>
+                    {" "}
+                    Your Subscribed Shops ({subscribedShops.length})
+                </h3>
                 {subscribedShops.length > 0 ? (
                     <div style={styles.shopGrid}>
                         {subscribedShops.map((shop) => (
@@ -194,7 +197,9 @@ export default function ShopList({ deliveryAddress }) {
                             >
                                 <div style={styles.shopInfo}>
                                     <div className="shop-title-customer-dashboard">
-                                        <h4>{shop.name}</h4>
+                                        <h4 style={{ color: "white" }}>
+                                            {shop.name}
+                                        </h4>
                                         {shop.homeDelivery && (
                                             <div className="home-delivery-wrapper">
                                                 <MdOutlineDeliveryDining
@@ -217,25 +222,30 @@ export default function ShopList({ deliveryAddress }) {
                                             style={{
                                                 padding: "10px",
                                                 background: "none",
-                                                border: "2px solid #007bff",
+                                                border: "2px solid #2B4936",
                                                 borderRadius: "12px",
                                                 cursor: "pointer",
+                                                color: "white",
                                             }}
                                         >
-                                            📍 {shop.location?.address}
+                                            {shop.location?.address}
                                         </button>
                                     )}
                                     {!shop.location.address && (
-                                        <p>Address not available</p>
+                                        <p style={{ color: "white" }}>
+                                            Address not available
+                                        </p>
                                     )}
-                                    <p>📞 {shop.phone || "No phone"}</p>
+                                    <p style={{ color: "white" }}>
+                                        📞 {shop.phone || "No phone"}
+                                    </p>
                                     <p style={styles.distance}>
-                                        🚚 {shop.distance} km away • Delivers
+                                        {shop.distance} km away • Delivers
                                         within {shop.deliveryRadius || 5} km
                                     </p>
                                     {shop.openingHours && (
                                         <p style={styles.hours}>
-                                            🕒 {shop.openingHours.open} -{" "}
+                                            {shop.openingHours.open} -{" "}
                                             {shop.openingHours.close}
                                         </p>
                                     )}
@@ -245,7 +255,7 @@ export default function ShopList({ deliveryAddress }) {
                                         to={`/shop/${shop._id}`}
                                         style={styles.browseButton}
                                     >
-                                        🛍️ Browse Products
+                                        Browse Products
                                     </Link>
                                     <button
                                         onClick={() =>
@@ -270,7 +280,7 @@ export default function ShopList({ deliveryAddress }) {
             {/* Available Shops */}
             {availableShops.length > 0 && (
                 <div style={styles.section}>
-                    <h3>
+                    <h3 style={{ color: "#2B4936" }}>
                         🔍 Shops Available in Your Area ({availableShops.length}
                         )
                     </h3>
@@ -278,20 +288,24 @@ export default function ShopList({ deliveryAddress }) {
                         {availableShops.map((shop) => (
                             <div key={shop._id} style={styles.shopCard}>
                                 <div style={styles.shopInfo}>
-                                    <h4>{shop.name}</h4>
-                                    <p>
-                                        📍{" "}
+                                    <h4 style={{ color: "white" }}>
+                                        {shop.name}
+                                    </h4>
+                                    <p style={{ color: "white" }}>
+                                        {" "}
                                         {shop.location?.address ||
                                             "Address not available"}
                                     </p>
-                                    <p>📞 {shop.phone || "No phone"}</p>
+                                    <p style={{ color: "white" }}>
+                                        {shop.phone || "No phone"}
+                                    </p>
                                     <p style={styles.distance}>
-                                        🚚 {shop.distance} km away • Delivers
+                                        {shop.distance} km away • Delivers
                                         within {shop.deliveryRadius || 5} km
                                     </p>
                                     {shop.openingHours && (
                                         <p style={styles.hours}>
-                                            🕒 {shop.openingHours.open} -{" "}
+                                            {shop.openingHours.open} -{" "}
                                             {shop.openingHours.close}
                                         </p>
                                     )}
@@ -300,7 +314,7 @@ export default function ShopList({ deliveryAddress }) {
                                     onClick={() => toggleSubscription(shop._id)}
                                     style={styles.subscribeButton}
                                 >
-                                    ➕ Subscribe
+                                    Subscribe
                                 </button>
                             </div>
                         ))}
@@ -342,11 +356,11 @@ const styles = {
         fontSize: "18px",
     },
     deliveryInfo: {
-        backgroundColor: "#e8f5e8",
+        backgroundColor: "#89AA97",
         padding: "20px",
         borderRadius: "8px",
         marginBottom: "30px",
-        border: "1px solid #28a745",
+        border: "2px solid #2B4936",
     },
     section: {
         marginBottom: "40px",
@@ -357,29 +371,29 @@ const styles = {
         gap: "20px",
     },
     subscribedShopCard: {
-        border: "2px solid #28a745",
+        border: "2px solid #2B4936",
         borderRadius: "12px",
         padding: "20px",
-        backgroundColor: "#f8fff8",
+        color: "white",
+        backgroundColor: "#89AA97",
         boxShadow: "0 4px 8px rgba(40, 167, 69, 0.1)",
     },
     shopCard: {
-        border: "1px solid #ddd",
+        border: "1px solid #2B4936",
         borderRadius: "8px",
         padding: "20px",
-        backgroundColor: "#fff",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        backgroundColor: "#89AA97",
     },
     shopInfo: {
         marginBottom: "15px",
     },
     distance: {
-        color: "#007bff",
+        color: "white",
         fontWeight: "bold",
         fontSize: "14px",
     },
     hours: {
-        color: "#28a745",
+        color: "white",
         fontSize: "14px",
     },
     shopActions: {
@@ -390,7 +404,7 @@ const styles = {
     browseButton: {
         display: "inline-block",
         padding: "12px 20px",
-        backgroundColor: "#007bff",
+        backgroundColor: "#2B4936",
         color: "white",
         textDecoration: "none",
         borderRadius: "6px",
@@ -399,7 +413,7 @@ const styles = {
     },
     subscribeButton: {
         padding: "12px 20px",
-        backgroundColor: "#28a745",
+        backgroundColor: "#2B4936",
         color: "white",
         border: "none",
         borderRadius: "6px",
