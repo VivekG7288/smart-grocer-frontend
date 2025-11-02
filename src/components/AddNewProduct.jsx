@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
+import Papa from "papaparse";
 import api from "../api/api";
-
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -9,6 +9,9 @@ function AddNewProduct() {
     const [loading, setLoading] = useState(true);
     const [addingProduct, setAddingProduct] = useState(false);
     const [shop, setShop] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [csvFile, setCsvFile] = useState(null);
+    const [csvData, setCsvData] = useState([]);
     const productCategory = [
         ["All"],
         ["Fresh & Perishable"],
@@ -117,6 +120,59 @@ function AddNewProduct() {
             alert("Error adding product: " + errorMsg);
         } finally {
             setAddingProduct(false);
+        }
+    };
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setCsvFile(file);
+        if (file) {
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => {
+                    console.log("Parsed CSV Data:", results.data);
+                    setCsvData(results.data);
+                },
+            });
+        }
+    };
+    const handleUploadData = async () => {
+        if (!csvData.length) {
+            alert("Please upload a valid CSV file first.");
+            return;
+        }
+
+        if (!shop?._id) {
+            alert("Shop not found. Please ensure you're logged in correctly.");
+            return;
+        }
+
+        setUploading(true);
+
+        try {
+            for (const item of csvData) {
+                if (!item.name || !item.price || !item.stock) continue;
+
+                const payload = {
+                    shopId: shop._id,
+                    name: item.name.trim(),
+                    category: item.category?.trim() || "others",
+                    price: parseFloat(item.price),
+                    stock: parseInt(item.stock),
+                    unit: item.unit?.trim() || "pcs",
+                    image: item.image?.trim() || "",
+                };
+
+                await api.post("/products", payload);
+            }
+
+            alert("All products uploaded successfully!");
+        } catch (err) {
+            console.error("Error uploading products:", err);
+            const errorMsg = err.response?.data?.error || err.message;
+            alert("Error uploading some products: " + errorMsg);
+        } finally {
+            setUploading(false);
         }
     };
     if (loading) {
@@ -277,6 +333,42 @@ function AddNewProduct() {
                 >
                     {addingProduct ? "➕ Adding Product..." : ` Add Product`}
                 </button>
+
+                <hr style={{ borderColor: "white" }} />
+                <div className="upload-csv-wrapper">
+                    <h5 style={{ color: "white", textAlign: "center" }}>
+                        OR Upload Products via CSV
+                    </h5>
+                    <input
+                        type="file"
+                        accept=".csv"
+                        onChange={handleFileChange}
+                        style={{
+                            color: "white",
+                            marginTop: "10px",
+                            display: "block",
+                            margin: "0 auto",
+                        }}
+                    />
+
+                    {csvData.length > 0 && (
+                        <p style={{ color: "lightgreen", textAlign: "center" }}>
+                            {csvData.length} products ready to upload
+                        </p>
+                    )}
+
+                    <button
+                        onClick={handleUploadData}
+                        disabled={uploading}
+                        style={
+                            uploading
+                                ? styles.disabledButton
+                                : styles.fileUploadButton
+                        }
+                    >
+                        {uploading ? "📤 Uploading..." : "📤 Upload Data"}
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -285,6 +377,17 @@ function AddNewProduct() {
 export default AddNewProduct;
 
 const styles = {
+    fileUploadButton: {
+        padding: "10px",
+        backgroundColor: "rgb(79 70 229)",
+        color: "white",
+        border: "none",
+        borderRadius: "25px",
+        cursor: "pointer",
+        fontSize: "14px",
+        fontWeight: "600",
+        marginTop: "10px",
+    },
     loading: {
         textAlign: "center",
         padding: "50px",
