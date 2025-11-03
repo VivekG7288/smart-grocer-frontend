@@ -103,18 +103,18 @@ export default function Cart({ deliveryAddress }) {
                 // Include delivery address
                 deliveryAddress: deliveryAddress
                     ? {
-                        flat: deliveryAddress.flat || "",
-                        building: deliveryAddress.building || "",
-                        street: deliveryAddress.street || "",
-                        area: deliveryAddress.area || "",
-                        landmark: deliveryAddress.landmark || "",
-                        city: deliveryAddress.city || "",
-                        pincode: deliveryAddress.pincode || "",
-                        coordinates: deliveryAddress.coordinates || [],
-                        formattedAddress:
-                            deliveryAddress.formattedAddress ||
-                            `${deliveryAddress.area}, ${deliveryAddress.city}`,
-                    }
+                          flat: deliveryAddress.flat || "",
+                          building: deliveryAddress.building || "",
+                          street: deliveryAddress.street || "",
+                          area: deliveryAddress.area || "",
+                          landmark: deliveryAddress.landmark || "",
+                          city: deliveryAddress.city || "",
+                          pincode: deliveryAddress.pincode || "",
+                          coordinates: deliveryAddress.coordinates || [],
+                          formattedAddress:
+                              deliveryAddress.formattedAddress ||
+                              `${deliveryAddress.area}, ${deliveryAddress.city}`,
+                      }
                     : null,
             };
 
@@ -124,7 +124,7 @@ export default function Cart({ deliveryAddress }) {
             console.error("Error adding to pantry:", err);
             alert(
                 "Error adding to pantry: " +
-                (err.response?.data?.error || err.message)
+                    (err.response?.data?.error || err.message)
             );
         }
     };
@@ -394,6 +394,16 @@ const styles = {
     container: {
         maxWidth: "800px",
         margin: "0 auto",
+    },
+    pantryButton: {
+        width: "fit-content",
+        padding: "5px",
+        backgroundColor: "#28a745",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontWeight: "600",
     },
     emptyCart: {
         textAlign: "center",

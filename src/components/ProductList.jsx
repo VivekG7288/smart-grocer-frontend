@@ -173,18 +173,18 @@ export default function ProductList() {
                 // Include delivery address
                 deliveryAddress: deliveryAddress
                     ? {
-                        flat: deliveryAddress.flat || "",
-                        building: deliveryAddress.building || "",
-                        street: deliveryAddress.street || "",
-                        area: deliveryAddress.area || "",
-                        landmark: deliveryAddress.landmark || "",
-                        city: deliveryAddress.city || "",
-                        pincode: deliveryAddress.pincode || "",
-                        coordinates: deliveryAddress.coordinates || [],
-                        formattedAddress:
-                            deliveryAddress.formattedAddress ||
-                            `${deliveryAddress.area}, ${deliveryAddress.city}`,
-                    }
+                          flat: deliveryAddress.flat || "",
+                          building: deliveryAddress.building || "",
+                          street: deliveryAddress.street || "",
+                          area: deliveryAddress.area || "",
+                          landmark: deliveryAddress.landmark || "",
+                          city: deliveryAddress.city || "",
+                          pincode: deliveryAddress.pincode || "",
+                          coordinates: deliveryAddress.coordinates || [],
+                          formattedAddress:
+                              deliveryAddress.formattedAddress ||
+                              `${deliveryAddress.area}, ${deliveryAddress.city}`,
+                      }
                     : null,
             };
 
@@ -194,7 +194,7 @@ export default function ProductList() {
             console.error("Error adding to pantry:", err);
             alert(
                 "Error adding to pantry: " +
-                (err.response?.data?.error || err.message)
+                    (err.response?.data?.error || err.message)
             );
         }
     };
@@ -257,10 +257,11 @@ export default function ProductList() {
                             <button
                                 onClick={() => onCatagorySelect(cat[0])}
                                 key={cat[0]}
-                                className={`category-list-button ${cat[0] === selectoryCategory
+                                className={`category-list-button ${
+                                    cat[0] === selectoryCategory
                                         ? "selected-category"
                                         : ""
-                                    }`}
+                                }`}
                             >
                                 {cat[1]} {cat[0]}
                             </button>
@@ -313,19 +314,6 @@ export default function ProductList() {
                                                 ? "Out of Stock"
                                                 : "+ Add to Cart"}
                                         </button>
-
-                                        {/* ADD TO PANTRY BUTTON - RIGHT HERE */}
-                                        {/* <button
-                                            onClick={() => addToPantry(product)}
-                                            disabled={product.stock === 0}
-                                            style={
-                                                product.stock === 0
-                                                    ? styles.disabledButton
-                                                    : styles.pantryButton
-                                            }
-                                        >
-                                            Track in Pantry
-                                        </button> */}
                                     </div>
                                 </div>
                             </div>
@@ -402,16 +390,6 @@ const styles = {
         width: "100%",
         padding: "5px",
         backgroundColor: "#007bff",
-        color: "white",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-        fontWeight: "600",
-    },
-    pantryButton: {
-        width: "100%",
-        padding: "5px",
-        backgroundColor: "#28a745",
         color: "white",
         border: "none",
         borderRadius: "4px",

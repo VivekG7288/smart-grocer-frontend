@@ -98,13 +98,6 @@ export default function PantryManager() {
                         onChange={(e) => setQuery(e.target.value)}
                     />
                 </div>
-                <button
-                    onClick={() => setShowAddForm(true)}
-                    style={styles.addButton}
-                >
-                    <BsFillBookmarkPlusFill style={{ marginBottom: "-2px" }} />{" "}
-                    Track New Item
-                </button>
             </div>
 
             {pantryItems.length === 0 ? (
@@ -265,19 +258,9 @@ const styles = {
     },
     header: {
         display: "flex",
-        justifyContent: "space-between",
+        gap: "20px",
         alignItems: "center",
         marginBottom: "30px",
-    },
-    addButton: {
-        padding: "10px",
-        backgroundColor: "#89AA97",
-        color: "white",
-        border: "none",
-        borderRadius: "25px",
-        cursor: "pointer",
-        fontSize: "18px",
-        fontWeight: "bold",
     },
     emptyState: {
         textAlign: "center",
