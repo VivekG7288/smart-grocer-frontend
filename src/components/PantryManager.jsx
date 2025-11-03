@@ -190,14 +190,21 @@ export default function PantryManager() {
                                         </button>
                                     )}
 
-                                {item.currentPacks < item.packsOwned && (
-                                    <button
-                                        onClick={() => requestRefill(item._id)}
-                                        style={styles.refillButton}
-                                    >
-                                        🚨 Need Refill Now!
-                                    </button>
-                                )}
+                                {![
+                                    "REFILL_REQUESTED",
+                                    "CONFIRMED",
+                                    "OUT_FOR_DELIVERY",
+                                ].includes(item.status) &&
+                                    item.currentPacks < item.packsOwned && (
+                                        <button
+                                            onClick={() =>
+                                                requestRefill(item._id)
+                                            }
+                                            style={styles.refillButton}
+                                        >
+                                            🚨 Need Refill Now!
+                                        </button>
+                                    )}
 
                                 {[
                                     "REFILL_REQUESTED",
