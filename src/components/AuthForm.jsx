@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 
 export default function AuthForm() {
     const { signup, login } = useContext(AuthContext);
@@ -7,6 +8,7 @@ export default function AuthForm() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const [previewPassword, setPreviewPassword] = useState(true);
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -92,6 +94,8 @@ export default function AuthForm() {
             setIsLoading(false);
         }
     };
+
+    const Icon = previewPassword ? IoIosEyeOff : IoMdEye;
 
     const switchMode = () => {
         setIsLogin(!isLogin);
@@ -280,7 +284,7 @@ export default function AuthForm() {
 
                     <input
                         name="password"
-                        type="password"
+                        type={previewPassword ? "password" : "text"}
                         placeholder="Password"
                         value={form.password}
                         onChange={handleChange}
@@ -297,6 +301,10 @@ export default function AuthForm() {
                         )}
                         required
                         minLength={6}
+                    />
+                    <Icon
+                        onClick={() => setPreviewPassword((prev) => !prev)}
+                        className="preview-icon"
                     />
 
                     <div
