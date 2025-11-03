@@ -141,12 +141,12 @@ const styles = {
         gap: "15px",
     },
     unreadNotification: {
-        backgroundColor: "rgb(55 65 81 / var(--tw-bg-opacity, 1))",
-        border: "1px solid #ffc107",
+        backgroundColor: "#FFFAF0",
+        border: "1px solid #2B4936",
         borderRadius: "8px",
         padding: "15px",
         cursor: "pointer",
-        color: "white",
+        color: "#2B4936",
     },
     notificationHeader: {
         display: "flex",
