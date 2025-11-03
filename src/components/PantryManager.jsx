@@ -23,6 +23,7 @@ export default function PantryManager() {
             );
             setFilteredProducts(filteredProducts);
         }
+        console.log("now", pantryItems);
     }, [query, pantryItems, user]);
 
     useEffect(() => {
@@ -190,7 +191,7 @@ export default function PantryManager() {
                                         </button>
                                     )}
 
-                                {item.status === "LOW" && (
+                                {item.currentPacks < item.packsOwned && (
                                     <button
                                         onClick={() => requestRefill(item._id)}
                                         style={styles.refillButton}
