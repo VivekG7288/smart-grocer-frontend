@@ -23,7 +23,6 @@ export default function PantryManager() {
             );
             setFilteredProducts(filteredProducts);
         }
-        console.log("now", pantryItems);
     }, [query, pantryItems, user]);
 
     useEffect(() => {
