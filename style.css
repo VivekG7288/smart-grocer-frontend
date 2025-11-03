@@ -225,6 +225,7 @@ input::placeholder {
     flex-direction: column;
     width: 120px;
     cursor: pointer;
+    box-shadow: 0 4px 12px #2b4936;
     @media (max-width: 1023px) {
         width: 80px;
         padding: 10px;

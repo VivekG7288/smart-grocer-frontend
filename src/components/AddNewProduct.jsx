@@ -423,6 +423,7 @@ const styles = {
         padding: "20px",
         borderRadius: "8px",
         border: "1px solid #2B4936",
+        boxShadow: "0 4px 12px #2B4936",
     },
     productInput: {
         padding: "10px",

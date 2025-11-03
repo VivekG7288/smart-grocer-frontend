@@ -161,7 +161,7 @@ export default function ShopForm() {
                         <label
                             htmlFor="shop-name-input"
                             style={{
-                                color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                color: "#FFFAF0",
                                 marginTop: "10px",
                             }}
                         >
@@ -178,7 +178,7 @@ export default function ShopForm() {
                         <label
                             htmlFor="shop-address-input"
                             style={{
-                                color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                color: "#FFFAF0",
                                 marginTop: "10px",
                             }}
                         >
@@ -197,7 +197,7 @@ export default function ShopForm() {
                         <label
                             htmlFor="phone-number-input"
                             style={{
-                                color: "rgb(209 213 219 / var(--tw-text-opacity, 1))",
+                                color: "#FFFAF0",
                                 marginTop: "10px",
                             }}
                         >
@@ -257,6 +257,8 @@ const styles = {
     container: {
         padding: "20px",
         maxWidth: "fit-content",
+        display: "flex",
+        justifySelf: "center",
     },
     loading: {
         textAlign: "center",
@@ -264,10 +266,10 @@ const styles = {
         fontSize: "18px",
     },
     createShopCard: {
-        backgroundColor: "rgb(31, 41, 55)",
+        backgroundColor: "#89AA97",
         padding: "30px",
         borderRadius: "12px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        boxShadow: "0 4px 12px #2B4936",
         border: "1px solid #ddd",
         color: "white",
     },
@@ -279,13 +281,13 @@ const styles = {
     },
     input: {
         padding: "12px",
-        color: "white",
-        border: "1px solid rgb(75 85 99)",
+        color: "#FFFAF0",
+        border: "1px solid #2B4936",
         borderRadius: "12px",
         fontSize: "16px",
         outline: "none",
         transition: "border-color 0.3s",
-        backgroundColor: "rgb(55 65 81 )",
+        backgroundColor: "#2B4936",
     },
     radiusContainer: {
         display: "flex",

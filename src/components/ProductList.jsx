@@ -346,7 +346,7 @@ const styles = {
         borderRadius: "8px",
         overflow: "hidden",
         backgroundColor: "#fff",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        boxShadow: "0 4px 12px #2B4936",
         maxHeight: "400px",
         width: "170px",
     },

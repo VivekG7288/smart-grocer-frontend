@@ -430,7 +430,7 @@ const styles = {
         borderRadius: "8px",
         overflow: "hidden",
         backgroundColor: "#fff",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        boxShadow: "0 4px 12px #2B4936",
         transition: "transform 0.2s",
     },
     productImage: {

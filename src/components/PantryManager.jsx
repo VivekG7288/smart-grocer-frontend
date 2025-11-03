@@ -278,8 +278,7 @@ const styles = {
         backgroundColor: "#fff",
         borderRadius: "12px",
         padding: "20px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-
+        boxShadow: "0 4px 12px #2B4936",
         border: "1px solid #ddd",
         width: "auto",
     },
