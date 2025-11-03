@@ -185,10 +185,15 @@ function AddNewProduct() {
                     fontSize: "20px",
                     margin: "10px",
                     textAlign: "center",
+                    color: "#2B4936",
                 }}
             >
                 <MdProductionQuantityLimits
-                    style={{ fontSize: "25px", marginBottom: "-4px" }}
+                    style={{
+                        fontSize: "25px",
+                        marginBottom: "-4px",
+                        color: "#2B4936",
+                    }}
                 />{" "}
                 Add New Product
             </h4>
@@ -198,7 +203,7 @@ function AddNewProduct() {
                         <label
                             htmlFor="name"
                             style={{
-                                color: "white",
+                                color: "#FFFAF0",
                             }}
                         >
                             Name
@@ -209,6 +214,7 @@ function AddNewProduct() {
                             value={product.name}
                             onChange={handleProductChange}
                             style={styles.productInput}
+                            className="add-new-product-input"
                         />
                     </div>
 
@@ -216,7 +222,7 @@ function AddNewProduct() {
                         <label
                             htmlFor="name"
                             style={{
-                                color: "white",
+                                color: "#FFFAF0",
                             }}
                         >
                             Category
@@ -242,7 +248,7 @@ function AddNewProduct() {
                         <label
                             htmlFor="price"
                             style={{
-                                color: "white",
+                                color: "#FFFAF0",
                             }}
                         >
                             Price
@@ -255,6 +261,7 @@ function AddNewProduct() {
                             value={product.price}
                             onChange={handleProductChange}
                             style={styles.productInput}
+                            className="add-new-product-input"
                         />
                     </div>
 
@@ -262,7 +269,7 @@ function AddNewProduct() {
                         <label
                             htmlFor="unit"
                             style={{
-                                color: "white",
+                                color: "#FFFAF0",
                             }}
                         >
                             Unit
@@ -290,7 +297,7 @@ function AddNewProduct() {
                         <label
                             htmlFor="stock"
                             style={{
-                                color: "white",
+                                color: "#FFFAF0",
                             }}
                         >
                             Stock
@@ -302,6 +309,7 @@ function AddNewProduct() {
                             value={product.stock}
                             onChange={handleProductChange}
                             style={styles.productInput}
+                            className="add-new-product-input"
                         />
                     </div>
 
@@ -309,7 +317,7 @@ function AddNewProduct() {
                         <label
                             htmlFor="image"
                             style={{
-                                color: "white",
+                                color: "#FFFAF0",
                             }}
                         >
                             Image
@@ -320,6 +328,7 @@ function AddNewProduct() {
                             value={product.image}
                             onChange={handleProductChange}
                             style={styles.imageInput}
+                            className="add-new-product-input"
                         />
                     </div>
                 </div>
@@ -339,7 +348,7 @@ function AddNewProduct() {
                     <h5
                         style={{
                             color: "white",
-                            textAlign: "center",
+                            textAlign: "#FFFAF0",
                             margin: "10px 0",
                         }}
                     >
@@ -350,7 +359,7 @@ function AddNewProduct() {
                         accept=".csv"
                         onChange={handleFileChange}
                         style={{
-                            color: "white",
+                            color: "#FFFAF0",
                             marginTop: "10px",
                             display: "block",
                             margin: "0 auto",
@@ -372,7 +381,7 @@ function AddNewProduct() {
                                 : styles.fileUploadButton
                         }
                     >
-                        {uploading ? "📤 Uploading..." : "📤 Upload Data"}
+                        {uploading ? " Uploading..." : " Upload Data"}
                     </button>
                 </div>
             </div>
@@ -385,8 +394,8 @@ export default AddNewProduct;
 const styles = {
     fileUploadButton: {
         padding: "10px",
-        backgroundColor: "rgb(79 70 229)",
-        color: "white",
+        backgroundColor: "#2B4936",
+        color: "#FFFAF0",
         border: "none",
         borderRadius: "25px",
         cursor: "pointer",
@@ -399,27 +408,6 @@ const styles = {
         padding: "50px",
         fontSize: "18px",
     },
-    input: {
-        padding: "12px",
-        color: "white",
-        border: "1px solid rgb(75 85 99)",
-        borderRadius: "12px",
-        fontSize: "16px",
-        outline: "none",
-        transition: "border-color 0.3s",
-        backgroundColor: "rgb(55 65 81 )",
-    },
-    button: {
-        padding: "14px",
-        backgroundColor: "rgb(79 70 229)",
-        color: "white",
-        border: "none",
-        borderRadius: "6px",
-        cursor: "pointer",
-        fontSize: "16px",
-        fontWeight: "600",
-        transition: "background-color 0.3s",
-    },
     disabledButton: {
         padding: "14px",
         backgroundColor: "#6c757d",
@@ -431,36 +419,36 @@ const styles = {
         fontWeight: "600",
     },
     productForm: {
-        backgroundColor: "rgb(55 65 81 )",
+        backgroundColor: "#89AA97",
         padding: "20px",
         borderRadius: "8px",
-        border: "1px solid #ddd",
+        border: "1px solid #2B4936",
     },
     productInput: {
         padding: "10px",
-        border: "1px solid rgb(75 85 99)",
-        backgroundColor: "rgba(31, 41, 55, 0.5)",
+        border: "1px solid #2B4936",
+        backgroundColor: "#FFFAF0",
         borderRadius: "12px",
         fontSize: "14px",
         transition: "border-color 0.3s",
         outline: "none",
-        color: "white",
+        color: "#2B4936",
         display: "flex",
         width: "fit-content",
     },
     imageInput: {
         padding: "10px",
-        border: "1px solid rgb(75 85 99)",
-        backgroundColor: "rgba(31, 41, 55, 0.5)",
+        border: "1px solid #2B4936",
+        backgroundColor: "#FFFAF0",
         borderRadius: "12px",
-        color: "white",
+        color: "#2B4936",
         fontSize: "14px",
         marginBottom: "15px",
     },
     addButton: {
         padding: "15px",
-        backgroundColor: "rgb(79 70 229)",
-        color: "white",
+        backgroundColor: "#2B4936",
+        color: "#FFFAF0",
         border: "none",
         borderRadius: "25px",
         cursor: "pointer",

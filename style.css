@@ -27,6 +27,10 @@ input::placeholder {
     color: white;
     opacity: 0.6;
 }
+.add-new-product-input::placeholder {
+    color: #2b4936;
+    opacity: 0.6;
+}
 
 .input-container {
     display: flex;
@@ -49,8 +53,9 @@ input::placeholder {
 
 .selected-category {
     color: white !important;
-    background: #0ca335bf !important;
-    border: 3px solid rgb(79 70 229) !important;
+    background: #89aa97 !important;
+    border: 3px solid #2b4936 !important;
+    outline: none;
 }
 
 .add-new-product-container {
@@ -114,7 +119,7 @@ input::placeholder {
     gap: 12px;
     align-items: center;
     padding: 20px 20px 0px 40px;
-    background: transparent;
+    background: #2b4936;
     @media (max-width: 1023px) {
         display: none;
     }
@@ -123,7 +128,7 @@ input::placeholder {
 .notification-div {
     color: white;
     width: auto;
-    background: linear-gradient(90deg, rgb(15, 23, 42), rgb(17, 24, 39));
+    background: #89aa97;
     position: absolute;
     top: 10%;
     right: 8%;
@@ -188,7 +193,7 @@ input::placeholder {
 
 .category-icons {
     font-size: 55px;
-    color: rgb(79 70 229);
+    color: #fffaf0;
     margin-top: -11px;
     @media (max-width: 1023px) {
         font-size: 30px;
@@ -197,26 +202,6 @@ input::placeholder {
 }
 
 .category-list-button {
-    border: none;
-    background: #808080b3;
-    color: rgb(55 65 81);
-    font-weight: bold;
-    font-size: 15px;
-    padding: 20px;
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 150px;
-    cursor: pointer;
-    @media (max-width: 1023px) {
-        width: 80px;
-        padding: 10px;
-        font-size: 12px;
-    }
-}
-
-.category-list-button-customer {
     border: none;
     background: #808080b3;
     color: rgb(55 65 81);

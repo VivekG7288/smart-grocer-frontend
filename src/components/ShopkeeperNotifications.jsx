@@ -58,11 +58,11 @@ export default function ShopkeeperNotifications({
 
     return (
         <div style={styles.container}>
-            <h3>
+            <h3 style={{ color: "#FFFAF0" }}>
                 <IoIosNotifications
                     style={{
                         fontSize: "35px",
-                        color: "white",
+                        color: "#FFFAF0",
                         marginBottom: "-11px",
                     }}
                 />{" "}
@@ -169,13 +169,13 @@ const styles = {
         gap: "15px",
     },
     unreadNotification: {
-        backgroundColor: "rgba(31, 41, 55, 0.5)",
+        backgroundColor: "#FFFAF0",
         border: "2px solid rgb(55, 65, 81)",
         borderRadius: "8px",
         padding: "15px",
         cursor: "pointer",
         textDecoration: "none",
-        color: "white",
+        color: "#2B4936",
     },
     readNotification: {
         backgroundColor: "rgba(31, 41, 55, 0.5)",
@@ -197,10 +197,11 @@ const styles = {
     },
     metadata: {
         marginTop: "10px",
-        backgroundColor: "#0ca335bf",
+        backgroundColor: "#89AA97",
         padding: "10px",
         borderRadius: "4px",
         fontSize: "14px",
+        color: "#FFFAF0",
     },
     actionRequired: {
         marginTop: "10px",

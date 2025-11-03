@@ -284,7 +284,7 @@ export default function ShopkeeperDashboard() {
                     >
                         <GiHamburgerMenu className="hamburger-icon" />
                     </button>
-                    <h2 style={{ color: "white" }}>Welcome, {user.name}!</h2>
+                    <h2 style={{ color: "#2B4936" }}>Welcome, {user.name}!</h2>
                 </div>
                 <div style={styles.headerActions}>
                     <button
@@ -294,7 +294,7 @@ export default function ShopkeeperDashboard() {
                         aria-expanded={notificationOpen}
                     >
                         <IoIosNotifications
-                            style={{ fontSize: "35px", color: "white" }}
+                            style={{ fontSize: "35px", color: "#2B4936" }}
                         />
 
                         {unreadNotifications > 0 && (
@@ -736,7 +736,7 @@ const styles = {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "22px 28px",
-        background: "linear-gradient(90deg,#0f172a,#111827)",
+        background: "#FFFAF0",
         boxShadow: "0 6px 18px rgba(2,6,23,0.35)",
         borderBottom: "1px solid rgba(255,255,255,0.03)",
     },
@@ -793,21 +793,21 @@ const styles = {
     activeNavLink: {
         padding: "10px 14px",
         textDecoration: "none",
-        color: "#0b1220",
+        color: "#2B4936",
         fontWeight: "700",
-        backgroundColor: "whitesmoke",
+        backgroundColor: "#FFFAF0",
         borderRadius: "12px 12px 0 0",
     },
     content: {
         padding: "20px",
-        backgroundColor: "whitesmoke",
+        backgroundColor: "#FFFAF0",
     },
     analyticsContainer: {
         marginBottom: "20px",
         padding: "16px",
-        backgroundColor: "#fff",
+        backgroundColor: "#FFFAF0",
         borderRadius: "8px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+        boxShadow: "0 2px 6px #89AA97",
     },
     analyticsGrid: {
         display: "grid",

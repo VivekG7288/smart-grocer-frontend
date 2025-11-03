@@ -227,14 +227,17 @@ export default function ProductList() {
         <div style={styles.container}>
             {shop && (
                 <div style={styles.shopHeader}>
-                    <h3>{shop.name}</h3>
-                    <p>
+                    <h3 style={{ color: "#FFFAF0" }}>{shop.name}</h3>
+                    <p style={{ color: "#FFFAF0" }}>
                         {shop.location?.address || shop.address} | {shop.phone}
                     </p>
                 </div>
             )}
             <div className="search-container">
-                <h4>Available Products ({selectedCategoryProducts.length})</h4>
+                <h4 style={{ color: "#2B4936" }}>
+                    {" "}
+                    Available Products ({selectedCategoryProducts.length})
+                </h4>
                 <div className="search-bar-wrapper">
                     <FaSearch className="search-icon" />
                     <input
@@ -254,7 +257,7 @@ export default function ProductList() {
                             <button
                                 onClick={() => onCatagorySelect(cat[0])}
                                 key={cat[0]}
-                                className={`category-list-button-customer ${
+                                className={`category-list-button ${
                                     cat[0] === selectoryCategory
                                         ? "selected-category"
                                         : ""
@@ -340,7 +343,7 @@ const styles = {
         padding: "20px",
     },
     shopHeader: {
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "#89AA97",
         padding: "20px",
         borderRadius: "8px",
         marginBottom: "20px",
