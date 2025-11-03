@@ -5,6 +5,7 @@ import { AuthContext } from "./contexts/AuthContext";
 import AuthForm from "./components/AuthForm";
 import ConsumerDashboard from "./components/ConsumerDashboard";
 import ShopkeeperDashboard from "./components/ShopkeeperDashboard";
+import OneSignal from 'react-onesignal';
 
 function App() {
   // Access the 'user' value from AuthContext to know if someone is logged in
@@ -12,14 +13,21 @@ function App() {
   console.log("AuthContext user:", user);
 
   // Initialize OneSignal notifications once on app mount
+//   useEffect(() => {
+//     if (window.OneSignal) {
+//       window.OneSignal.push(() => {
+//         window.OneSignal.init({
+//           appId: "76eb459e-8e91-47ce-8fba-f551244b0363",
+//         });
+//       });
+//     }
+//   }, []);
+
   useEffect(() => {
-    if (window.OneSignal) {
-      window.OneSignal.push(() => {
-        window.OneSignal.init({
-          appId: "76eb459e-8e91-47ce-8fba-f551244b0363",
-        });
-      });
-    }
+    OneSignal.init({
+      appId: "76eb459e-8e91-47ce-8fba-f551244b0363",
+      allowLocalhostAsSecureOrigin: true, // for localhost testing
+    });
   }, []);
 
   /*

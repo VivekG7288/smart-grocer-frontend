@@ -154,7 +154,7 @@ export default function ShopkeeperDashboard() {
                         (order.shopId &&
                             order.shopId.toString &&
                             order.shopId.toString() ===
-                                userShop._id.toString()) ||
+                            userShop._id.toString()) ||
                         (typeof order.shopId === "object" &&
                             order.shopId._id === userShop._id)
                 );
@@ -183,7 +183,7 @@ export default function ShopkeeperDashboard() {
                                 (s2, it) =>
                                     s2 +
                                     Number(it.price || 0) *
-                                        Number(it.quantity || 0),
+                                    Number(it.quantity || 0),
                                 0
                             )
                         );
@@ -259,6 +259,11 @@ export default function ShopkeeperDashboard() {
         loadUnreadCount();
     }, [user]);
 
+    const handleSubscribe = async () => {
+        const permission = await OneSignal.Slidedown.promptPush();
+        console.log("User permission:", permission);
+    };
+
     const isActive = (path) => location.pathname === path;
 
     return (
@@ -324,6 +329,7 @@ export default function ShopkeeperDashboard() {
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
                     </button>
+                    <button onClick={handleSubscribe}>Enable Notifications</button>
                 </div>
             </div>
 
@@ -671,7 +677,7 @@ export default function ShopkeeperDashboard() {
                                     <div style={styles.recentCard}>
                                         <h5>Recent Refill Requests</h5>
                                         {analytics.recentRefills.length ===
-                                        0 ? (
+                                            0 ? (
                                             <p>No recent refill requests</p>
                                         ) : (
                                             <ul>
