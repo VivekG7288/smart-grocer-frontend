@@ -15,7 +15,6 @@ export default function AuthForm() {
         phone: "",
         password: "",
         role: "CONSUMER",
-        address: "",
         picture: "",
     });
 
@@ -30,7 +29,7 @@ export default function AuthForm() {
             return false;
         }
 
-        if (!isLogin && (!form.name || !form.address)) {
+        if (!isLogin && !form.name) {
             setError("All fields are required for signup");
             return false;
         }
@@ -75,7 +74,6 @@ export default function AuthForm() {
                     phone: form.phone,
                     password: form.password,
                     role: form.role,
-                    address: form.address,
                     picture: form.picture,
                 });
                 setSuccessMessage(
@@ -106,7 +104,6 @@ export default function AuthForm() {
             phone: "",
             password: "",
             role: "CONSUMER",
-            address: "",
         });
     };
 
@@ -178,37 +175,6 @@ export default function AuthForm() {
                                 <option value="CONSUMER">Consumer</option>
                                 <option value="SHOPKEEPER">Shopkeeper</option>
                             </select>
-
-                            <label
-                                htmlFor="address"
-                                style={{
-                                    color: "white",
-                                }}
-                            >
-                                Address
-                            </label>
-
-                            <input
-                                name="address"
-                                type="text"
-                                placeholder="Address"
-                                value={form.address}
-                                onChange={handleChange}
-                                style={styles.input}
-                                onFocus={(e) => (
-                                    (e.currentTarget.style.borderColor =
-                                        "#3b82f6"),
-                                    (e.currentTarget.style.boxShadow =
-                                        "0 0 0 4px rgba(59,130,246,.15)")
-                                )}
-                                onBlur={(e) => (
-                                    (e.currentTarget.style.borderColor =
-                                        "#e5e7eb"),
-                                    (e.currentTarget.style.boxShadow =
-                                        "0 0 0 0 rgba(0,0,0,0)")
-                                )}
-                                required
-                            />
 
                             <label
                                 htmlFor="phone"
