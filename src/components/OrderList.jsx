@@ -4,6 +4,7 @@ import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { AiFillAccountBook } from "react-icons/ai";
 import { GrRefresh } from "react-icons/gr";
+import { MdDirections } from "react-icons/md";
 
 export default function OrderList() {
     const { user } = useContext(AuthContext);
@@ -216,21 +217,37 @@ export default function OrderList() {
                                         </p>
                                     </div>
 
-                                    <button
-                                        onClick={() =>
-                                            handleOpenMap(
-                                                order.deliveryAddress
-                                                    .formattedAddress
-                                            )
-                                        }
-                                        style={styles.addressInfo}
-                                    >
-                                        <p>
+                                    <div style={styles.addressInfo}>
+                                        <p
+                                            style={{
+                                                display: "flex",
+                                                gap: "5px",
+                                            }}
+                                        >
                                             <strong>
                                                 📍 Delivery Address:
                                             </strong>
-                                            (Click to navigate)
+                                            <button
+                                                onClick={() =>
+                                                    handleOpenMap(
+                                                        order.deliveryAddress
+                                                            .formattedAddress
+                                                    )
+                                                }
+                                                style={{
+                                                    cursor: "pointer",
+                                                    border: "none",
+                                                    background: "none",
+                                                    display: "flex",
+                                                    gap: "10px",
+                                                }}
+                                            >
+                                                <MdDirections
+                                                    style={{ fontSize: "20px" }}
+                                                />
+                                            </button>
                                         </p>
+
                                         <div style={styles.fullAddress}>
                                             {order.deliveryAddress ? (
                                                 <>
@@ -295,7 +312,7 @@ export default function OrderList() {
                                                 </p>
                                             )}
                                         </div>
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
 
