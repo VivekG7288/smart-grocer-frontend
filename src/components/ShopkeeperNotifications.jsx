@@ -34,21 +34,18 @@ export default function ShopkeeperNotifications({
         return () => clearInterval(interval);
     };
 
-    const markAsRead = async (notificationId) => {
+    const deleteNotification = async (notificationId) => {
         try {
-            await api.put(`/notifications/${notificationId}/read`);
-            setNotifications((prev) =>
-                prev.map((n) =>
-                    n._id === notificationId ? { ...n, isRead: true } : n
-                )
+            await api.delete(`/notifications/${notificationId}`);
+            // Remove from local state
+            setNotifications(
+                notifications.filter((n) => n._id !== notificationId)
             );
-            // Inform parent that one notification was read so it can decrement the count
             if (typeof onNotificationRead === "function")
                 onNotificationRead(notificationId);
             return true;
         } catch (err) {
-            console.error("Error marking notification as read:", err);
-            return false;
+            console.error("Error deleting notification:", err);
         }
     };
 
@@ -93,17 +90,13 @@ export default function ShopkeeperNotifications({
                                         : styles.unreadNotification
                                 }
                                 onClick={async () => {
-                                    // If unread, mark as read on the server and update parent counter
-                                    if (!notification.isRead) {
-                                        const ok = await markAsRead(
-                                            notification._id
-                                        );
-                                        if (ok) {
-                                            // close notifications panel if parent provided setter
-                                            setNotificationOpen &&
-                                                setNotificationOpen(false);
-                                            // onNotificationRead already called inside markAsRead
-                                        }
+                                    const ok = await deleteNotification(
+                                        notification._id
+                                    );
+                                    if (ok) {
+                                        // close notifications panel if parent provided setter
+                                        setNotificationOpen &&
+                                            setNotificationOpen(false);
                                     }
                                 }}
                             >

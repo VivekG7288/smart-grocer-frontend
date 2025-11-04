@@ -27,19 +27,18 @@ export default function NotificationCenter({
         }
     };
 
-    const markAsRead = async (notificationId) => {
+    const deleteNotification = async (notificationId) => {
         try {
-            await api.put(`/notifications/${notificationId}/read`);
+            await api.delete(`/notifications/${notificationId}`);
+            // Remove from local state
             setNotifications(
-                notifications.map((n) =>
-                    n._id === notificationId ? { ...n, isRead: true } : n
-                )
+                notifications.filter((n) => n._id !== notificationId)
             );
             if (typeof onNotificationRead === "function")
                 onNotificationRead(notificationId);
             return true;
         } catch (err) {
-            console.error("Error marking notification as read:", err);
+            console.error("Error deleting notification:", err);
         }
     };
 
@@ -81,17 +80,13 @@ export default function NotificationCenter({
                                         : styles.unreadNotification
                                 }
                                 onClick={async () => {
-                                    // If unread, mark as read on the server and update parent counter
-                                    if (!notification.isRead) {
-                                        const ok = await markAsRead(
-                                            notification._id
-                                        );
-                                        if (ok) {
-                                            // close notifications panel if parent provided setter
-                                            setNotificationOpen &&
-                                                setNotificationOpen(false);
-                                            // onNotificationRead already called inside markAsRead
-                                        }
+                                    const ok = await deleteNotification(
+                                        notification._id
+                                    );
+                                    if (ok) {
+                                        // close notifications panel if parent provided setter
+                                        setNotificationOpen &&
+                                            setNotificationOpen(false);
                                     }
                                 }}
                             >
