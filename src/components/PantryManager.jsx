@@ -2,14 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { IoStorefrontSharp } from "react-icons/io5";
-import { BsFillBookmarkPlusFill } from "react-icons/bs";
 import { FaSearch } from "react-icons/fa";
 
 export default function PantryManager() {
     const { user } = useContext(AuthContext);
     const [pantryItems, setPantryItems] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showAddForm, setShowAddForm] = useState(false);
     const [query, setQuery] = useState("");
     const [filteredProduct, setFilteredProducts] = useState([pantryItems]);
 
@@ -32,7 +30,12 @@ export default function PantryManager() {
     const loadPantryItems = async () => {
         try {
             const res = await api.get(`/pantry/user/${user._id}`);
-            setPantryItems(res.data);
+            // Add a local property for editable stock
+            const itemsWithStock = res.data.map((item) => ({
+                ...item,
+                editablePacksOwned: item.packsOwned,
+            }));
+            setPantryItems(itemsWithStock);
         } catch (err) {
             console.error("Error loading pantry:", err);
         } finally {
@@ -40,15 +43,34 @@ export default function PantryManager() {
         }
     };
 
+    const handleStockChange = (itemId, value) => {
+        setPantryItems((prev) =>
+            prev.map((item) =>
+                item._id === itemId
+                    ? { ...item, editablePacksOwned: Number(value) }
+                    : item
+            )
+        );
+    };
+
     const requestRefill = async (itemId) => {
+        const item = pantryItems.find((i) => i._id === itemId);
+        if (!item) return;
+
         try {
             const res = await api.put(`/pantry/${itemId}`, {
                 status: "REFILL_REQUESTED",
+                currentPacks: item.editablePacksOwned, // ✅ backend expects this field
             });
 
-            setPantryItems(
-                pantryItems.map((item) =>
-                    item._id === itemId ? res.data : item
+            setPantryItems((prev) =>
+                prev.map((i) =>
+                    i._id === itemId
+                        ? {
+                              ...res.data,
+                              editablePacksOwned: res.data.currentPacks,
+                          }
+                        : i
                 )
             );
 
@@ -98,9 +120,6 @@ export default function PantryManager() {
                         <div key={item._id} style={styles.itemCard}>
                             <div style={styles.itemHeader}>
                                 <h4>{item.productName}</h4>
-                                <span style={getStatusBadgeStyle(item.status)}>
-                                    {item.status.replace("_", " ")}
-                                </span>
                             </div>
 
                             <div style={styles.itemDetails}>
@@ -122,9 +141,19 @@ export default function PantryManager() {
                                     <strong>Current Stock:</strong>
                                 </p>
                                 <div style={styles.stockControls}>
-                                    <span style={styles.stockCount}>
-                                        {item.packsOwned} {item.unit}
-                                    </span>
+                                    <input
+                                        name="stock"
+                                        style={styles.stockCount}
+                                        type="number"
+                                        value={item.editablePacksOwned}
+                                        onChange={(e) =>
+                                            handleStockChange(
+                                                item._id,
+                                                e.target.value
+                                            )
+                                        }
+                                    />{" "}
+                                    {item.unit}
                                 </div>
                             </div>
 
@@ -171,18 +200,6 @@ export default function PantryManager() {
         </div>
     );
 }
-
-const getStatusBadgeStyle = (status) => ({
-    ...styles.statusBadge,
-    backgroundColor:
-        status === "LOW" || status === "REFILL_REQUESTED"
-            ? "#dc3545"
-            : status === "CONFIRMED" || status === "OUT_FOR_DELIVERY"
-            ? "#ffc107"
-            : status === "STOCKED"
-            ? "#28a745"
-            : "#6c757d",
-});
 
 const styles = {
     container: {
@@ -257,7 +274,7 @@ const styles = {
     },
     stockCount: {
         fontWeight: "bold",
-        minWidth: "100px",
+        maxWidth: "40px",
         textAlign: "center",
     },
     itemActions: {
@@ -280,5 +297,6 @@ const styles = {
         borderRadius: "6px",
         color: "#856404",
         fontWeight: "bold",
+        marginTop: "10px",
     },
 };

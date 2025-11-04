@@ -233,7 +233,7 @@ export default function RefillRequests() {
                                     </p>
                                     <p>
                                         <strong>Quantity:</strong>{" "}
-                                        {request.packsOwned} packs ×{" "}
+                                        {request.currentPacks} packs ×{" "}
                                         {request.quantityPerPack} {request.unit}
                                     </p>
                                     <p>
@@ -243,7 +243,7 @@ export default function RefillRequests() {
                                     <p>
                                         <strong>Total:</strong> ₹
                                         {(
-                                            request.price * request.packsOwned
+                                            request.price * request.currentPacks
                                         ).toFixed(2)}
                                     </p>
                                 </div>
