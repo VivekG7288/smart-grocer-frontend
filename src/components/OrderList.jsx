@@ -77,7 +77,7 @@ export default function OrderList() {
             // Update local state
             setOrders(
                 orders.map((order) =>
-                    order._id === orderId
+                    order._id.toString() === orderId.toString()
                         ? { ...order, status: newStatus }
                         : order
                 )
