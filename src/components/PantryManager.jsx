@@ -40,22 +40,6 @@ export default function PantryManager() {
         }
     };
 
-    const updateConsumption = async (itemId, newPacks) => {
-        try {
-            const res = await api.put(`/pantry/${itemId}`, {
-                currentPacks: newPacks,
-            });
-
-            setPantryItems(
-                pantryItems.map((item) =>
-                    item._id === itemId ? res.data : item
-                )
-            );
-        } catch (err) {
-            console.error("Error updating consumption:", err);
-        }
-    };
-
     const requestRefill = async (itemId) => {
         try {
             const res = await api.put(`/pantry/${itemId}`, {
@@ -111,10 +95,7 @@ export default function PantryManager() {
             ) : (
                 <div style={styles.pantryGrid}>
                     {filteredProduct.map((item) => (
-                        <div
-                            key={item._id}
-                            style={getItemCardStyle(item.status)}
-                        >
+                        <div key={item._id} style={styles.itemCard}>
                             <div style={styles.itemHeader}>
                                 <h4>{item.productName}</h4>
                                 <span style={getStatusBadgeStyle(item.status)}>
@@ -137,42 +118,13 @@ export default function PantryManager() {
                             </div>
 
                             <div style={styles.stockTracker}>
-                                <p>
+                                <p style={{ minWidth: "120px", margin: 0 }}>
                                     <strong>Current Stock:</strong>
                                 </p>
                                 <div style={styles.stockControls}>
-                                    <button
-                                        onClick={() =>
-                                            updateConsumption(
-                                                item._id,
-                                                Math.max(
-                                                    0,
-                                                    item.currentPacks - 1
-                                                )
-                                            )
-                                        }
-                                        style={styles.stockButton}
-                                    >
-                                        -
-                                    </button>
                                     <span style={styles.stockCount}>
-                                        {item.currentPacks} / {item.packsOwned}{" "}
-                                        packs
+                                        {item.packsOwned} {item.unit}
                                     </span>
-                                    <button
-                                        onClick={() =>
-                                            updateConsumption(
-                                                item._id,
-                                                Math.min(
-                                                    item.packsOwned,
-                                                    item.currentPacks + 1
-                                                )
-                                            )
-                                        }
-                                        style={styles.stockButton}
-                                    >
-                                        +
-                                    </button>
                                 </div>
                             </div>
 
@@ -190,21 +142,12 @@ export default function PantryManager() {
                                         </button>
                                     )}
 
-                                {![
-                                    "REFILL_REQUESTED",
-                                    "CONFIRMED",
-                                    "OUT_FOR_DELIVERY",
-                                ].includes(item.status) &&
-                                    item.currentPacks < item.packsOwned && (
-                                        <button
-                                            onClick={() =>
-                                                requestRefill(item._id)
-                                            }
-                                            style={styles.refillButton}
-                                        >
-                                            🚨 Need Refill Now!
-                                        </button>
-                                    )}
+                                <button
+                                    onClick={() => requestRefill(item._id)}
+                                    style={styles.refillButton}
+                                >
+                                    🚨 Need Refill Now!
+                                </button>
 
                                 {[
                                     "REFILL_REQUESTED",
@@ -228,19 +171,6 @@ export default function PantryManager() {
         </div>
     );
 }
-
-const getItemCardStyle = (status) => ({
-    ...styles.itemCard,
-    border: `4px solid ${
-        status === "LOW" || status === "REFILL_REQUESTED"
-            ? "#dc3545"
-            : status === "CONFIRMED" || status === "OUT_FOR_DELIVERY"
-            ? "#ffc107"
-            : status === "STOCKED"
-            ? "#28a745"
-            : "#6c757d"
-    }`,
-});
 
 const getStatusBadgeStyle = (status) => ({
     ...styles.statusBadge,
@@ -287,7 +217,7 @@ const styles = {
         padding: "20px",
         boxShadow: "0 4px 12px #2B4936",
         border: "1px solid #ddd",
-        width: "auto",
+        width: "200px",
     },
     itemHeader: {
         display: "flex",
@@ -308,13 +238,13 @@ const styles = {
         color: "#666",
     },
     stockTracker: {
+        display: "flex",
         marginBottom: "15px",
     },
     stockControls: {
         display: "flex",
         alignItems: "center",
         gap: "10px",
-        marginTop: "8px",
     },
     stockButton: {
         width: "30px",

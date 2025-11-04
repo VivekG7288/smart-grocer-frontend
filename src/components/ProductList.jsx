@@ -146,59 +146,6 @@ export default function ProductList() {
         }
     };
 
-    const addToPantry = async (product) => {
-        try {
-            // Get user's current delivery address
-            const savedAddress = localStorage.getItem(
-                `deliveryAddress_${user._id}`
-            );
-            let deliveryAddress = null;
-
-            if (savedAddress) {
-                deliveryAddress = JSON.parse(savedAddress);
-            }
-
-            const payload = {
-                userId: user._id,
-                shopId: shopId,
-                productId: product._id,
-                productName: product.name,
-                brandName: "", // Can add input for this
-                quantityPerPack: 1, // Default, can be customized
-                unit: product.unit,
-                packsOwned: 2, // Default
-                price: product.price,
-                refillThreshold: 1,
-
-                // Include delivery address
-                deliveryAddress: deliveryAddress
-                    ? {
-                          flat: deliveryAddress.flat || "",
-                          building: deliveryAddress.building || "",
-                          street: deliveryAddress.street || "",
-                          area: deliveryAddress.area || "",
-                          landmark: deliveryAddress.landmark || "",
-                          city: deliveryAddress.city || "",
-                          pincode: deliveryAddress.pincode || "",
-                          coordinates: deliveryAddress.coordinates || [],
-                          formattedAddress:
-                              deliveryAddress.formattedAddress ||
-                              `${deliveryAddress.area}, ${deliveryAddress.city}`,
-                      }
-                    : null,
-            };
-
-            await api.post("/pantry", payload);
-            alert(`${product.name} added to your pantry for tracking!`);
-        } catch (err) {
-            console.error("Error adding to pantry:", err);
-            alert(
-                "Error adding to pantry: " +
-                    (err.response?.data?.error || err.message)
-            );
-        }
-    };
-
     const loadProducts = async () => {
         try {
             const res = await api.get("/products");
@@ -349,6 +296,9 @@ const styles = {
         boxShadow: "0 4px 12px #2B4936",
         maxHeight: "400px",
         width: "170px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
     },
     productImage: {
         width: "100%",
@@ -359,7 +309,6 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        height: "-webkit-fill-available",
         padding: "15px",
     },
     category: {

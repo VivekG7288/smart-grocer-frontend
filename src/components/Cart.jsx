@@ -96,7 +96,7 @@ export default function Cart({ deliveryAddress }) {
                 brandName: "", // Can add input for this
                 quantityPerPack: 1, // Default, can be customized
                 unit: product.unit,
-                packsOwned: 2, // Default
+                packsOwned: product.quantity,
                 price: product.price,
                 refillThreshold: 1,
 
