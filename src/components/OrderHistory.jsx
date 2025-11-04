@@ -100,6 +100,26 @@ export default function OrderHistory() {
         }
     };
 
+    const updateOrderStatus = async (orderId, newStatus) => {
+        try {
+            await api.put(`/orders/${orderId}`, { status: newStatus });
+
+            // Update local state
+            setOrders(
+                orders.map((order) =>
+                    order._id === orderId
+                        ? { ...order, status: newStatus }
+                        : order
+                )
+            );
+
+            alert(`Order status updated to ${newStatus}`);
+        } catch (err) {
+            console.error("Error updating order status:", err);
+            alert("Error updating order status");
+        }
+    };
+
     if (loading) {
         return <div style={styles.loading}>Loading your order history...</div>;
     }
@@ -107,7 +127,7 @@ export default function OrderHistory() {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <h3>📋 Your Order History</h3>
+                <h3> Your Order History</h3>
                 <div style={styles.filters}>
                     <select
                         value={filter}
@@ -211,24 +231,42 @@ export default function OrderHistory() {
                                             "0.00"}
                                     </strong>
                                 </div>
-                                <div style={styles.orderActions}>
-                                    {order.status === "DELIVERED" && (
-                                        <button
-                                            onClick={() => reorderItems(order)}
-                                            style={styles.reorderButton}
-                                        >
-                                            🔄 Reorder
-                                        </button>
-                                    )}
-                                    {order.deliveryDate && (
-                                        <span style={styles.deliveryDate}>
-                                            Delivered:{" "}
-                                            {new Date(
-                                                order.deliveryDate
-                                            ).toLocaleDateString()}
-                                        </span>
-                                    )}
-                                </div>
+                                {order.status === "PENDING" && (
+                                    <button
+                                        onClick={() =>
+                                            updateOrderStatus(
+                                                order._id,
+                                                "CANCELLED"
+                                            )
+                                        }
+                                        style={styles.cancelButton}
+                                    >
+                                        cancel order
+                                    </button>
+                                )}
+                                {(order.status === "DELIVERED" ||
+                                    order.deliveryDate) && (
+                                    <div style={styles.orderActions}>
+                                        {order.status === "DELIVERED" && (
+                                            <button
+                                                onClick={() =>
+                                                    reorderItems(order)
+                                                }
+                                                style={styles.reorderButton}
+                                            >
+                                                🔄 Reorder
+                                            </button>
+                                        )}
+                                        {order.deliveryDate && (
+                                            <span style={styles.deliveryDate}>
+                                                Delivered:{" "}
+                                                {new Date(
+                                                    order.deliveryDate
+                                                ).toLocaleDateString()}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -355,6 +393,15 @@ const styles = {
         display: "flex",
         alignItems: "center",
         gap: "15px",
+    },
+    cancelButton: {
+        padding: "8px 16px",
+        backgroundColor: "#dc3545",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontSize: "14px",
     },
     reorderButton: {
         padding: "8px 16px",
