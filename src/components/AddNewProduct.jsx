@@ -150,23 +150,59 @@ function AddNewProduct() {
         setUploading(true);
 
         try {
+            // ✅ Get all products (no filter)
+            const existingProductsRes = await api.get("/products");
+            const existingProducts = existingProductsRes.data;
+
             for (const item of csvData) {
                 if (!item.name || !item.price || !item.stock) continue;
 
-                const payload = {
-                    shopId: shop._id,
-                    name: item.name.trim(),
-                    category: item.category?.trim() || "others",
-                    price: parseFloat(item.price),
-                    stock: parseInt(item.stock),
-                    unit: item.unit?.trim() || "pcs",
-                    image: item.image?.trim() || "",
-                };
+                const productName = item.name.trim().toLowerCase();
+                const existingProduct = existingProducts.find(
+                    (p) =>
+                        p.name.trim().toLowerCase() === productName &&
+                        p.shopId === shop._id
+                );
 
-                await api.post("/products", payload);
+                if (existingProduct) {
+                    // 🟢 If product exists, update its details
+                    const updatedPayload = {
+                        ...existingProduct,
+                        stock:
+                            parseInt(existingProduct.stock) +
+                            parseInt(item.stock),
+                        price: parseFloat(item.price),
+                        unit: item.unit?.trim() || existingProduct.unit,
+                        category:
+                            item.category?.trim() || existingProduct.category,
+                        image: item.image?.trim() || existingProduct.image,
+                    };
+
+                    await api.put(
+                        `/products/${existingProduct._id}`,
+                        updatedPayload
+                    );
+                    console.log(`Updated existing product: ${item.name}`);
+                } else {
+                    // 🆕 Create new product
+                    const payload = {
+                        shopId: shop._id,
+                        name: item.name.trim(),
+                        category: item.category?.trim() || "others",
+                        price: parseFloat(item.price),
+                        stock: parseInt(item.stock),
+                        unit: item.unit?.trim() || "pcs",
+                        image: item.image?.trim() || "",
+                    };
+
+                    await api.post("/products", payload);
+                    console.log(`Added new product: ${item.name}`);
+                }
             }
 
-            alert("All products uploaded successfully!");
+            alert(
+                "Products uploaded successfully — existing products updated."
+            );
         } catch (err) {
             console.error("Error uploading products:", err);
             const errorMsg = err.response?.data?.error || err.message;
@@ -175,6 +211,7 @@ function AddNewProduct() {
             setUploading(false);
         }
     };
+
     if (loading) {
         return <div style={styles.loading}>Loading your shop...</div>;
     }

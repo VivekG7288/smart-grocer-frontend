@@ -432,11 +432,12 @@ const styles = {
         backgroundColor: "#fff",
         boxShadow: "0 4px 12px #2B4936",
         transition: "transform 0.2s",
+        width: "250px",
     },
     productImage: {
         width: "100%",
         height: "150px",
-        objectFit: "cover",
+        objectFit: "contain",
     },
     productName: {
         margin: "0 0 8px 0",
