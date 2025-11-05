@@ -3,6 +3,7 @@ import api from "../api/api";
 import { AuthContext } from "../contexts/AuthContext";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function PantryManager() {
     const { user } = useContext(AuthContext);
@@ -83,6 +84,15 @@ export default function PantryManager() {
         }
     };
 
+    const removePantryItem = async (itemID) => {
+        try {
+            await api.delete(`/pantry/user/${itemID}`);
+            loadPantryItems();
+        } catch (err) {
+            console.error("Error while removing item from pantry", err);
+        }
+    };
+
     if (loading) {
         return <div style={styles.loading}>Loading your pantry...</div>;
     }
@@ -120,6 +130,22 @@ export default function PantryManager() {
                         <div key={item._id} style={styles.itemCard}>
                             <div style={styles.itemHeader}>
                                 <h4>{item.productName}</h4>
+
+                                <button
+                                    onClick={() => removePantryItem(item._id)}
+                                    style={{
+                                        cursor: "pointer",
+                                        background: "none",
+                                        border: "none",
+                                    }}
+                                >
+                                    <MdDeleteForever
+                                        style={{
+                                            fontSize: "25px",
+                                            color: "red",
+                                        }}
+                                    />
+                                </button>
                             </div>
 
                             <div style={styles.itemDetails}>
@@ -158,19 +184,6 @@ export default function PantryManager() {
                             </div>
 
                             <div style={styles.itemActions}>
-                                {item.status === "STOCKED" &&
-                                    item.currentPacks <=
-                                        item.refillThreshold && (
-                                        <button
-                                            onClick={() =>
-                                                requestRefill(item._id)
-                                            }
-                                            style={styles.refillButton}
-                                        >
-                                            🔔 Request Refill
-                                        </button>
-                                    )}
-
                                 <button
                                     onClick={() => requestRefill(item._id)}
                                     style={styles.refillButton}
