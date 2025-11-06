@@ -42,6 +42,8 @@ export default function ShopkeeperDashboard() {
     const [notificationOpen, setNotificationOpen] = useState(false);
     const navRef = React.useRef(null);
     const notificationRef = React.useRef(null);
+    const [editedShop, setEditedShop] = useState(null);
+    const [editShop, setEditShop] = useState(false);
 
     // Handle clicks outside notification panel
     useEffect(() => {
@@ -154,7 +156,7 @@ export default function ShopkeeperDashboard() {
                         (order.shopId &&
                             order.shopId.toString &&
                             order.shopId.toString() ===
-                            userShop._id.toString()) ||
+                                userShop._id.toString()) ||
                         (typeof order.shopId === "object" &&
                             order.shopId._id === userShop._id)
                 );
@@ -183,7 +185,7 @@ export default function ShopkeeperDashboard() {
                                 (s2, it) =>
                                     s2 +
                                     Number(it.price || 0) *
-                                    Number(it.quantity || 0),
+                                        Number(it.quantity || 0),
                                 0
                             )
                         );
@@ -329,7 +331,9 @@ export default function ShopkeeperDashboard() {
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
                     </button>
-                    <button onClick={handleSubscribe}>Enable Notifications</button>
+                    <button onClick={handleSubscribe}>
+                        Enable Notifications
+                    </button>
                 </div>
             </div>
 
@@ -590,39 +594,187 @@ export default function ShopkeeperDashboard() {
                                             />
                                         </div>
 
-                                        <Link to="/" style={styles.editButton}>
-                                            Edit Details
-                                        </Link>
+                                        <button
+                                            onClick={async () => {
+                                                if (editShop) {
+                                                    // Save updated details
+                                                    try {
+                                                        const res =
+                                                            await api.put(
+                                                                `/shops/${shop._id}`,
+                                                                editedShop
+                                                            );
+                                                        setShop(res.data);
+                                                        setEditShop(false);
+                                                        alert(
+                                                            "Shop details updated successfully!"
+                                                        );
+                                                    } catch (error) {
+                                                        console.error(
+                                                            "Error updating shop:",
+                                                            error
+                                                        );
+                                                        alert(
+                                                            "Failed to update shop details. Please try again."
+                                                        );
+                                                    }
+                                                } else {
+                                                    // Enable edit mode
+                                                    setEditedShop({ ...shop });
+                                                    setEditShop(true);
+                                                }
+                                            }}
+                                            style={styles.editButton}
+                                        >
+                                            {editShop ? "Done" : "Edit Details"}
+                                        </button>
                                     </div>
                                     <div style={styles.shopDetailsGrid}>
+                                        {/* Shop Name */}
                                         <div style={styles.detailGroup}>
                                             <label>Shop Name</label>
-                                            <p>{shop.name}</p>
+                                            {editShop ? (
+                                                <input
+                                                    type="text"
+                                                    value={
+                                                        editedShop?.name || ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setEditedShop(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                name: e.target
+                                                                    .value,
+                                                            })
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <p>{shop.name}</p>
+                                            )}
                                         </div>
+
+                                        {/* Phone */}
                                         <div style={styles.detailGroup}>
                                             <label>Phone</label>
-                                            <p>
-                                                {shop.phone || "Not provided"}
-                                            </p>
+                                            {editShop ? (
+                                                <input
+                                                    type="text"
+                                                    value={
+                                                        editedShop?.phone || ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setEditedShop(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                phone: e.target
+                                                                    .value,
+                                                            })
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <p>
+                                                    {shop.phone ||
+                                                        "Not provided"}
+                                                </p>
+                                            )}
                                         </div>
+
+                                        {/* City */}
                                         <div style={styles.detailGroup}>
                                             <label>City</label>
-                                            <p>
-                                                {shop.location?.city ||
-                                                    "Not provided"}
-                                            </p>
+                                            {editShop ? (
+                                                <input
+                                                    type="text"
+                                                    value={
+                                                        editedShop?.location
+                                                            ?.city || ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setEditedShop(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                location: {
+                                                                    ...prev.location,
+                                                                    city: e
+                                                                        .target
+                                                                        .value,
+                                                                },
+                                                            })
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <p>
+                                                    {shop.location?.city ||
+                                                        "Not provided"}
+                                                </p>
+                                            )}
                                         </div>
+
+                                        {/* Pincode */}
                                         <div style={styles.detailGroup}>
                                             <label>Pincode</label>
-                                            <p>
-                                                {shop.location?.pincode ||
-                                                    "Not provided"}
-                                            </p>
+                                            {editShop ? (
+                                                <input
+                                                    type="text"
+                                                    value={
+                                                        editedShop?.location
+                                                            ?.pincode || ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setEditedShop(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                location: {
+                                                                    ...prev.location,
+                                                                    pincode:
+                                                                        e.target
+                                                                            .value,
+                                                                },
+                                                            })
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <p>
+                                                    {shop.location?.pincode ||
+                                                        "Not provided"}
+                                                </p>
+                                            )}
                                         </div>
+
+                                        {/* Delivery Radius */}
                                         <div style={styles.detailGroup}>
                                             <label>Delivery Radius</label>
-                                            <p>{shop.deliveryRadius || 5} km</p>
+                                            {editShop ? (
+                                                <input
+                                                    type="number"
+                                                    value={
+                                                        editedShop?.deliveryRadius ||
+                                                        ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setEditedShop(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                deliveryRadius:
+                                                                    e.target
+                                                                        .value,
+                                                            })
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <p>
+                                                    {shop.deliveryRadius || 5}{" "}
+                                                    km
+                                                </p>
+                                            )}
                                         </div>
+
+                                        {/* Address */}
                                         <div
                                             style={{
                                                 ...styles.detailGroup,
@@ -630,11 +782,35 @@ export default function ShopkeeperDashboard() {
                                             }}
                                         >
                                             <label>Address</label>
-                                            <p>
-                                                {shop.location?.address ||
-                                                    "Address not provided"}
-                                            </p>
+                                            {editShop ? (
+                                                <textarea
+                                                    value={
+                                                        editedShop?.location
+                                                            ?.address || ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        setEditedShop(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                location: {
+                                                                    ...prev.location,
+                                                                    address:
+                                                                        e.target
+                                                                            .value,
+                                                                },
+                                                            })
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <p>
+                                                    {shop.location?.address ||
+                                                        "Address not provided"}
+                                                </p>
+                                            )}
                                         </div>
+
+                                        {/* Shop ID */}
                                         <div
                                             style={{
                                                 ...styles.detailGroup,
@@ -677,7 +853,7 @@ export default function ShopkeeperDashboard() {
                                     <div style={styles.recentCard}>
                                         <h5>Recent Refill Requests</h5>
                                         {analytics.recentRefills.length ===
-                                            0 ? (
+                                        0 ? (
                                             <p>No recent refill requests</p>
                                         ) : (
                                             <ul>
@@ -875,6 +1051,7 @@ const styles = {
         fontSize: "14px",
         border: "1px solid #e2e8f0",
         transition: "all 0.2s",
+        cursor: "pointer",
     },
     shopId: {
         fontFamily: "monospace",
