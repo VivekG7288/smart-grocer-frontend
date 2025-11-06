@@ -83,6 +83,7 @@ export default function PantryManager() {
             alert("Error requesting refill");
         }
     };
+    console.log(filteredProduct);
 
     const removePantryItem = async (itemID) => {
         try {
@@ -147,11 +148,21 @@ export default function PantryManager() {
                                     />
                                 </button>
                             </div>
+                            <img
+                                style={{
+                                    objectFit: "contain",
+                                    width: "200px",
+                                    height: "200px",
+                                    marginTop: "-30px",
+                                }}
+                                src={item.productId.image}
+                            ></img>
 
                             <div style={styles.itemDetails}>
                                 <p>
                                     <strong>Shop:</strong> {item.shopId?.name}
                                 </p>
+
                                 <p>
                                     <strong>Brand:</strong>{" "}
                                     {item.brandName || "Generic"}
