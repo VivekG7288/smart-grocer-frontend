@@ -11,24 +11,6 @@ function App() {
     const { user } = useContext(AuthContext);
     console.log("AuthContext user:", user);
 
-    // Initialize OneSignal notifications once on app mount
-    //   useEffect(() => {
-    //     if (window.OneSignal) {
-    //       window.OneSignal.push(() => {
-    //         window.OneSignal.init({
-    //           appId: "76eb459e-8e91-47ce-8fba-f551244b0363",
-    //         });
-    //       });
-    //     }
-    //   }, []);
-
-    useEffect(() => {
-        OneSignal.init({
-            appId: "76eb459e-8e91-47ce-8fba-f551244b0363",
-            allowLocalhostAsSecureOrigin: true, // for localhost testing
-        });
-    }, []);
-
     /*
      * If no user is logged in:
      * - Show only the AuthForm (login/signup screen)
