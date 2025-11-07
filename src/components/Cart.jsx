@@ -7,12 +7,27 @@ async function haveSameShopId(items) {
 
     try {
         const shopsRes = await api.get("/shops");
+        const firstShopId = items[0].productId?.shopId || items[0].shopId;
 
-        const firstShopId = items[0].shopId;
-        const allSame = items.every((item) => item.shopId === firstShopId);
-        const filteredStore = shopsRes.data.filter(
-            (x) => x._id == items[0].shopId
+        // If shopId is missing, skip
+        if (!firstShopId) {
+            console.warn("No shopId found in first cart item:", items[0]);
+            return false;
+        }
+
+        const allSame = items.every(
+            (item) => (item.productId?.shopId || item.shopId) === firstShopId
         );
+
+        const filteredStore = shopsRes.data.filter(
+            (x) => x._id === firstShopId
+        );
+
+        // ✅ Prevent undefined access
+        if (filteredStore.length === 0) {
+            console.warn("Shop not found for shopId:", firstShopId);
+            return false;
+        }
 
         return filteredStore[0].homeDelivery && allSame;
     } catch (error) {
@@ -20,6 +35,37 @@ async function haveSameShopId(items) {
         return false;
     }
 }
+
+// put this above your component
+const ensureFullProduct = async (cartItem) => {
+    // cartItem is the whole item; the product doc is nested at productId
+    const p = cartItem?.productId || cartItem;
+    if (!p) return null;
+
+    // if all required fields present, use as-is
+    if (p.shopId && p.name && typeof p.price === "number" && p.unit) return p;
+
+    // otherwise, fetch full product (assumes GET /api/products/:id exists)
+    try {
+        const id = p._id || cartItem?.productId?._id;
+        if (!id) return { ...p, unit: p.unit || "pcs" };
+
+        const { data } = await api.get(`/products/${id}`);
+        // final safety fallback for unit
+        return {
+            ...p,
+            ...data,
+            unit: (data && data.unit) || p.unit || "pcs",
+        };
+    } catch (e) {
+        console.warn("Could not fetch full product, using fallbacks:", e);
+        // last-resort safe fallbacks so pantry validation passes
+        return {
+            ...p,
+            unit: p.unit || "pcs",
+        };
+    }
+};
 
 export default function Cart({ deliveryAddress }) {
     const { user } = useContext(AuthContext);
@@ -51,73 +97,114 @@ export default function Cart({ deliveryAddress }) {
         }
     }, [cart]);
 
-    const loadCart = () => {
-        const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-        console.log("Loaded cart:", cartData);
-        setCart(cartData);
-    };
-
-    const updateQuantity = (productId, newQuantity) => {
-        if (newQuantity <= 0) {
-            removeFromCart(productId);
-            return;
-        }
-
-        const updatedCart = cart.map((item) =>
-            item._id === productId ? { ...item, quantity: newQuantity } : item
-        );
-        setCart(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-    };
-
-    const removeFromCart = (productId) => {
-        const updatedCart = cart.filter((item) => item._id !== productId);
-        setCart(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-    };
-
-    const addToPantry = async (product) => {
+    const loadCart = async () => {
         try {
-            // Get user's current delivery address
+            const res = await api.get("/cart", {
+                params: { userId: user._id },
+            });
+            console.log("Loaded cart:", res.data);
+            setCart(res.data.items || []); // handle empty cart safely
+        } catch (error) {
+            console.error("Error loading cart:", error);
+        }
+    };
+
+    const updateQuantity = async (productId, newQuantity) => {
+        if (newQuantity < 0) return; // Prevent negative quantity
+
+        try {
+            const payload = {
+                userId: user._id,
+                productId,
+                quantity: newQuantity,
+            };
+
+            const res = await api.patch("/cart/quantity", payload);
+            console.log("Cart after quantity update:", res.data);
+
+            // Update cart in state + localStorage
+            setCart(res.data.items || []);
+        } catch (error) {
+            console.error("Error updating quantity:", error);
+            alert("Failed to update quantity. Please try again.");
+        }
+    };
+
+    const removeFromCart = async (productId) => {
+        try {
+            const payload = {
+                userId: user._id,
+                productId,
+            };
+
+            const res = await api.delete("/cart", { data: payload });
+            console.log("Cart after removal:", res.data);
+
+            setCart(res.data.items || []);
+        } catch (error) {
+            console.error("Error removing item from cart:", error);
+            alert("Failed to remove item from cart. Please try again.");
+        }
+    };
+
+    const addToPantry = async (cartItem) => {
+        try {
+            // ensure we have a complete product doc
+            const product = await ensureFullProduct(cartItem);
+            if (!product || !product._id) {
+                alert("Unable to add to pantry: invalid product.");
+                return;
+            }
+
+            // get saved address (unchanged)
             const savedAddress = localStorage.getItem(
                 `deliveryAddress_${user._id}`
             );
-            let deliveryAddress = null;
+            const addr = savedAddress ? JSON.parse(savedAddress) : null;
 
-            if (savedAddress) {
-                deliveryAddress = JSON.parse(savedAddress);
-            }
-
+            // build payload with safe fallbacks
             const payload = {
                 userId: user._id,
-                shopId: product.shopId,
-                productId: product._id,
-                productName: product.name,
-                brandName: "", // Can add input for this
-                quantityPerPack: 1, // Default, can be customized
-                unit: product.unit,
-                packsOwned: product.quantity,
-                price: product.price,
+                shopId: product.shopId, // required
+                productId: product._id, // required
+                productName: product.name, // required
+                brandName: "",
+                quantityPerPack: 1,
+                unit: product.unit || "pcs", // ✅ ensure present
+                packsOwned: cartItem.quantity ?? 1,
+                price: typeof product.price === "number" ? product.price : 0, // required
                 refillThreshold: 1,
-
-                // Include delivery address
-                deliveryAddress: deliveryAddress
+                deliveryAddress: addr
                     ? {
-                          flat: deliveryAddress.flat || "",
-                          building: deliveryAddress.building || "",
-                          street: deliveryAddress.street || "",
-                          area: deliveryAddress.area || "",
-                          landmark: deliveryAddress.landmark || "",
-                          city: deliveryAddress.city || "",
-                          pincode: deliveryAddress.pincode || "",
-                          coordinates: deliveryAddress.coordinates || [],
+                          flat: addr.flat || "",
+                          building: addr.building || "",
+                          street: addr.street || "",
+                          area: addr.area || "",
+                          landmark: addr.landmark || "",
+                          city: addr.city || "",
+                          pincode: addr.pincode || "",
+                          coordinates: addr.coordinates || [],
                           formattedAddress:
-                              deliveryAddress.formattedAddress ||
-                              `${deliveryAddress.area}, ${deliveryAddress.city}`,
+                              addr.formattedAddress ||
+                              `${addr.area}, ${addr.city}`,
                       }
                     : null,
             };
 
+            // quick front-end validation to avoid 400s
+            if (
+                !payload.shopId ||
+                !payload.productId ||
+                !payload.productName ||
+                !payload.unit ||
+                typeof payload.price !== "number"
+            ) {
+                console.error("Pantry payload invalid:", payload);
+                alert("Missing product info (unit/name/price). Try again.");
+                return;
+            }
+
+            console.log("Adding to pantry payload:", payload);
             await api.post("/pantry", payload);
             alert(`${product.name} added to your pantry for tracking!`);
         } catch (err) {
@@ -162,13 +249,21 @@ export default function Cart({ deliveryAddress }) {
             // Group cart items by shop
             const ordersByShop = {};
             cart.forEach((item) => {
-                if (!ordersByShop[item.shopId]) {
-                    ordersByShop[item.shopId] = [];
+                const product = item.productId;
+
+                if (!product || !product._id || !product.shopId) {
+                    console.error("Invalid product in cart item:", item);
+                    return;
                 }
-                ordersByShop[item.shopId].push({
-                    productId: item._id,
+
+                if (!ordersByShop[product.shopId]) {
+                    ordersByShop[product.shopId] = [];
+                }
+
+                ordersByShop[product.shopId].push({
+                    productId: product._id,
                     quantity: item.quantity,
-                    price: item.price,
+                    price: product.price,
                 });
             });
 
@@ -212,9 +307,8 @@ export default function Cart({ deliveryAddress }) {
                 console.log("Placing order with delivery address:", orderData);
                 await api.post("/orders", orderData);
             }
+            await api.post("/cart/clear", { userId: user._id });
 
-            // Clear cart after successful order
-            localStorage.removeItem("cart");
             setCart([]);
             alert(
                 "Order(s) placed successfully! The shop will contact you for delivery confirmation."
@@ -230,7 +324,10 @@ export default function Cart({ deliveryAddress }) {
 
     const getTotalAmount = () => {
         return cart
-            .reduce((total, item) => total + item.price * item.quantity, 0)
+            .reduce(
+                (total, item) => total + item.productId.price * item.quantity,
+                0
+            )
             .toFixed(2);
     };
 
@@ -277,25 +374,31 @@ export default function Cart({ deliveryAddress }) {
 
             <div style={styles.cartItems}>
                 {cart.map((item) => (
-                    <div key={item._id} style={styles.cartItem}>
-                        {item.image && (
+                    <div key={item.productId?._id} style={styles.cartItem}>
+                        {item.productId?.image && (
                             <img
-                                src={item.image}
-                                alt={item.name}
+                                src={item.productId?.image}
+                                alt={item.productId?.name}
                                 style={styles.itemImage}
                             />
                         )}
                         <div style={styles.itemDetails}>
-                            <h4>{item.name}</h4>
-                            <p style={styles.itemCategory}>{item.category}</p>
+                            <h4>{item.productId?.name}</h4>
+                            <p style={styles.itemCategory}>
+                                {item.productId?.category}
+                            </p>
                             <p style={styles.itemPrice}>
-                                ₹{item.price} per {item.unit}
+                                ₹{item.productId?.price} per{" "}
+                                {item.productId?.unit}
                             </p>
                         </div>
                         <div style={styles.quantityControls}>
                             <button
                                 onClick={() =>
-                                    updateQuantity(item._id, item.quantity - 1)
+                                    updateQuantity(
+                                        item.productId?._id,
+                                        item.quantity - 1
+                                    )
                                 }
                                 style={styles.quantityButton}
                             >
@@ -304,7 +407,10 @@ export default function Cart({ deliveryAddress }) {
                             <span style={styles.quantity}>{item.quantity}</span>
                             <button
                                 onClick={() =>
-                                    updateQuantity(item._id, item.quantity + 1)
+                                    updateQuantity(
+                                        item.productId?._id,
+                                        item.quantity + 1
+                                    )
                                 }
                                 style={styles.quantityButton}
                             >
@@ -312,13 +418,14 @@ export default function Cart({ deliveryAddress }) {
                             </button>
                         </div>
                         <div style={styles.itemTotal}>
-                            ₹{(item.price * item.quantity).toFixed(2)}
+                            ₹
+                            {(item.productId?.price * item.quantity).toFixed(2)}
                         </div>
                         <button
                             onClick={() => addToPantry(item)}
-                            disabled={item.stock === 0}
+                            disabled={item.productId?.stock === 0}
                             style={
-                                item.stock === 0
+                                item.productId?.stock === 0
                                     ? styles.disabledButton
                                     : styles.pantryButton
                             }
@@ -326,7 +433,7 @@ export default function Cart({ deliveryAddress }) {
                             Track in Pantry
                         </button>
                         <button
-                            onClick={() => removeFromCart(item._id)}
+                            onClick={() => removeFromCart(item.productId?._id)}
                             style={styles.removeButton}
                         >
                             🗑️
