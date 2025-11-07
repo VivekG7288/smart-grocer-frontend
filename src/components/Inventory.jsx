@@ -432,7 +432,7 @@ const styles = {
         backgroundColor: "#fff",
         boxShadow: "0 4px 12px #2B4936",
         transition: "transform 0.2s",
-        width: "250px",
+        width: "220px",
     },
     productImage: {
         width: "100%",
