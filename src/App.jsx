@@ -23,10 +23,8 @@ function App() {
 //   }, []);
 
   useEffect(() => {
-    OneSignal.init({
-      appId: "76eb459e-8e91-47ce-8fba-f551244b0363",
-      allowLocalhostAsSecureOrigin: true, // for localhost testing
-    });
+        // OneSignal is initialized in AuthContext when a user logs in or when session restores.
+        // Keep App free of direct OneSignal init to avoid duplicate inits.
   }, []);
 
     /*
