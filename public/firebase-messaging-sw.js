@@ -1,6 +1,20 @@
 // Firebase messaging service worker
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
+
+// Use NetworkFirst strategy for API requests
+workbox.routing.registerRoute(
+  ({ url }) => url.pathname.startsWith('/api') || url.origin === 'https://smart-grocer-backend-1.onrender.com',
+  new workbox.strategies.NetworkFirst({
+    cacheName: 'api-cache',
+    plugins: [
+      new workbox.cacheableResponse.CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
 
 firebase.initializeApp({
   apiKey: "AIzaSyCDFlFfH8v9vPqnjOqRIqUuh9GsqF_252w",

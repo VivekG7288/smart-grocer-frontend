@@ -6,12 +6,29 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: "autoUpdate", // keeps your app updated
+      registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "robots.txt"],
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => {
+              return url.pathname.startsWith('/api') || url.origin === 'https://smart-grocer-backend-1.onrender.com';
+            },
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          }
+        ],
+        navigateFallback: null
+      },
       manifest: {
-        name: "My React App",
-        short_name: "MyApp",
-        description: "A modern React PWA built with Vite.",
+        name: "Smart Grocer",
+        short_name: "SmartGrocer",
+        description: "Smart Grocer - Your Intelligent Shopping Assistant",
         theme_color: "#0d6efd",
         background_color: "#ffffff",
         display: "standalone",
