@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { firebaseConfig } from '../config/firebase';
+import { firebaseConfig, vapidKey } from '../config/firebase';
 import api from '../api/api';
 
 class FirebaseMessaging {
@@ -36,8 +36,12 @@ class FirebaseMessaging {
   async getFCMToken() {
     try {
       // Get registration token. Initially this makes a network call
+      if (!vapidKey) {
+        throw new Error('VAPID key is not configured. Please add VITE_FIREBASE_VAPID_KEY to your .env file');
+      }
+      
       const token = await getToken(this.messaging, {
-        vapidKey: "BKagOny0KF_2pCJQ3m__6yL8KhxGmdOHfz-4CKKH3lrKYTlmrqk3cddwNyVDh9A1UjHOxI4Gj_Y4SbXETn4hOwo" // Your VAPID key here
+        vapidKey // Using VAPID key from environment variables
       });
       
       if (token) {

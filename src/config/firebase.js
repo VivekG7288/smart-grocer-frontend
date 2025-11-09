@@ -1,10 +1,13 @@
 // Firebase configuration
 export const firebaseConfig = {
-  apiKey: "AIzaSyCDFlFfH8v9vPqnjOqRIqUuh9GsqF_252w",
-  authDomain: "smart-grocer-90714.firebaseapp.com",
-  projectId: "smart-grocer-90714",
-  storageBucket: "smart-grocer-90714.firebasestorage.app",
-  messagingSenderId: "980993250745",
-  appId: "1:980993250745:web:d394ecd25341e620285268",
-  measurementId: "G-PSS4CEYCN4"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+
+// VAPID key for web push notifications
+export const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;

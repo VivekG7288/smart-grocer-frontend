@@ -11,20 +11,9 @@ function App() {
   const { user } = useContext(AuthContext);
   console.log("AuthContext user:", user);
 
-  // Initialize OneSignal notifications once on app mount
-//   useEffect(() => {
-//     if (window.OneSignal) {
-//       window.OneSignal.push(() => {
-//         window.OneSignal.init({
-//           appId: "76eb459e-8e91-47ce-8fba-f551244b0363",
-//         });
-//       });
-//     }
-//   }, []);
-
+  // Initialize Firebase notifications
   useEffect(() => {
-        // OneSignal is initialized in AuthContext when a user logs in or when session restores.
-        // Keep App free of direct OneSignal init to avoid duplicate inits.
+    // Firebase messaging will be initialized by the NotificationTester component
   }, []);
 
     /*

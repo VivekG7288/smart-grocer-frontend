@@ -3,6 +3,7 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import AddressSelector from "./AddressSelector";
 import PantryManager from "./PantryManager"; // Import the new component
+import NotificationTester from "./NotificationTester"; // Import notification tester
 import ShopList from "./ShopList";
 import ProductList from "./ProductList";
 import Cart from "./Cart";
@@ -294,6 +295,7 @@ export default function ConsumerDashboard() {
             </div>
 
             <div style={styles.content}>
+                <NotificationTester />
                 <Routes>
                     {/* Make Pantry the default route - main feature */}
                     <Route path="/" element={<PantryManager />} />
