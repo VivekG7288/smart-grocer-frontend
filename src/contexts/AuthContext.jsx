@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import api from "../api/api";
+import { firebaseMessaging } from '../utils/firebaseMessaging';
 
 /*
  * Creates a new Context for authentication data and functions.
@@ -70,72 +71,23 @@ export function AuthProvider({ children }) {
         localStorage.setItem("user", JSON.stringify(loggedUser));
         setUser(loggedUser);
 
-        // Register OneSignal for push notifications (non-blocking)
-        if (typeof window !== 'undefined') {
-            registerOneSignal(loggedUser._id).catch((e) => {
-                console.debug('OneSignal register error (login):', e?.message || e);
+        // Initialize Firebase messaging and request permission
+        try {
+            await firebaseMessaging.requestPermission(loggedUser._id);
+            
+            // Listen for foreground messages
+            firebaseMessaging.onForegroundMessage((payload) => {
+                const { title, body } = payload.notification;
+                new Notification(title, { body });
             });
+        } catch (err) {
+            console.error('Failed to initialize Firebase messaging:', err);
         }
+        
         return loggedUser;
     };
 
-    // Register OneSignal and send playerId to backend
-    const registerOneSignal = async (userId) => {
-        try {
-            const appId = (import.meta.env && import.meta.env.VITE_ONESIGNAL_APP_ID) || '76eb459e-8e91-47ce-8fba-f551244b0363';
-
-            if (!window.OneSignal) {
-                console.warn('OneSignal SDK not loaded');
-                return;
-            }
-
-            window.OneSignal = window.OneSignal || [];
-
-            // Initialize SDK and listen for subscription changes. When a playerId
-            // becomes available (user subscribes / grants permission) we send it to the backend.
-            await new Promise((resolve) => {
-                window.OneSignal.push(() => {
-                    try {
-                        window.OneSignal.init({ appId, allowLocalhostAsSecureOrigin: true });
-
-                        // If user is already subscribed, getUserId will return it.
-                        window.OneSignal.getUserId().then((id) => {
-                            if (id) {
-                                api.post('/users/onesignal', { userId, playerId: id }).catch((e) => console.debug('Failed to save playerId', e));
-                            }
-                        }).catch(() => {});
-
-                        // Listen for subscription changes (when user accepts prompt)
-                        window.OneSignal.on('subscriptionChange', function(isSubscribed) {
-                            console.debug('OneSignal subscriptionChange:', isSubscribed);
-                            window.OneSignal.getUserId().then((id) => {
-                                if (id) {
-                                    api.post('/users/onesignal', { userId, playerId: id }).then(() => {
-                                        console.debug('Saved playerId to backend');
-                                    }).catch((e) => console.debug('Failed to save playerId', e));
-                                }
-                            }).catch(() => {});
-                        });
-
-                        // Also listen for permission changes (some browsers notify separately)
-                        window.OneSignal.on('notificationPermissionChange', function(permissionChange) {
-                            console.debug('OneSignal permissionChange:', permissionChange);
-                            window.OneSignal.getUserId().then((id) => {
-                                if (id) {
-                                    api.post('/users/onesignal', { userId, playerId: id }).catch((e) => console.debug('Failed to save playerId', e));
-                                }
-                            }).catch(() => {});
-                        });
-                    } catch (e) {
-                        console.debug('OneSignal init error:', e?.message || e);
-                    }
-                    resolve();
-                });
-            });
-        } catch (err) {
-            console.error('registerOneSignal failed:', err?.message || err);
-        }
-    };
+    // Will be replaced with Firebase initialization
 
     /*
      * Logout function:
