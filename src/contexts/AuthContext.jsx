@@ -90,12 +90,41 @@ export function AuthProvider({ children }) {
             }
 
             window.OneSignal = window.OneSignal || [];
+
+            // Initialize SDK and listen for subscription changes. When a playerId
+            // becomes available (user subscribes / grants permission) we send it to the backend.
             await new Promise((resolve) => {
                 window.OneSignal.push(() => {
                     try {
-                        window.OneSignal.init({
-                            appId,
-                            allowLocalhostAsSecureOrigin: true,
+                        window.OneSignal.init({ appId, allowLocalhostAsSecureOrigin: true });
+
+                        // If user is already subscribed, getUserId will return it.
+                        window.OneSignal.getUserId().then((id) => {
+                            if (id) {
+                                api.post('/users/onesignal', { userId, playerId: id }).catch((e) => console.debug('Failed to save playerId', e));
+                            }
+                        }).catch(() => {});
+
+                        // Listen for subscription changes (when user accepts prompt)
+                        window.OneSignal.on('subscriptionChange', function(isSubscribed) {
+                            console.debug('OneSignal subscriptionChange:', isSubscribed);
+                            window.OneSignal.getUserId().then((id) => {
+                                if (id) {
+                                    api.post('/users/onesignal', { userId, playerId: id }).then(() => {
+                                        console.debug('Saved playerId to backend');
+                                    }).catch((e) => console.debug('Failed to save playerId', e));
+                                }
+                            }).catch(() => {});
+                        });
+
+                        // Also listen for permission changes (some browsers notify separately)
+                        window.OneSignal.on('notificationPermissionChange', function(permissionChange) {
+                            console.debug('OneSignal permissionChange:', permissionChange);
+                            window.OneSignal.getUserId().then((id) => {
+                                if (id) {
+                                    api.post('/users/onesignal', { userId, playerId: id }).catch((e) => console.debug('Failed to save playerId', e));
+                                }
+                            }).catch(() => {});
                         });
                     } catch (e) {
                         console.debug('OneSignal init error:', e?.message || e);
@@ -103,20 +132,6 @@ export function AuthProvider({ children }) {
                     resolve();
                 });
             });
-
-            // Request permission and get player id
-            const playerId = await window.OneSignal.getUserId();
-            if (!playerId) {
-                // ask for permission
-                try {
-                    await window.OneSignal.showNativePrompt();
-                } catch (e) {}
-            }
-
-            const finalId = await window.OneSignal.getUserId();
-            if (finalId) {
-                await api.post('/users/onesignal', { userId, playerId: finalId });
-            }
         } catch (err) {
             console.error('registerOneSignal failed:', err?.message || err);
         }
