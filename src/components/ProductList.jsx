@@ -156,18 +156,25 @@ export default function ProductList() {
         }
     };
 
-    const addToCart = (product) => {
-        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-        const existingItem = cart.find((item) => item._id === product._id);
-
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({ ...product, quantity: 1 });
+    const addToCart = async (product) => {
+        if (!user) {
+            alert("Please log in to add items to your cart.");
+            return;
         }
 
-        localStorage.setItem("cart", JSON.stringify(cart));
-        alert(`${product.name} added to cart!`);
+        try {
+            const payload = {
+                userId: user._id,
+                productId: product._id,
+                quantity: 1,
+            };
+
+            await api.post("/cart", payload); // now hits /api/cart on backend
+            alert(`${product.name} added to cart!`);
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            alert("Failed to add product to cart. Please try again.");
+        }
     };
 
     return (

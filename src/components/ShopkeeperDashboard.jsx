@@ -261,11 +261,6 @@ export default function ShopkeeperDashboard() {
         loadUnreadCount();
     }, [user]);
 
-    const handleSubscribe = async () => {
-        const permission = await OneSignal.Slidedown.promptPush();
-        console.log("User permission:", permission);
-    };
-
     const isActive = (path) => location.pathname === path;
 
     return (
@@ -330,9 +325,6 @@ export default function ShopkeeperDashboard() {
                     </div>
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
-                    </button>
-                    <button onClick={handleSubscribe}>
-                        Enable Notifications
                     </button>
                 </div>
             </div>
