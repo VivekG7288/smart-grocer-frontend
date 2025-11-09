@@ -7,9 +7,10 @@ const prodBase = (typeof import.meta !== 'undefined' && import.meta.env && impor
   : 'https://smart-grocer-backend-1.onrender.com/api';
 
 const api = axios.create({
+  // In production use the configured prodBase, in development point at local backend
   baseURL: (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.PROD)
     ? prodBase
-    : '/api',
+    : 'http://localhost:4000/api',
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true
 });

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { firebaseMessaging } from '../utils/firebaseMessaging';
+import { AuthContext } from '../contexts/AuthContext';
 
 const NotificationTester = () => {
   const [permissionState, setPermissionState] = useState('default');
@@ -18,6 +19,8 @@ const NotificationTester = () => {
       ]
     });
   };
+
+  const { user } = useContext(AuthContext);
 
   const testNotifications = async () => {
     try {
@@ -41,8 +44,14 @@ const NotificationTester = () => {
         return;
       }
 
+      // Ensure we have a logged-in user id to save the token against
+      if (!user || !user._id) {
+        setTestResult({ type: 'error', message: 'You must be logged in for the token to be saved to the server.' });
+        return;
+      }
+
       // Request permission and get token
-      const token = await firebaseMessaging.requestPermission();
+      const token = await firebaseMessaging.requestPermission(user._id);
       if (token) {
         setTestResult({ type: 'info', message: 'Got FCM token, sending test notification...' });
         
