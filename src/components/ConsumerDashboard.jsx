@@ -14,6 +14,7 @@ import { SlLocationPin } from "react-icons/sl";
 import { IoIosNotifications } from "react-icons/io";
 import { IoStorefrontSharp } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
+import api from "../api/api";
 
 export default function ConsumerDashboard() {
     const { user, logout } = useContext(AuthContext);
@@ -57,11 +58,9 @@ export default function ConsumerDashboard() {
     const loadUnreadCount = () => {
         const loadUnreadCount = async () => {
             try {
-                const res = await fetch(
-                    `/api/notifications/user/${user._id}/unread-count`
-                );
-                const data = await res.json();
-                setUnreadNotifications(data.count);
+                if (!user || !user._id) return;
+                const res = await api.get(`/notifications/user/${user._id}/unread-count`);
+                setUnreadNotifications(res.data.count || 0);
             } catch (err) {
                 console.error("Error loading notification count:", err);
             }

@@ -70,11 +70,9 @@ export default function ShopkeeperDashboard() {
     const loadUnreadCount = () => {
         const loadUnreadCount = async () => {
             try {
-                const res = await fetch(
-                    `/api/notifications/user/${user._id}/unread-count`
-                );
-                const data = await res.json();
-                setUnreadNotifications(data.count);
+                if (!user || !user._id) return;
+                const res = await api.get(`/notifications/user/${user._id}/unread-count`);
+                setUnreadNotifications(res.data.count || 0);
             } catch (err) {
                 console.error("Error loading notification count:", err);
             }
