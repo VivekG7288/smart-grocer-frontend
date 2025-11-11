@@ -56,7 +56,7 @@ const NotificationTester = () => {
         setTestResult({ type: 'info', message: 'Got FCM token, sending test notification...' });
         
         // Test sending a notification
-        const response = await fetch('http://localhost:4000/api/test-notifications/test', {
+        const response = await fetch('https://smart-grocer-backend-1.onrender.com/api/test-notifications/test', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
