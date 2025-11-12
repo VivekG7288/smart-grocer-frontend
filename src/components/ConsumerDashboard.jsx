@@ -2,13 +2,13 @@ import React, { useState, useContext, useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import AddressSelector from "./AddressSelector";
-import PantryManager from "./PantryManager"; // Import the new component
+import PantryManager from "./PantryManager"; 
 import NotificationTester from "./NotificationTester"; // Import notification tester
 import ShopList from "./ShopList";
 import ProductList from "./ProductList";
 import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
-import NotificationCenter from "./NotificationCenter"; // We'll create this too
+import NotificationCenter from "./NotificationCenter"; 
 import ExpenseTracker from "./ExpenseTracker";
 import { SlLocationPin } from "react-icons/sl";
 import { IoIosNotifications } from "react-icons/io";
@@ -294,7 +294,7 @@ export default function ConsumerDashboard() {
             </div>
 
             <div style={styles.content}>
-                <NotificationTester />
+                {/* <NotificationTester /> */}
                 <Routes>
                     {/* Make Pantry the default route - main feature */}
                     <Route path="/" element={<PantryManager />} />

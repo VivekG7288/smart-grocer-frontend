@@ -92,7 +92,7 @@ export default function PantryManager() {
                 <p><strong>Size:</strong> {item.quantityPerPack} {item.unit}</p>
               </div>
 
-              <div style={styles.stockTracker}>
+              {/* <div style={styles.stockTracker}>
                 <p><strong>Current Stock:</strong></p>
                 <div style={styles.stockControls}>
                   <button 
@@ -111,7 +111,7 @@ export default function PantryManager() {
                     +
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               <div style={styles.itemActions}>
                 {item.status === 'STOCKED' && item.currentPacks <= item.refillThreshold && (
