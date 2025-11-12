@@ -4,7 +4,6 @@ import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { registerSW } from "virtual:pwa-register";
 
-
 /*
  * Registers the Service Worker for the app.
  *
@@ -28,7 +27,6 @@ const updateSW = registerSW({
         console.log("App ready to work offline!");
     },
 });
-
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>

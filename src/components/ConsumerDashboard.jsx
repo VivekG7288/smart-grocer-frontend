@@ -2,13 +2,13 @@ import React, { useState, useContext, useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import AddressSelector from "./AddressSelector";
-import PantryManager from "./PantryManager"; 
+import PantryManager from "./PantryManager";
 import NotificationTester from "./NotificationTester"; // Import notification tester
 import ShopList from "./ShopList";
 import ProductList from "./ProductList";
 import Cart from "./Cart";
 import OrderHistory from "./OrderHistory";
-import NotificationCenter from "./NotificationCenter"; 
+// import NotificationCenter from "./NotificationCenter";
 import ExpenseTracker from "./ExpenseTracker";
 import { SlLocationPin } from "react-icons/sl";
 import { IoIosNotifications } from "react-icons/io";
@@ -59,7 +59,9 @@ export default function ConsumerDashboard() {
         const loadUnreadCount = async () => {
             try {
                 if (!user || !user._id) return;
-                const res = await api.get(`/notifications/user/${user._id}/unread-count`);
+                const res = await api.get(
+                    `/notifications/user/${user._id}/unread-count`
+                );
                 setUnreadNotifications(res.data.count || 0);
             } catch (err) {
                 console.error("Error loading notification count:", err);
@@ -144,7 +146,7 @@ export default function ConsumerDashboard() {
                     </div>
                 </div>
                 <div style={styles.headerActions}>
-                    <button
+                    {/* <button
                         style={styles.notificationButton}
                         onClick={() => setNotificationOpen(!notificationOpen)}
                         aria-label="Toggle notifications"
@@ -178,7 +180,7 @@ export default function ConsumerDashboard() {
                             }
                             unreadNotifications={unreadNotifications}
                         />
-                    </div>
+                    </div> */}
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
                     </button>

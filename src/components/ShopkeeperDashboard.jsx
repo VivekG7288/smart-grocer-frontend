@@ -5,7 +5,7 @@ import ShopForm from "./ShopForm";
 import PaymentPage from "./PaymentPage";
 import OrderList from "./OrderList";
 import RefillRequests from "./RefillRequests";
-import ShopkeeperNotifications from "./ShopkeeperNotifications";
+// import ShopkeeperNotifications from "./ShopkeeperNotifications";
 import Inventory from "./Inventory";
 import AddNewProduct from "./AddNewProduct";
 import { IoIosNotifications } from "react-icons/io";
@@ -71,7 +71,9 @@ export default function ShopkeeperDashboard() {
         const loadUnreadCount = async () => {
             try {
                 if (!user || !user._id) return;
-                const res = await api.get(`/notifications/user/${user._id}/unread-count`);
+                const res = await api.get(
+                    `/notifications/user/${user._id}/unread-count`
+                );
                 setUnreadNotifications(res.data.count || 0);
             } catch (err) {
                 console.error("Error loading notification count:", err);
@@ -287,7 +289,7 @@ export default function ShopkeeperDashboard() {
                     <h2 style={{ color: "#2B4936" }}>Welcome, {user.name}!</h2>
                 </div>
                 <div style={styles.headerActions}>
-                    <button
+                    {/* <button
                         style={styles.notificationButton}
                         onClick={() => setNotificationOpen(!notificationOpen)}
                         aria-label="Toggle notifications"
@@ -320,7 +322,7 @@ export default function ShopkeeperDashboard() {
                                 )
                             }
                         />
-                    </div>
+                    </div> */}
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
                     </button>
