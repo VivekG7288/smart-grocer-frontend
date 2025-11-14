@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import AddressSelector from "./AddressSelector";
-import PantryManager from "./PantryManager";
+// import PantryManager from "./PantryManager";
 import NotificationTester from "./NotificationTester"; // Import notification tester
 import ShopList from "./ShopList";
 import ProductList from "./ProductList";
@@ -192,15 +192,6 @@ export default function ConsumerDashboard() {
                 style={styles.nav}
             >
                 <Link
-                    to="/"
-                    style={
-                        isActive("/") ? styles.activeNavLink : styles.navLink
-                    }
-                >
-                    <IoStorefrontSharp style={{ marginBottom: "-2px" }} /> My
-                    Pantry
-                </Link>
-                <Link
                     to="/shops"
                     style={
                         isActive("/shops")
@@ -257,14 +248,6 @@ export default function ConsumerDashboard() {
                     }}
                 >
                     <Link
-                        to="/"
-                        style={styles.navLink}
-                        onClick={() => setMenuOpen(false)}
-                    >
-                        <IoStorefrontSharp style={{ marginBottom: "-2px" }} />{" "}
-                        My Pantry
-                    </Link>
-                    <Link
                         to="/shops"
                         style={styles.navLink}
                         onClick={() => setMenuOpen(false)}
@@ -299,7 +282,6 @@ export default function ConsumerDashboard() {
                 {/* <NotificationTester /> */}
                 <Routes>
                     {/* Make Pantry the default route - main feature */}
-                    <Route path="/" element={<PantryManager />} />
                     <Route
                         path="/shops"
                         element={<ShopList deliveryAddress={deliveryAddress} />}

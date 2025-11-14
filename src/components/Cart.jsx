@@ -421,7 +421,7 @@ export default function Cart({ deliveryAddress }) {
                             ₹
                             {(item.productId?.price * item.quantity).toFixed(2)}
                         </div>
-                        <button
+                        {/* <button
                             onClick={() => addToPantry(item)}
                             disabled={item.productId?.stock === 0}
                             style={
@@ -431,7 +431,7 @@ export default function Cart({ deliveryAddress }) {
                             }
                         >
                             Track in Pantry
-                        </button>
+                        </button> */}
                         <button
                             onClick={() => removeFromCart(item.productId?._id)}
                             style={styles.removeButton}

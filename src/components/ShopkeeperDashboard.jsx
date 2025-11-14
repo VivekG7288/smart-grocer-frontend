@@ -4,7 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import ShopForm from "./ShopForm";
 import PaymentPage from "./PaymentPage";
 import OrderList from "./OrderList";
-import RefillRequests from "./RefillRequests";
+// import RefillRequests from "./RefillRequests";
 // import ShopkeeperNotifications from "./ShopkeeperNotifications";
 import Inventory from "./Inventory";
 import AddNewProduct from "./AddNewProduct";
@@ -341,7 +341,7 @@ export default function ShopkeeperDashboard() {
                     />{" "}
                     My Shop
                 </Link>
-                <Link
+                {/* <Link
                     to="/refill-requests"
                     style={
                         isActive("/refill-requests")
@@ -353,7 +353,7 @@ export default function ShopkeeperDashboard() {
                         style={{ marginRight: "5px", marginBottom: "-2px" }}
                     />{" "}
                     Refill Requests
-                </Link>
+                </Link> */}
                 <Link
                     to="/orders"
                     style={
@@ -884,17 +884,17 @@ export default function ShopkeeperDashboard() {
                 <Routes>
                     <Route path="/" element={<ShopForm />} />
                     <Route path="/payment" element={<PaymentPage />} />
-                    <Route
+                    {/* <Route
                         path="/refill-requests"
                         element={<RefillRequests />}
-                    />
+                    /> */}
                     <Route path="/orders" element={<OrderList />} />
                     <Route path="/inventory" element={<Inventory />} />
                     <Route path="/addNewProduct" element={<AddNewProduct />} />
-                    <Route
+                    {/* <Route
                         path="/refill-requests"
                         element={<RefillRequests />}
-                    />
+                    /> */}
                 </Routes>
             </div>
         </div>
