@@ -22,6 +22,10 @@ export function AuthProvider({ children }) {
                         await firebaseMessaging.requestPermission(
                             parsedUser._id
                         );
+                        firebaseMessaging.onForegroundMessage((payload) => {
+                            const { title, body } = payload.notification;
+                            new Notification(title, { body });
+                        });
                     } catch (err) {
                         console.warn(
                             "Firebase messaging init failed:",
@@ -56,6 +60,10 @@ export function AuthProvider({ children }) {
 
         try {
             await firebaseMessaging.requestPermission(loggedUser._id);
+            firebaseMessaging.onForegroundMessage((payload) => {
+                const { title, body } = payload.notification;
+                new Notification(title, { body });
+            });
         } catch (err) {
             console.error("Failed to initialize Firebase messaging:", err);
         }
