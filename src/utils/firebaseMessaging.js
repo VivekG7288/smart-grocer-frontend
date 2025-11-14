@@ -70,14 +70,8 @@ class FirebaseMessaging {
   onForegroundMessage(callback) {
     return onMessage(this.messaging, (payload) => {
       console.log('Received foreground message:', payload);
-      // Create notification
-      const { title, body } = payload.notification || {};
-      if (title) {
-        new Notification(title, {
-          body,
-          icon: '/vite.svg' // Your app icon
-        });
-      }
+      // Firebase automatically shows notification when received
+      // Just call the callback if provided for app-specific handling
       if (callback) callback(payload);
     });
   }
