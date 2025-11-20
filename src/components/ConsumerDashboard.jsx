@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import AddressSelector from "./AddressSelector";
+import { FaCartShopping } from "react-icons/fa6";
 // import PantryManager from "./PantryManager";
 import NotificationTester from "./NotificationTester"; // Import notification tester
 import ShopList from "./ShopList";
@@ -128,7 +129,7 @@ export default function ConsumerDashboard() {
                         >
                             <GiHamburgerMenu className="hamburger-icon" />
                         </button>
-                        <h2>Welcome, {user.name}!</h2>
+                        <h2 className="customer-name">Welcome, {user.name}!</h2>
                     </div>
 
                     <div style={styles.deliveryAddress}>
@@ -145,7 +146,7 @@ export default function ConsumerDashboard() {
                         </button>
                     </div>
                 </div>
-                <div style={styles.headerActions}>
+                <div className="nav-sec-2" style={styles.headerActions}>
                     {/* <button
                         style={styles.notificationButton}
                         onClick={() => setNotificationOpen(!notificationOpen)}
@@ -181,6 +182,16 @@ export default function ConsumerDashboard() {
                             unreadNotifications={unreadNotifications}
                         />
                     </div> */}
+                    <Link to="/cart">
+                        <FaCartShopping
+                            style={{
+                                marginRight: "5px",
+                                marginBottom: "-2px",
+                                fontSize: "30px",
+                            }}
+                        />
+                    </Link>
+
                     <button onClick={logout} style={styles.logoutButton}>
                         Logout
                     </button>
@@ -200,16 +211,6 @@ export default function ConsumerDashboard() {
                     }
                 >
                     🏪 Find Shops
-                </Link>
-                <Link
-                    to="/cart"
-                    style={
-                        isActive("/cart")
-                            ? styles.activeNavLink
-                            : styles.navLink
-                    }
-                >
-                    🛒 Cart
                 </Link>
                 <Link
                     to="/orders"
@@ -253,13 +254,6 @@ export default function ConsumerDashboard() {
                         onClick={() => setMenuOpen(false)}
                     >
                         🏪 Find Shops
-                    </Link>
-                    <Link
-                        to="/cart"
-                        style={styles.navLink}
-                        onClick={() => setMenuOpen(false)}
-                    >
-                        🛒 Cart
                     </Link>
                     <Link
                         to="/orders"

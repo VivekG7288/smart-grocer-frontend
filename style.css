@@ -394,3 +394,32 @@ input::placeholder {
 .checkbox-container {
     text-align: left;
 }
+
+.cart-item-section-1 {
+    display: flex;
+    gap: 20px;
+}
+.cart-item-section-2 {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.cart-items-wrapper {
+    justify-content: space-between;
+    @media (max-width: 500px) {
+        flex-direction: column;
+    }
+}
+
+.customer-name {
+    @media (max-width: 500px) {
+        font-size: 14px;
+    }
+}
+
+.nav-sec-2 {
+    @media (max-width: 500px) {
+        flex-direction: column;
+    }
+}

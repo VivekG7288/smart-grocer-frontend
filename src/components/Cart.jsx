@@ -374,54 +374,65 @@ export default function Cart({ deliveryAddress }) {
 
             <div style={styles.cartItems}>
                 {cart.map((item) => (
-                    <div key={item.productId?._id} style={styles.cartItem}>
-                        {item.productId?.image && (
-                            <img
-                                src={item.productId?.image}
-                                alt={item.productId?.name}
-                                style={styles.itemImage}
-                            />
-                        )}
-                        <div style={styles.itemDetails}>
-                            <h4>{item.productId?.name}</h4>
-                            <p style={styles.itemCategory}>
-                                {item.productId?.category}
-                            </p>
-                            <p style={styles.itemPrice}>
-                                ₹{item.productId?.price} per{" "}
-                                {item.productId?.unit}
-                            </p>
+                    <div
+                        className="cart-items-wrapper"
+                        key={item.productId?._id}
+                        style={styles.cartItem}
+                    >
+                        <div className="cart-item-section-1">
+                            {item.productId?.image && (
+                                <img
+                                    src={item.productId?.image}
+                                    alt={item.productId?.name}
+                                    style={styles.itemImage}
+                                />
+                            )}
+                            <div style={styles.itemDetails}>
+                                <h4>{item.productId?.name}</h4>
+                                <p style={styles.itemCategory}>
+                                    {item.productId?.category}
+                                </p>
+                                <p style={styles.itemPrice}>
+                                    ₹{item.productId?.price} per{" "}
+                                    {item.productId?.unit}
+                                </p>
+                            </div>
                         </div>
-                        <div style={styles.quantityControls}>
-                            <button
-                                onClick={() =>
-                                    updateQuantity(
-                                        item.productId?._id,
-                                        item.quantity - 1
-                                    )
-                                }
-                                style={styles.quantityButton}
-                            >
-                                -
-                            </button>
-                            <span style={styles.quantity}>{item.quantity}</span>
-                            <button
-                                onClick={() =>
-                                    updateQuantity(
-                                        item.productId?._id,
-                                        item.quantity + 1
-                                    )
-                                }
-                                style={styles.quantityButton}
-                            >
-                                +
-                            </button>
-                        </div>
-                        <div style={styles.itemTotal}>
-                            ₹
-                            {(item.productId?.price * item.quantity).toFixed(2)}
-                        </div>
-                        {/* <button
+                        <div className="cart-item-section-2">
+                            <div style={styles.quantityControls}>
+                                <button
+                                    onClick={() =>
+                                        updateQuantity(
+                                            item.productId?._id,
+                                            item.quantity - 1
+                                        )
+                                    }
+                                    style={styles.quantityButton}
+                                >
+                                    -
+                                </button>
+                                <span style={styles.quantity}>
+                                    {item.quantity}
+                                </span>
+                                <button
+                                    onClick={() =>
+                                        updateQuantity(
+                                            item.productId?._id,
+                                            item.quantity + 1
+                                        )
+                                    }
+                                    style={styles.quantityButton}
+                                >
+                                    +
+                                </button>
+                            </div>
+                            <div style={styles.itemTotal}>
+                                ₹
+                                {(
+                                    item.productId?.price * item.quantity
+                                ).toFixed(2)}
+                            </div>
+                            {/* <button
                             onClick={() => addToPantry(item)}
                             disabled={item.productId?.stock === 0}
                             style={
@@ -432,12 +443,15 @@ export default function Cart({ deliveryAddress }) {
                         >
                             Track in Pantry
                         </button> */}
-                        <button
-                            onClick={() => removeFromCart(item.productId?._id)}
-                            style={styles.removeButton}
-                        >
-                            🗑️
-                        </button>
+                            <button
+                                onClick={() =>
+                                    removeFromCart(item.productId?._id)
+                                }
+                                style={styles.removeButton}
+                            >
+                                🗑️
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
