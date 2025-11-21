@@ -11,7 +11,7 @@ import { FaPumpSoap } from "react-icons/fa6";
 import { BsFillBasketFill } from "react-icons/bs";
 import { IoIosBasket } from "react-icons/io";
 
-export default function ProductList() {
+export default function ProductList({ increaseQty }) {
     const { shopId } = useParams();
     const { user } = useContext(AuthContext);
     const [products, setProducts] = useState([]);
@@ -25,6 +25,17 @@ export default function ProductList() {
 
     const onCatagorySelect = (value) => {
         setSelectoryCategory(value);
+    };
+
+    const loadCart = async () => {
+        try {
+            const res = await api.get("/cart", {
+                params: { userId: user._id },
+            });
+            increaseQty(res.data.items.length);
+        } catch (error) {
+            console.error("Error loading cart:", error);
+        }
     };
 
     useEffect(() => {
@@ -170,6 +181,7 @@ export default function ProductList() {
             };
 
             await api.post("/cart", payload); // now hits /api/cart on backend
+            await loadCart();
             alert(`${product.name} added to cart!`);
         } catch (error) {
             console.error("Error adding to cart:", error);

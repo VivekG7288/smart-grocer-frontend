@@ -67,7 +67,11 @@ const ensureFullProduct = async (cartItem) => {
     }
 };
 
-export default function Cart({ deliveryAddress }) {
+export default function Cart({
+    deliveryAddress,
+    clearCartCount,
+    decreaseCartCount,
+}) {
     const { user } = useContext(AuthContext);
     const [cart, setCart] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -131,6 +135,7 @@ export default function Cart({ deliveryAddress }) {
     };
 
     const removeFromCart = async (productId) => {
+        decreaseCartCount();
         try {
             const payload = {
                 userId: user._id,
@@ -319,6 +324,7 @@ export default function Cart({ deliveryAddress }) {
             alert("Error placing order: " + errorMsg);
         } finally {
             setLoading(false);
+            clearCartCount();
         }
     };
 

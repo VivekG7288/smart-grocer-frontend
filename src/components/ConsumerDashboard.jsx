@@ -24,6 +24,7 @@ export default function ConsumerDashboard() {
     const location = useLocation();
     const [notificationOpen, setNotificationOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
 
     const notificationRef = React.useRef(null);
 
@@ -33,6 +34,21 @@ export default function ConsumerDashboard() {
             `deliveryAddress_${user._id}`,
             JSON.stringify(address)
         );
+    };
+
+    useEffect(() => {
+        loadCart();
+    }, []);
+
+    const loadCart = async () => {
+        try {
+            const res = await api.get("/cart", {
+                params: { userId: user._id },
+            });
+            setCartCount(res.data.items.length);
+        } catch (error) {
+            console.error("Error loading cart:", error);
+        }
     };
 
     useEffect(() => {
@@ -183,11 +199,12 @@ export default function ConsumerDashboard() {
                         />
                     </div> */}
                     <Link to="/cart">
+                        <span className="cart-count">{cartCount}</span>
                         <FaCartShopping
                             style={{
                                 marginRight: "5px",
                                 marginBottom: "-2px",
-                                fontSize: "30px",
+                                fontSize: "45px",
                             }}
                         />
                     </Link>
@@ -280,10 +297,25 @@ export default function ConsumerDashboard() {
                         path="/shops"
                         element={<ShopList deliveryAddress={deliveryAddress} />}
                     />
-                    <Route path="/shop/:shopId" element={<ProductList />} />
+                    <Route
+                        path="/shop/:shopId"
+                        element={
+                            <ProductList
+                                increaseQty={(qty) => setCartCount(qty)}
+                            />
+                        }
+                    />
                     <Route
                         path="/cart"
-                        element={<Cart deliveryAddress={deliveryAddress} />}
+                        element={
+                            <Cart
+                                decreaseCartCount={() =>
+                                    setCartCount((prev) => prev - 1)
+                                }
+                                clearCartCount={() => setCartCount(0)}
+                                deliveryAddress={deliveryAddress}
+                            />
+                        }
                     />
                     <Route path="/orders" element={<OrderHistory />} />
 
