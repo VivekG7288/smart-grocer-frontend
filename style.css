@@ -131,6 +131,9 @@ input::placeholder {
     align-items: center;
     padding: 20px 20px 0px 40px;
     background: #2b4936;
+    position: sticky;
+    z-index: 1;
+    top: 146px;
     @media (max-width: 1023px) {
         display: none;
     }

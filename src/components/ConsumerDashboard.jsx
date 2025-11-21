@@ -339,6 +339,8 @@ const styles = {
         backgroundColor: "#FFFAF0",
         color: "#2B4936",
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        position: "sticky",
+        top: 0,
     },
     locationInfo: {
         display: "flex",
@@ -396,7 +398,6 @@ const styles = {
     },
     nav: {
         background: "#2B4936",
-        boxShadow: "0 6px 18px rgba(2,6,23,0.35)",
         marginBottom: "-1px",
     },
     navLink: {
