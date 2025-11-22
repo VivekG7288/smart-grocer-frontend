@@ -133,6 +133,19 @@ input::placeholder {
     background: #2b4936;
     position: sticky;
     z-index: 1;
+    top: 113px;
+    @media (max-width: 1023px) {
+        display: none;
+    }
+}
+.customer-dashboard-nav-desktop {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 20px 20px 0px 40px;
+    background: #2b4936;
+    position: sticky;
+    z-index: 1;
     top: 146px;
     @media (max-width: 1023px) {
         display: none;

@@ -913,6 +913,8 @@ const styles = {
         background: "#FFFAF0",
         boxShadow: "0 6px 18px rgba(2,6,23,0.35)",
         borderBottom: "1px solid rgba(255,255,255,0.03)",
+        position: "sticky",
+        top: 0,
     },
     headerActions: {
         display: "flex",

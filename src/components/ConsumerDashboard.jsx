@@ -215,10 +215,7 @@ export default function ConsumerDashboard() {
                 </div>
             </div>
 
-            <nav
-                className="shop-keeper-dashboard-nav-desktop"
-                style={styles.nav}
-            >
+            <nav className="customer-dashboard-nav-desktop" style={styles.nav}>
                 <Link
                     to="/shops"
                     style={
