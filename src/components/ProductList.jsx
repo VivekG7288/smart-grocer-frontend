@@ -190,7 +190,7 @@ export default function ProductList({ increaseQty }) {
     };
 
     return (
-        <div style={styles.container}>
+        <div>
             {shop && (
                 <div style={styles.shopHeader}>
                     <h3 style={{ color: "#FFFAF0" }}>{shop.name}</h3>
@@ -238,14 +238,14 @@ export default function ProductList({ increaseQty }) {
                 {selectedCategoryProducts.length === 0 ? (
                     <p>No products available in this shop yet.</p>
                 ) : (
-                    <div style={styles.productGrid}>
+                    <div className="product-grid">
                         {selectedCategoryProducts.map((product) => (
-                            <div key={product._id} style={styles.productCard}>
+                            <div className="product-card" key={product._id}>
                                 {product.image && (
                                     <img
+                                        className="product-image"
                                         src={product.image}
                                         alt={product.name}
-                                        style={styles.productImage}
                                     />
                                 )}
                                 <div style={styles.productInfo}>
@@ -253,13 +253,13 @@ export default function ProductList({ increaseQty }) {
                                         <h5 style={{ margin: "8px 0" }}>
                                             {product.name}
                                         </h5>
-                                        <p style={styles.category}>
+                                        <p className="product-category">
                                             {product.category}
                                         </p>
-                                        <p style={styles.price}>
+                                        <p className="product-price">
                                             ₹{product.price} per {product.unit}
                                         </p>
-                                        <p style={styles.stock}>
+                                        <p className="product-stock-info">
                                             Stock: {product.stock}{" "}
                                             {product.unit}
                                         </p>
@@ -268,6 +268,7 @@ export default function ProductList({ increaseQty }) {
                                     {/* ADD THE BUTTONS HERE - Both buttons in a button container */}
                                     <div style={styles.buttonContainer}>
                                         <button
+                                            className="add-to-cart-button"
                                             onClick={() => addToCart(product)}
                                             disabled={product.stock === 0}
                                             style={
@@ -292,32 +293,11 @@ export default function ProductList({ increaseQty }) {
 }
 
 const styles = {
-    container: {
-        padding: "20px",
-    },
     shopHeader: {
         backgroundColor: "#89AA97",
-        padding: "20px",
+        padding: "10px",
         borderRadius: "8px",
         marginBottom: "20px",
-    },
-    productGrid: {
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "20px",
-        height: "fit-content",
-    },
-    productCard: {
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        overflow: "hidden",
-        backgroundColor: "#fff",
-        boxShadow: "0 4px 12px #2B4936",
-        maxHeight: "400px",
-        width: "170px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
     },
     productImage: {
         width: "100%",
@@ -329,23 +309,6 @@ const styles = {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "15px",
-    },
-    category: {
-        color: "#666",
-        fontSize: "14px",
-        margin: "5px 0",
-    },
-    price: {
-        fontWeight: "bold",
-        color: "#007bff",
-        fontSize: "16px",
-        margin: "8px 0 0 0",
-    },
-    stock: {
-        color: "#28a745",
-        fontSize: "14px",
-        marginBottom: "15px",
-        margin: "8px 0",
     },
 
     /* NEW STYLES FOR BUTTON CONTAINER */

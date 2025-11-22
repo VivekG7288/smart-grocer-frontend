@@ -421,17 +421,6 @@ export default function ShopkeeperDashboard() {
                         Shop
                     </Link>
                     <Link
-                        to="/refill-requests"
-                        style={{
-                            ...styles.navLink,
-                            background: "transparent",
-                        }}
-                        onClick={() => setMenuOpen(false)}
-                    >
-                        <CiRedo style={{ marginRight: "8px" }} /> Refill
-                        Requests
-                    </Link>
-                    <Link
                         to="/orders"
                         style={{
                             ...styles.navLink,
@@ -572,8 +561,13 @@ export default function ShopkeeperDashboard() {
 
                                 {/* Shop Details Card */}
                                 <div style={styles.shopDetailsCard}>
-                                    <div style={styles.shopDetailsHeader}>
-                                        <h4>Shop Details</h4>
+                                    <div
+                                        className="shop-details-header"
+                                        style={styles.shopDetailsHeader}
+                                    >
+                                        <h4 style={{ margin: 0 }}>
+                                            Shop Details
+                                        </h4>
                                         <div className="home-delivery-icon-wrapper">
                                             <label htmlFor="home-delivery">
                                                 Home delivery
