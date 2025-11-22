@@ -196,6 +196,16 @@ export default function OrderList() {
                             {/* Enhanced Customer & Delivery Information */}
                             <div style={styles.deliveryInfo}>
                                 <h5>🚚 Delivery Information:</h5>
+                                {order.deliveryType === "delivery" && (
+                                    <h4 style={{ color: "green", margin: 0 }}>
+                                        Need home delivery
+                                    </h4>
+                                )}
+                                {order.deliveryType === "store" && (
+                                    <h4 style={{ color: "green", margin: 0 }}>
+                                        Store pick up
+                                    </h4>
+                                )}
                                 <div className="customer-details-shopkeeper-dashboard">
                                     <div style={styles.contactInfo}>
                                         <p>

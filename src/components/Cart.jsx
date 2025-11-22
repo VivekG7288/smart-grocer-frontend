@@ -285,6 +285,7 @@ export default function Cart({
                     items: items,
                     totalAmount: totalAmount,
                     status: "PENDING",
+                    deliveryType: selectedOption,
 
                     // Include delivery address
                     deliveryAddress: {
